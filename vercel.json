@@ -9,6 +9,14 @@
       "destination": "/api/send-email"
     },
     {
+      "source": "/api/auth/register",
+      "destination": "/api/auth/register"
+    },
+    {
+      "source": "/api/auth/login",
+      "destination": "/api/auth/login"
+    },
+    {
       "source": "/urun-:slug",
       "destination": "/product.html"
     },

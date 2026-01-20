@@ -1073,7 +1073,7 @@ window.validateFields = function (list) {
     return valid;
 };
 
-window.goToStep2 = function () {
+window.goToStep2 = async function () {
     const fields = ['guest-name', 'guest-surname', 'guest-email', 'guest-phone', 'guest-password', 'guest-password-confirm'];
     if (!validateFields(fields)) {
         showToast('Lütfen tüm zorunlu alanları doldurun.', 'error');
@@ -1095,7 +1095,7 @@ window.goToStep2 = function () {
         tc: document.getElementById('guest-tc').value
     };
 
-    if (registerUser(userData)) {
+    if (await registerUser(userData)) {
         // Send Welcome Email
         if (typeof window.sendWelcomeEmail === 'function') {
             console.log('📧 Sending welcome email to new user...');
@@ -1104,13 +1104,10 @@ window.goToStep2 = function () {
 
         goToStep(2);
     } else {
-        // Try auto-login if registered
-        if (window.loginUser(userData.email, userData.password, false)) {
-            console.log('✅ User already exists, logged in automatically.');
-            goToStep(2);
-        } else {
-            showToast('Bu e-posta zaten kayıtlı. Lütfen giriş yapın veya şifrenizi kontrol edin.', 'error');
-        }
+        // Try auto-login if registered (Async check)
+        // Since register failed, likely exists. Try login with same stats? No, password might be wrong.
+        // API returns specific error. 
+        // If registerUser returns false, it already showed a toast.
     }
 };
 
@@ -1511,41 +1508,91 @@ function onPlayerStateChange(event) {
 // --- USER MANAGEMENT SYSTEM ---
 
 const UserManager = {
-    getUsers: () => JSON.parse(localStorage.getItem('deerDeriUsers')) || [],
-    saveUsers: (users) => localStorage.setItem('deerDeriUsers', JSON.stringify(users)),
+    // Deprecated LocalStorage Methods (Kept empty to prevent crash until Order API is ready)
+    getUsers: () => [],
+    saveUsers: (users) => { },
+
+    // Session Management
     getCurrentUser: () => JSON.parse(localStorage.getItem('deerDeriCurrentUser')),
     setCurrentUser: (user) => localStorage.setItem('deerDeriCurrentUser', JSON.stringify(user)),
     clearCurrentUser: () => localStorage.removeItem('deerDeriCurrentUser')
 };
 
-window.registerUser = function (userData) {
-    const users = UserManager.getUsers();
-    if (users.find(u => u.email.toLowerCase().trim() === userData.email.toLowerCase().trim())) {
-        return false; // User exists
+window.registerUser = async function (userData) {
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: userData.firstName + ' ' + userData.lastName,
+                email: userData.email,
+                password: userData.password,
+                phone: userData.phone,
+                tcId: userData.tc
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Auto login with returned user data
+            const userSession = {
+                ...data.user,
+                firstName: userData.firstName, // Keep frontend formatting consistent
+                lastName: userData.lastName,
+                addresses: [],
+                orders: []
+            };
+            UserManager.setCurrentUser(userSession);
+            return true;
+        } else {
+            showToast(data.error || 'Kayıt başarısız.', 'error');
+            return false;
+        }
+    } catch (e) {
+        console.error('Register API Error:', e);
+        showToast('Sunucu hatası.', 'error');
+        return false;
     }
-
-    // Add ID and empty lists
-    userData.id = Date.now().toString();
-    userData.orders = [];
-    userData.addresses = [];
-
-    users.push(userData);
-    UserManager.saveUsers(users);
-
-    // Auto login
-    UserManager.setCurrentUser(userData);
-    return true;
 };
 
-window.loginUser = function (email, password, shouldReload = true) {
-    const users = UserManager.getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-        UserManager.setCurrentUser(user);
-        if (shouldReload) window.location.reload(); // Refresh to update UI
-        return true;
+window.loginUser = async function (email, password, shouldReload = true) {
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Map API user to Frontend User Structure
+            const user = data.user;
+            // Split name for frontend compatibility if needed, or keep as is
+            const displayNames = user.name.split(' ');
+            const userSession = {
+                id: user.id,
+                email: user.email,
+                firstName: displayNames[0],
+                lastName: displayNames.slice(1).join(' '),
+                role: user.role,
+                phone: user.phone,
+                addresses: [], // WIll be populated from DB later
+                orders: [] // Will be populated from DB later
+            };
+
+            UserManager.setCurrentUser(userSession);
+            if (shouldReload) window.location.reload();
+            return true;
+        } else {
+            if (shouldReload) showToast(data.error || 'Giriş başarısız.', 'error');
+            return false;
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return false;
     }
-    return false;
 };
 
 window.logoutUser = function () {
@@ -1857,13 +1904,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Login Form Listener (Global)
     document.querySelectorAll('.login-form').forEach(form => {
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
             const inputs = this.querySelectorAll('input');
             const email = inputs[0].value;
             const pass = inputs[1].value;
 
-            if (loginUser(email, pass)) {
+            if (await loginUser(email, pass)) {
                 showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
 
                 // --- SPECIAL CHECKOUT AUTO-STEP ---
@@ -1921,13 +1968,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modalLoginForm = document.getElementById('checkout-login-form');
     if (modalLoginForm) {
-        modalLoginForm.addEventListener('submit', function (e) {
+        modalLoginForm.addEventListener('submit', async function (e) {
             e.preventDefault();
             const email = document.getElementById('modal-login-email').value;
             const pass = document.getElementById('modal-login-pass').value;
 
             // Login without reload to stay on checkout page
-            if (loginUser(email, pass, false)) {
+            if (await loginUser(email, pass, false)) {
                 showToast('Giriş başarılı! Bilgileriniz yükleniyor...', 'success');
                 closeCheckoutModal();
 
