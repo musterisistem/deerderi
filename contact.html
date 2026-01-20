@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
+    <title>İletişim | DEER DERİ</title>
+    <meta name="description" content="DEER DERİ ile iletişime geçin. Adres, telefon ve iletişim formu.">
+    <link rel="stylesheet" href="styles.css?v=200">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .page-header {
+            background-color: #f8f8f8;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            font-size: 42px;
+            margin-bottom: 15px;
+            font-family: var(--font-heading);
+            color: var(--primary-color);
+        }
+
+        .page-subtitle {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        .contact-info-card {
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: #f9f9f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: var(--primary-color);
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover .contact-icon {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        .contact-text h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: #999;
+        }
+
+        .contact-text p {
+            font-size: 16px;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .contact-form-wrapper {
+            background: #fff;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            font-family: var(--font-body);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .map-section {
+            height: 450px;
+            width: 100%;
+            margin-bottom: -5px;
+            /* Fix small gap */
+            filter: grayscale(100%);
+            transition: filter 0.5s ease;
+        }
+
+        .map-section:hover {
+            filter: grayscale(0%);
+        }
+
+        @media (max-width: 991px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. Duyuru Bandı -->
+    <div class="announcement-bar">
+        <div class="marquee-content">
+            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
+            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
+            Gün: 31 Ocak
+        </div>
+    </div>
+
+    <!-- 2. Header -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="DEER DERİ" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="nav-desktop" id="desktop-nav">
+                <!-- Populated by script.js based on Admin Categories -->
+            </nav>
+
+            <!-- Icons & Dropdowns -->
+            <div class="header-icons">
+                <!-- Login Dropdown -->
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label" id="header-user-name">Giriş Yap</span>
+                    <div class="dropdown-menu login-dropdown">
+                        <form class="login-form">
+                            <input type="email" placeholder="E-Posta Adresi">
+                            <input type="password" placeholder="Şifre">
+                            <button class="btn btn-primary">GİRİŞ YAP</button>
+                            <a href="register.html" class="register-btn">ÜYE OL</a>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Cart Dropdown -->
+                <div class="icon-group">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                    <div class="dropdown-menu cart-dropdown">
+                        <div class="cart-preview-wrapper">
+                            <div id="cart-image-preview" class="cart-image-preview">
+                                <!-- Hover image will appear here -->
+                            </div>
+                            <div id="header-cart-preview" class="cart-items-list">
+                                <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <div class="mobile-nav-wrapper">
+            <nav class="mobile-horizontal-nav">
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
+                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/canta">ÇANTA</a>
+                </div>
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
+                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/kartlik">KARTLIK</a>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/index.html">KOLEKSİYON</a>
+                </div>
+            </nav>
+            <!-- Mobile Submenus -->
+            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
+                <a href="/kategori/aksesuar">Bileklik</a>
+                <a href="/kategori/aksesuar">Kolye</a>
+                <a href="/kategori/aksesuar">Pasaport Kılıfı</a>
+                <a href="/kategori/aksesuar">Telefon Kılıfı</a>
+            </div>
+            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
+                <a href="/kategori/cuzdan">Erkek Cüzdan</a>
+                <a href="/kategori/cuzdan">Kadın Cüzdan</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">Bize Ulaşın</h1>
+            <p class="page-subtitle">Sorularınız, görüşleriniz veya sadece merhaba demek için bize yazın.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="contact-grid">
+            <!-- Contact Info -->
+            <div class="contact-info-card">
+                <h3 style="margin-bottom: 30px;">İletişim Bilgileri</h3>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div class="contact-text">
+                        <h4>Adres</h4>
+                        <p>Demirtaşpaşa, Celal Bayar Cd.<br>Petek Bozkaya İş Hanı A Blok No:4/H<br>16300
+                            Osmangazi̇/Bursa</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div class="contact-text">
+                        <h4>Telefon</h4>
+                        <p>0530 472 16 44</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="contact-text">
+                        <h4>E-Posta</h4>
+                        <p>info@deerderi.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div class="contact-text">
+                        <h4>Whatsapp Destek</h4>
+                        <p>Hafta içi: 09:00 - 18:00<br>Hafta sonu: 10:00 - 15:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-wrapper">
+                <h3 style="margin-bottom: 30px;">Bize Yazın</h3>
+                <form action="#" method="POST"
+                    onsubmit="event.preventDefault(); alert('Mesajınız başarıyla gönderildi. En kısa sürede dönüş yapacağız.');">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Adınız Soyadınız" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Telefon Numaranız">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="E-Posta Adresiniz" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Konu" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" placeholder="Mesajınız..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px;">MESAJI
+                        GÖNDER</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="map-section">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3047.9033112671204!2d29.06774827641888!3d40.188965169469824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14ca3fde3b84497f%3A0x694cfb75ce176c33!2sD%C3%B6rtel%20Tedarik!5e0!3m2!1str!2str!4v1768583225335!5m2!1str!2str"
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <footer id="dynamic-footer">
+        <!-- Footer content will be dynamically rendered by script.js -->
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yÃ¼kleniyor...
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

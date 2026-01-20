@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
+    <title>DEER DERI | Ödeme</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-black: #000000;
+            --soft-grey: #f8f8f8;
+            --border-color: #e5e5e5;
+            --text-muted: #666666;
+            --success-green: #2e7d32;
+        }
+
+        .checkout-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Modern Step Progress */
+        .step-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 50px;
+            position: relative;
+        }
+
+        .step-progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            background: #fff;
+            padding: 0 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active {
+            color: var(--primary-black);
+        }
+
+        .step-item.active .step-number {
+            background: var(--primary-black);
+            color: #fff;
+            border-color: var(--primary-black);
+        }
+
+        .step-item.completed {
+            color: var(--success-green);
+        }
+
+        .step-item.completed .step-number {
+            background: var(--success-green);
+            color: #fff;
+            border-color: var(--success-green);
+        }
+
+        /* Main Layout */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .checkout-section {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 35px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--soft-grey);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .checkout-step {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .checkout-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-black);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-black);
+        }
+
+        #addr-text-input {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            resize: none;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        #addr-text-input:focus {
+            background: #fafafa;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Sidebar & Summary */
+        .checkout-sidebar {
+            position: sticky;
+            top: 120px;
+        }
+
+        .summary-card {
+            background: var(--soft-grey);
+            padding: 30px;
+            border-radius: 4px;
+        }
+
+        .summary-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 25px;
+        }
+
+        .summary-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-item img {
+            width: 60px;
+            height: 75px;
+            object-fit: cover;
+        }
+
+        .summary-item-details {
+            flex: 1;
+        }
+
+        .summary-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .summary-item-price {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .summary-totals {
+            padding-top: 20px;
+            border-top: 2px solid #fff;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .total-row.grand-total {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        /* Shipping Selection */
+        .shipping-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .shipping-card {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .shipping-card:hover {
+            border-color: var(--primary-black);
+            background: #fafafa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .shipping-card.selected {
+            border-color: var(--primary-black);
+            background: #fff;
+            box-shadow: 0 0 0 1px var(--primary-black);
+        }
+
+        .shipping-card input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-black);
+            cursor: pointer;
+        }
+
+        .shipping-info {
+            flex: 1;
+        }
+
+        .shipping-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .shipping-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .shipping-price {
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--primary-black);
+        }
+
+        /* Saved Addresses */
+        .saved-address-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .saved-address-card {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: #fff;
+        }
+
+        .saved-address-card:hover {
+            border-color: var(--primary-black);
+            background: #fafafa;
+        }
+
+        .saved-address-card.selected {
+            border-color: var(--primary-black);
+            background: #fff;
+            box-shadow: 0 0 0 1px var(--primary-black);
+        }
+
+        .saved-address-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .addr-title {
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .saved-address-card i.fa-check-circle {
+            color: var(--success-green);
+            font-size: 18px;
+        }
+
+        .addr-body {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .btn-addr-type {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-addr-type:hover {
+            border-color: var(--primary-black);
+        }
+
+        .btn-addr-type.active {
+            background: var(--primary-black);
+            color: #fff;
+            border-color: var(--primary-black);
+        }
+
+        .add-new-addr-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-black);
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+            border-bottom: 1.5px solid var(--primary-black);
+            padding-bottom: 2px;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .add-new-addr-link:hover {
+            opacity: 0.7;
+        }
+
+        /* Success Popup */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-box {
+            background: #fff;
+            padding: 50px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        @media (max-width: 992px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-sidebar {
+                position: static;
+                order: -1;
+            }
+        }
+
+        /* Confirmation Window Styles */
+        #address-confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 11000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirm-content {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .confirm-icon {
+            font-size: 50px;
+            color: var(--success-green);
+            margin-bottom: 20px;
+        }
+
+        .confirm-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        /* Checkout Login Modal */
+        #checkout-login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 12000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-modal-content {
+            background: #fff;
+            padding: 50px;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 0;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #000;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="nav-desktop">
+                <div class="nav-item">
+                    <a href="index.html" class="nav-link">Aksesuar <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#">Bileklik</a>
+                        <a href="#">Kolye</a>
+                        <a href="#">Pasaport Kılıfı</a>
+                        <a href="#">Telefon Kılıfı</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Çanta</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Cüzdan <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#">Erkek Cüzdan</a>
+                        <a href="#">Kadın Cüzdan</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Kartlık</a>
+                </div>
+            </nav>
+
+            <!-- Icons & Dropdowns -->
+            <div class="header-icons">
+                <!-- Login Dropdown -->
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label" id="header-user-name">Hesabım</span>
+                    <div class="dropdown-menu login-dropdown">
+                        <form class="login-form">
+                            <input type="email" placeholder="E-Posta Adresi">
+                            <input type="password" placeholder="Şifre">
+                            <button class="btn btn-primary">GİRİŞ YAP</button>
+                            <a href="register.html" class="register-btn">ÜYE OL</a>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Cart Dropdown -->
+                <div class="icon-group">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                    <div class="dropdown-menu cart-dropdown">
+                        <div id="header-cart-preview">
+                            <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <div class="mobile-nav-wrapper">
+            <nav class="mobile-horizontal-nav">
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
+                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="#">ÇANTA</a>
+                </div>
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
+                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="#">KARTLIK</a>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="index.html">KOLEKSİYON</a>
+                </div>
+            </nav>
+            <!-- Mobile Submenus -->
+            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
+                <a href="#">Bileklik</a>
+                <a href="#">Kolye</a>
+                <a href="#">Pasaport Kılıfı</a>
+                <a href="#">Telefon Kılıfı</a>
+            </div>
+            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
+                <a href="#">Erkek Cüzdan</a>
+                <a href="#">Kadın Cüzdan</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="checkout-container">
+        <!-- New 3-Step Progress -->
+        <div class="step-progress">
+            <div class="step-item active" id="step-nav-1">
+                <div class="step-number">1</div>
+                <span>BİLGİLER</span>
+            </div>
+            <div class="step-item" id="step-nav-2">
+                <div class="step-number">2</div>
+                <span>TESLİMAT</span>
+            </div>
+            <div class="step-item" id="step-nav-3">
+                <div class="step-number">3</div>
+                <span>ÖDEME</span>
+            </div>
+        </div>
+
+        <div class="checkout-grid">
+            <!-- Left: Steps Navigation Content -->
+            <div class="checkout-main">
+
+                <!-- STEP 1: Identity & Quick Register -->
+                <div id="step-1-container" class="checkout-step active">
+                    <div class="checkout-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Hesap Bilgileri</h2>
+                            <a href="javascript:void(0)" onclick="openCheckoutLogin()"
+                                style="font-size:12px; font-weight:700; color:var(--primary-black); text-decoration:underline;">GİRİŞ
+                                YAPIN</a>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ADINIZ</label>
+                                <input type="text" id="guest-name" class="form-control" placeholder="Örn: Ahmet">
+                            </div>
+                            <div class="form-group">
+                                <label>SOYADINIZ</label>
+                                <input type="text" id="guest-surname" class="form-control" placeholder="Örn: Yılmaz">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>E-POSTA ADRESİNİZ</label>
+                                <input type="email" id="guest-email" class="form-control"
+                                    placeholder="ahmet@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>TELEFON NUMARANIZ</label>
+                                <input type="tel" id="guest-phone" class="form-control" placeholder="05XX XXX XX XX"
+                                    maxlength="11"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 11)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>T.C. KİMLİK NO (Opsiyonel)</label>
+                            <input type="text" id="guest-tc" class="form-control" maxlength="11"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 11)"
+                                placeholder="Fatura için gereklidir">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ŞİFRE BELİRLE (Otomatik Üyelik)</label>
+                                <input type="password" id="guest-password" class="form-control" placeholder="••••••••">
+                            </div>
+                            <div class="form-group">
+                                <label>ŞİFRE TEKRAR</label>
+                                <input type="password" id="guest-password-confirm" class="form-control"
+                                    placeholder="••••••••">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="goToStep2()" class="btn btn-black btn-lg"
+                        style="width:100%; letter-spacing:1px; font-weight:700;">
+                        TESLİMAT BİLGİLERİNE GEÇ <i class="fa-solid fa-arrow-right" style="margin-left:8px;"></i>
+                    </button>
+                </div>
+
+                <!-- STEP 2: Delivery & Shipping -->
+                <div id="step-2-container" class="checkout-step">
+                    <div class="checkout-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Teslimat Adresi</h2>
+                        </div>
+
+                        <!-- Saved Addresses (Member Only) -->
+                        <div id="checkout-saved-addresses" style="display:none; margin-bottom:30px;">
+                            <div class="saved-address-grid" id="saved-address-list">
+                                <!-- Cards injected by JS -->
+                            </div>
+                            <a href="javascript:void(0)" onclick="toggleNewAddressForm()" class="add-new-addr-link">
+                                <i class="fa-solid fa-plus"></i> YENİ ADRES EKLE
+                            </a>
+                        </div>
+
+                        <!-- Address Form -->
+                        <div id="checkout-address-form">
+                            <div class="form-group">
+                                <label>ADRES BAŞLIĞI</label>
+                                <div style="display:flex; gap:10px;">
+                                    <button type="button" class="btn-addr-type active"
+                                        onclick="setAddressType('Ev', this)"
+                                        style="flex:1; padding:10px; border:1px solid var(--border-color); background:#fff; cursor:pointer;">EV</button>
+                                    <button type="button" class="btn-addr-type" onclick="setAddressType('İş', this)"
+                                        style="flex:1; padding:10px; border:1px solid var(--border-color); background:#fff; cursor:pointer;">İŞ</button>
+                                    <button type="button" class="btn-addr-type" onclick="setAddressType('Diğer', this)"
+                                        style="flex:1; padding:10px; border:1px solid var(--border-color); background:#fff; cursor:pointer;">DİĞER</button>
+                                </div>
+                                <input type="hidden" id="addr-title-input" value="Ev">
+                            </div>
+
+                            <div class="form-group">
+                                <label>TAM ADRES</label>
+                                <textarea id="addr-text-input" class="form-control" rows="3"
+                                    placeholder="Mahalle, sokak, bina ve daire no..."></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>ŞEHİR</label>
+                                    <select id="city-select" class="form-control" onchange="loadDistricts()">
+                                        <option value="">Seçiniz</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>İLÇE</label>
+                                    <select id="district-select" class="form-control" disabled>
+                                        <option value="">Önce Şehir Seçiniz</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="checkoutSaveAddress()" class="btn btn-black"
+                                style="width:100%; margin-top:10px; padding:15px; font-weight:800;">ADRESİ
+                                KAYDET</button>
+                        </div>
+                    </div>
+
+                    <div class="checkout-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Kargo Seçimi</h2>
+                        </div>
+                        <div class="shipping-list">
+                            <div class="shipping-card selected" onclick="selectShipping('standard')">
+                                <input type="radio" name="shipping" value="standard" checked>
+                                <div class="shipping-info">
+                                    <span class="shipping-title">Standart Kargo</span>
+                                    <span class="shipping-desc">Tüm Türkiye'ye 2-3 iş günü içinde güvenli
+                                        teslimat.</span>
+                                </div>
+                                <div class="shipping-price">+100₺</div>
+                            </div>
+                            <div class="shipping-card" onclick="selectShipping('door')">
+                                <input type="radio" name="shipping" value="door">
+                                <div class="shipping-info">
+                                    <span class="shipping-title">Kapıda Ödeme</span>
+                                    <span class="shipping-desc">Teslimat anında nakit veya kredi kartı ile ödeme
+                                        kolaylığı.</span>
+                                </div>
+                                <div class="shipping-price">+50₺</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:15px;">
+                        <button type="button" onclick="goToStep(1)" class="btn btn-secondary"
+                            style="flex:1; font-weight:700;">GERİ</button>
+                        <button type="button" onclick="goToStep3()" class="btn btn-black"
+                            style="flex:2; font-weight:700;">ÖDEMEYE DEVAM ET</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Payment -->
+                <div id="step-3-container" class="checkout-step">
+                    <div class="checkout-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Ödeme Bilgileri</h2>
+                        </div>
+
+                        <!-- Card Form -->
+                        <div id="payment-card-form">
+                            <div class="form-group">
+                                <label>KART ÜZERİNDEKİ İSİM</label>
+                                <input type="text" id="card-name" class="form-control" placeholder="AD SOYAD">
+                            </div>
+                            <div class="form-group">
+                                <label>KART NUMARASI</label>
+                                <input type="text" id="card-number" class="form-control"
+                                    placeholder="0000 0000 0000 0000">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>SON KULLANMA</label>
+                                    <input type="text" id="card-expiry" class="form-control" placeholder="AA/YY">
+                                </div>
+                                <div class="form-group">
+                                    <label>CVV</label>
+                                    <input type="text" id="card-cvv" class="form-control" placeholder="000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COD Message -->
+                        <div id="payment-cod-msg"
+                            style="display:none; padding:20px; background:#f9f9f9; border-radius:8px; text-align:center; border:1px dashed var(--border-color);">
+                            <i class="fa-solid fa-truck-fast"
+                                style="font-size:32px; margin-bottom:15px; color:var(--primary-black);"></i>
+                            <p style="font-weight:700; margin-bottom:5px;">Kapıda Ödeme Seçildi</p>
+                            <p style="font-size:13px; color:var(--text-muted);">Ödemenizi ürün teslimatında nakit veya
+                                kartla yapabilirsiniz.</p>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:15px;">
+                        <button type="button" onclick="goToStep(2)" class="btn btn-secondary"
+                            style="flex:1; font-weight:700;">GERİ</button>
+                        <button type="button" onclick="processOrder()" class="btn btn-black"
+                            style="flex:2; font-weight:700;">SİPARİŞİ TAMAMLA</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Order Summary -->
+            <div class="checkout-sidebar">
+                <div class="summary-box">
+                    <h3
+                        style="font-size:18px; font-weight:700; margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:15px;">
+                        SİPARİŞ ÖZETİ</h3>
+
+                    <div id="checkout-summary-items" style="margin-bottom:20px; max-height:400px; overflow-y:auto;">
+                        <!-- Items injected by JS -->
+                    </div>
+
+                    <div class="summary-totals" style="border-top:1px solid var(--border-color); padding-top:20px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="color:var(--text-muted);">Ara Toplam</span>
+                            <span id="summary-subtotal" style="font-weight:700;">0₺</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="color:var(--text-muted);">Kargo Ücreti</span>
+                            <span id="summary-shipping" style="font-weight:700;">0₺</span>
+                        </div>
+                        <div
+                            style="display:flex; justify-content:space-between; margin-top:15px; padding-top:15px; border-top:2px solid var(--primary-black); font-size:18px; font-weight:900;">
+                            <span>TOPLAM</span>
+                            <span id="summary-total-price">0₺</span>
+                        </div>
+                        <p style="font-size:11px; color:var(--text-muted); text-align:right; margin-top:5px;">KDV
+                            Dahildir</p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top:20px; padding:15px; background:#fff; border:1px solid var(--border-color); border-radius:8px; display:flex; align-items:center; gap:15px;">
+                    <i class="fa-solid fa-shield-halved" style="font-size:24px; color:#2E7D32;"></i>
+                    <div style="font-size:12px; line-height:1.4;">
+                        <strong>Güvenli Alışveriş</strong><br>
+                        Verileriniz 256-bit SSL ile korunmaktadır.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup (Kaldırıldı - Yönlendirme yapılıyor) -->
+
+    <!-- Address Confirmation Modal -->
+
+    <!-- Address Confirmation Modal -->
+    <div id="address-confirm-modal">
+        <div class="confirm-content">
+            <div class="confirm-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="confirm-title">Adres Eklendi!</div>
+            <div class="confirm-text">Yeni teslimat adresiniz başarıyla profilinize eklendi. Listeden seçerek devam
+                edebilirsiniz.</div>
+            <button class="btn btn-black" onclick="closeAddressModal()" style="width:100%;">TAMAM</button>
+        </div>
+    </div>
+    <!-- Checkout Login Modal -->
+    <div id="checkout-login-modal">
+        <div class="login-modal-content">
+            <span class="close-modal" onclick="closeCheckoutModal()">&times;</span>
+            <h2 class="modal-title">Giriş Yap</h2>
+            <form id="checkout-login-form">
+                <div class="form-group">
+                    <label>E-POSTA</label>
+                    <input type="email" class="form-control" id="modal-login-email" required
+                        placeholder="E-posta adresiniz">
+                </div>
+                <div class="form-group">
+                    <label>ŞİFRE</label>
+                    <input type="password" class="form-control" id="modal-login-pass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-black btn-lg" style="width:100%; margin-top:20px;">GİRİŞ
+                    YAP</button>
+                <div style="text-align:center; margin-top:20px; font-size:13px;">
+                    Hesabınız yok mu? <a href="register.html" style="font-weight:700; text-decoration:underline;">Üye
+                        Olun</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="data.js"></script>
+    <script src="turkey_locations.js"></script>
+    <script src="script.js?v=207"></script>
+    <script src="order_email_helper.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initCheckout === 'function') {
+                initCheckout();
+            }
+        });
+    </script>
+    <!-- Footer -->
+    <footer id="dynamic-footer">
+        <!-- Footer content will be dynamically rendered by script.js -->
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yÃ¼kleniyor...
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

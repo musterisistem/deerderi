@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEER DERİ | Admin Panel</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="product-form.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo.png" alt="DEER DERİ" class="admin-logo">
+                <h3>YÖNETİM</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" data-view="dashboard">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                </a>
+                <a href="#" class="nav-link" data-view="products">
+                    <i class="fa-solid fa-boxes-stacked"></i> Ürünler
+                </a>
+                <a href="#" class="nav-link" data-view="orders">
+                    <i class="fa-solid fa-cart-shopping"></i> Siparişler
+                </a>
+                <a href="#" class="nav-link" data-view="categories">
+                    <i class="fa-solid fa-list"></i> Kategoriler
+                </a>
+                <div class="nav-group">
+                    <a href="#" class="nav-link nav-parent" onclick="toggleSubmenu(event, 'settings-submenu')">
+                        <i class="fa-solid fa-gear"></i> Site Ayarları
+                        <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                    </a>
+                    <div class="nav-submenu" id="settings-submenu">
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-usp">
+                            <i class="fa-solid fa-star"></i> Site Özellikleri (USP)
+                        </a>
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-faq">
+                            <i class="fa-solid fa-circle-question"></i> Sıkça Sorulan Sorular
+                        </a>
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-infoboxes">
+                            <i class="fa-solid fa-box-open"></i> Ürün Bilgi Kutuları
+                        </a>
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-delivery">
+                            <i class="fa-solid fa-truck"></i> Teslimat Bilgileri
+                        </a>
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-banners">
+                            <i class="fa-solid fa-images"></i> Vitrin Yönetimi
+                        </a>
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-menu">
+                            <i class="fa-solid fa-bars"></i> Menü Yönetimi
+                        </a>
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-email">
+                            <i class="fa-solid fa-envelope"></i> Mail Ayarları
+                        </a>
+                        <a href="#" class="nav-link nav-sublink" data-view="settings-footer">
+                            <i class="fa-solid fa-table-cells-large"></i> Footer Yönetimi
+                        </a>
+                    </div>
+                </div>
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-arrow-left"></i> Siteye Dön
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="page-title">
+                    <h2 id="view-title">Dashboard</h2>
+                </div>
+                <div class="top-bar-actions">
+                    <span id="current-date"></span>
+                    <button class="btn btn-primary" id="add-item-btn" style="display: none;">
+                        <i class="fa-solid fa-plus"></i> <span id="add-btn-text">Ekle</span>
+                    </button>
+                </div>
+            </header>
+
+            <div id="content-area" class="content-area">
+                <!-- Dynamic Content Injected Here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Ekle/Düzenle</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" id="modal-form-area">
+                <!-- Dynamic Form Injected Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="admin_email_settings.js"></script>
+    <script src="admin.js?v=109"></script>
+</body>
+
+</html>

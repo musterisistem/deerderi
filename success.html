@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEER DERİ | Siparişiniz Alındı</title>
+    <link rel="stylesheet" href="styles.css?v=203">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Success Page Custom Styles */
+        body {
+            background-color: #f9f9f9;
+        }
+
+        /* Override header for success page if needed, otherwise use styles.css */
+        header#main-header {
+            background: #fff;
+            position: relative;
+            /* Ensure it's not absolute like on home page hero */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .shipping-info-box {
+            border: 1px solid #000;
+            padding: 8px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .success-hero {
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            color: white;
+            padding: 60px 20px 100px;
+            text-align: center;
+            position: relative;
+            margin-bottom: -60px;
+        }
+
+        .success-icon-box {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            backdrop-filter: blur(5px);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .success-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .order-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 60px;
+            animation: slideUp 0.7s ease-out;
+        }
+
+        /* ... (Previous Styles) ... */
+        .order-card-header {
+            padding: 30px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: #fff;
+        }
+
+        .order-id-badge {
+            background: #f0f7f1;
+            color: #2e7d32;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .order-progress {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px;
+            background: #fcfcfc;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .progress-step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: #e0e0e0;
+            color: #888;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .step-icon {
+            background: #2e7d32;
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+        }
+
+        .step-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #999;
+        }
+
+        .progress-step.active .step-label {
+            color: #2e7d32;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 60px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2e7d32;
+            width: 15%;
+            transition: width 1s ease;
+        }
+
+        .order-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 0;
+        }
+
+        .order-items-area {
+            padding: 40px;
+            border-right: 1px solid #f0f0f0;
+        }
+
+        .order-summary-area {
+            padding: 40px;
+            background: #fafafa;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #eee;
+            margin-right: 20px;
+        }
+
+        .item-info h4 {
+            margin: 0 0 5px;
+            font-size: 15px;
+        }
+
+        .item-meta {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .item-price {
+            margin-left: auto;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+            font-weight: 700;
+            color: #000;
+            font-size: 18px;
+        }
+
+        .address-preview {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .action-area {
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            0% {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .order-content {
+                grid-template-columns: 1fr;
+            }
+
+            .order-items-area {
+                border-right: none;
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .action-area {
+                flex-direction: column;
+            }
+
+            .success-hero {
+                padding: 40px 20px 80px;
+            }
+
+            .success-hero h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. Duyuru Bandı -->
+    <div class="announcement-bar">
+        <div class="marquee-content">
+            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
+            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
+            Gün: 31 Ocak
+        </div>
+    </div>
+
+    <!-- 2. Header (Yapısal olarak Index ile aynı, ancak statik yüklendi) -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="nav-desktop" id="desktop-nav">
+                <!-- JS ile dolacak, ama statik linkler de koyabiliriz güvenli olması için -->
+                <a href="index.html" class="nav-link">KOLEKSİYON</a>
+                <a href="index.html" class="nav-link">YENİ GELENLER</a>
+                <a href="index.html" class="nav-link">ÇANTA</a>
+                <a href="index.html" class="nav-link">CÜZDAN</a>
+                <a href="index.html" class="nav-link">AKSESUAR</a>
+                <a href="contact.html" class="nav-link">İLETİŞİM</a>
+            </nav>
+
+            <!-- Icons & Dropdowns -->
+            <div class="header-icons">
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label" id="header-user-name">Giriş Yap</span>
+                    <!-- JS Dropdown -->
+                </div>
+
+                <div class="icon-group">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SUCCESS CONTENT -->
+    <div class="success-hero">
+        <div class="success-icon-box">
+            <i class="fa-solid fa-check" style="font-size: 40px;"></i>
+        </div>
+        <h1>Siparişiniz Alındı!</h1>
+        <p>Teşekkür ederiz. Siparişiniz başarıyla oluşturuldu ve işleme alındı.</p>
+    </div>
+
+    <div class="container">
+        <!-- LOADING -->
+        <div id="loading-box"
+            style="text-align:center; padding:50px; background:#fff; border-radius:16px; margin-top:-40px; position:relative; z-index:10; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+            <i class="fa-solid fa-circle-notch fa-spin" style="font-size:40px; color:#2e7d32; margin-bottom:20px;"></i>
+            <h3>Sipariş Detayları Bekleniyor...</h3>
+        </div>
+
+        <!-- ORDER CARD -->
+        <div id="order-card" class="order-card" style="display:none;">
+            <div class="order-card-header">
+                <div class="order-id-badge" id="display-order-no">#ORD-XXXXXX</div>
+                <div style="color:#888; font-size:14px;"><i class="fa-regular fa-calendar"
+                        style="margin-right:8px;"></i> <span id="display-date">20.01.2026</span></div>
+            </div>
+
+            <div class="order-progress">
+                <div class="progress-line">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-step active">
+                    <div class="step-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                    <div class="step-label">Sipariş Alındı</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="step-label">Hazırlanıyor</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                    <div class="step-label">Kargoda</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                    <div class="step-label">Teslim Edildi</div>
+                </div>
+            </div>
+
+            <div class="order-content">
+                <div class="order-items-area">
+                    <h3 style="margin-bottom:20px; font-size:18px;">Ürünler</h3>
+                    <div id="items-container">
+                        <!-- JS Items -->
+                    </div>
+                </div>
+
+                <div class="order-summary-area">
+                    <h3 style="margin-bottom:20px; font-size:18px;">Ödeme Özeti</h3>
+                    <div class="summary-row">
+                        <span>Ara Toplam</span>
+                        <span id="summ-subtotal">0₺</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Kargo</span>
+                        <span id="summ-shipping">0₺</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>TOPLAM</span>
+                        <span id="summ-total" style="color:#2e7d32;">0₺</span>
+                    </div>
+
+                    <div class="address-preview">
+                        <h4 style="margin:0 0 10px; font-size:14px; text-transform:uppercase; color:#888;">Teslimat
+                            Adresi</h4>
+                        <div id="summ-address" style="font-size:14px; line-height:1.5; color:#333;">
+                            <!-- Address -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-area">
+                <a href="account.html" class="btn btn-black" style="padding:15px 40px; min-width:200px;">
+                    <i class="fa-solid fa-list-ul" style="margin-right:8px;"></i> SİPARİŞLERİM
+                </a>
+                <a href="index.html" class="btn btn-secondary" style="padding:15px 40px; min-width:200px;">
+                    ALIŞVERİŞE DÖN
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER (Dynamic + Placeholder) -->
+    <footer id="dynamic-footer">
+        <div style="background:#111; color:#fff; padding:60px 0; text-align:center;">
+            <div class="container">
+                <div style="font-size:30px; margin-bottom:20px; font-weight:700;">DEER DERİ</div>
+                <p>Kadim mirasın izinde, ustalığın ve doğallığın buluştuğu nokta.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="order_email_helper.js"></script>
+    <script src="script.js?v=206"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // JS fonksiyonlarını çalıştır (Dynamic içerik için)
+            if (typeof renderFooter === 'function') renderFooter();
+            if (typeof renderHeaderNav === 'function') renderHeaderNav();
+            if (typeof updateCartBadge === 'function') updateCartBadge();
+            if (typeof checkAuth === 'function') checkAuth();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetOrderId = urlParams.get('orderid');
+            const loading = document.getElementById('loading-box');
+            const card = document.getElementById('order-card');
+
+            // Find Order Logic
+            let foundOrder = null;
+            let currentUser = JSON.parse(localStorage.getItem('deerDeriCurrentUser') || 'null');
+
+            if (currentUser && currentUser.orders) {
+                foundOrder = currentUser.orders.find(o => o.id === targetOrderId);
+            }
+            if (!foundOrder) {
+                const globalOrders = JSON.parse(localStorage.getItem('deerDeriOrders') || '[]');
+                foundOrder = globalOrders.find(o => o.id === targetOrderId || o.orderNumber === targetOrderId);
+                if (!foundOrder && !targetOrderId && globalOrders.length > 0) {
+                    foundOrder = globalOrders[globalOrders.length - 1];
+                }
+            }
+
+            if (foundOrder) {
+                loading.style.display = 'none';
+                card.style.display = 'block';
+
+                document.getElementById('display-order-no').textContent = '#' + (foundOrder.orderNumber || foundOrder.id);
+                document.getElementById('display-date').textContent = foundOrder.date || new Date().toLocaleDateString('tr-TR');
+
+                const container = document.getElementById('items-container');
+                let subTotal = 0;
+
+                (foundOrder.items || []).forEach(item => {
+                    const price = item.price || 0;
+                    const qty = item.quantity || 1;
+                    subTotal += price * qty;
+
+                    container.innerHTML += `
+                        <div class="item-row">
+                            <img src="${item.image || 'assets/placeholder_product.jpg'}" class="item-img">
+                            <div class="item-info">
+                                <h4>${item.name}</h4>
+                                <div class="item-meta">Adet: ${qty} ${item.color ? '| ' + item.color : ''}</div>
+                                ${item.embossing ? `<div style="font-size:11px; color:#2e7d32;">Özel Baskı: ${item.embossing}</div>` : ''}
+                            </div>
+                            <div class="item-price">${(price * qty).toLocaleString('tr-TR')}₺</div>
+                        </div>
+                    `;
+                });
+
+                const shippingCost = foundOrder.shipping === 'door' ? 50 : 100;
+                const total = foundOrder.total || (subTotal + shippingCost);
+
+                document.getElementById('summ-subtotal').textContent = subTotal.toLocaleString('tr-TR') + '₺';
+                document.getElementById('summ-shipping').textContent = shippingCost.toLocaleString('tr-TR') + '₺';
+                document.getElementById('summ-total').textContent = total.toLocaleString('tr-TR') + '₺';
+
+                if (foundOrder.address) {
+                    const a = foundOrder.address;
+                    document.getElementById('summ-address').innerHTML = `
+                        <strong>${a.title}</strong><br>
+                        ${a.address}<br>
+                        ${a.district} / ${a.city}
+                    `;
+                }
+
+                // Mail Trigger
+                const sentEmails = JSON.parse(sessionStorage.getItem('sentOrderEmails') || '[]');
+                const orderUniqueId = foundOrder.id || foundOrder.orderNumber;
+
+                if (!sentEmails.includes(orderUniqueId)) {
+                    if (!foundOrder.customerEmail && currentUser) {
+                        foundOrder.customerEmail = currentUser.email;
+                        foundOrder.customerName = currentUser.firstName + ' ' + currentUser.lastName;
+                        foundOrder.customerPhone = currentUser.phone;
+                    }
+                    if (typeof window.sendOrderEmails === 'function') {
+                        const res = await window.sendOrderEmails(foundOrder);
+                        if (res && res.success) {
+                            sentEmails.push(orderUniqueId);
+                            sessionStorage.setItem('sentOrderEmails', JSON.stringify(sentEmails));
+                        }
+                    }
+                }
+
+            } else {
+                loading.innerHTML = '<p>Sipariş bulunamadı. Hesabıma yönlendiriliyorsunuz...</p>';
+                setTimeout(() => window.location.href = 'account.html', 2000);
+            }
+        });
+    </script>
+</body>
+
+</html>

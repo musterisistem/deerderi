@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
+    <title>DEER DERI | Hesabım</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .account-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 40px;
+            margin: 60px auto;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        .account-sidebar {
+            border-right: 1px solid #eee;
+            padding-right: 20px;
+        }
+
+        .account-menu-item {
+            display: block;
+            padding: 15px 0;
+            color: #666;
+            font-weight: 500;
+            border-bottom: 1px solid #f9f9f9;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .account-menu-item:hover,
+        .account-menu-item.active {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .account-menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .account-content {
+            padding-bottom: 60px;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-family: var(--font-heading);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Orders Table */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .orders-table th {
+            text-align: left;
+            padding: 15px;
+            background: #f9f9f9;
+            font-weight: 600;
+        }
+
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-processing {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .status-shipped {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+
+        .status-delivered {
+            background: #eee;
+            color: #555;
+        }
+
+        /* Address Cards */
+        .address-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .address-card {
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 4px;
+            position: relative;
+            background: #fff;
+            transition: box-shadow 0.3s;
+        }
+
+        .address-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .address-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .address-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .add-address-btn {
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #999;
+            cursor: pointer;
+            min-height: 200px;
+            transition: all 0.2s;
+        }
+
+        .add-address-btn:hover {
+            border-color: #000;
+            color: #000;
+            background: #f9f9f9;
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #fff;
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 8px;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-backdrop.show .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Form Floating Labels (Repeated from Register for consistency) */
+        .form-floating {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .form-floating input,
+        .form-floating textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 15px;
+            transition: all 0.3s;
+            outline: none;
+            background: #fdfdfd;
+            font-family: inherit;
+        }
+
+        .form-floating textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-floating input:focus,
+        .form-floating textarea:focus {
+            border-color: #000;
+            background: #fff;
+        }
+
+        .form-floating label {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            /* For textarea align top */
+            color: #888;
+            font-size: 14px;
+            transition: all 0.3s;
+            pointer-events: none;
+            background: transparent;
+        }
+
+        /* Specific adjustments for input centering */
+        .form-floating input+label {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .form-floating input:focus+label,
+        .form-floating input:not(:placeholder-shown)+label,
+        .form-floating textarea:focus+label,
+        .form-floating textarea:not(:placeholder-shown)+label {
+            top: 0;
+            transform: translateY(-50%) scale(0.9);
+            background: #fff;
+            padding: 0 5px;
+            color: #000;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .account-container {
+                grid-template-columns: 1fr;
+            }
+
+            .account-sidebar {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 20px;
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. Duyuru Bandı -->
+    <div class="announcement-bar">
+        <div class="marquee-content">
+            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
+            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
+            Gün: 31 Ocak
+        </div>
+    </div>
+
+    <!-- 2. Header -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="nav-desktop">
+                <div class="nav-item">
+                    <a href="index.html" class="nav-link">Aksesuar <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#">Bileklik</a>
+                        <a href="#">Kolye</a>
+                        <a href="#">Pasaport Kılıfı</a>
+                        <a href="#">Telefon Kılıfı</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Çanta</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Cüzdan <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#">Erkek Cüzdan</a>
+                        <a href="#">Kadın Cüzdan</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Kartlık</a>
+                </div>
+            </nav>
+
+            <!-- Icons & Dropdowns -->
+            <div class="header-icons">
+                <!-- Login Dropdown -->
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label" id="header-user-name">Hesabım</span>
+                    <div class="dropdown-menu login-dropdown">
+                        <!-- Content injected by checkAuth() -->
+                    </div>
+                </div>
+
+                <!-- Cart Dropdown -->
+                <div class="icon-group">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                    <div class="dropdown-menu cart-dropdown">
+                        <div class="cart-preview-wrapper">
+                            <div id="cart-image-preview" class="cart-image-preview"></div>
+                            <div id="header-cart-preview" class="cart-items-list">
+                                <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <div class="mobile-nav-wrapper">
+            <nav class="mobile-horizontal-nav">
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
+                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="#">ÇANTA</a>
+                </div>
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
+                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="#">KARTLIK</a>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="index.html">KOLEKSİYON</a>
+                </div>
+            </nav>
+            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
+                <a href="#">Bileklik</a>
+                <a href="#">Kolye</a>
+                <a href="#">Pasaport Kılıfı</a>
+                <a href="#">Telefon Kılıfı</a>
+            </div>
+            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
+                <a href="#">Erkek Cüzdan</a>
+                <a href="#">Kadın Cüzdan</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="account-container">
+        <!-- Sidebar -->
+        <div class="account-sidebar">
+            <div class="account-menu-item active" onclick="showSection('dashboard', this)">
+                <i class="fa-solid fa-grip"></i> Özet
+            </div>
+            <div class="account-menu-item" onclick="showSection('orders', this)">
+                <i class="fa-solid fa-box-open"></i> Siparişlerim
+            </div>
+            <div class="account-menu-item" onclick="showSection('addresses', this)">
+                <i class="fa-solid fa-location-dot"></i> Adreslerim
+            </div>
+            <div class="account-menu-item" onclick="showSection('invoices', this)">
+                <i class="fa-solid fa-file-invoice"></i> Faturalarım
+            </div>
+            <div class="account-menu-item" onclick="window.logoutUser()">
+                <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="account-content">
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <h2 class="section-title">Hesap Özeti</h2>
+                <div style="padding: 20px; background: #f9f9f9; border-radius: 4px;">
+                    <h3 style="font-size: 18px; margin-bottom: 10px;">Merhaba, <span
+                            class="user-name-display">Kullanıcı</span></h3>
+                    <p style="color: #666; font-size: 14px;">
+                        Hesap panelinizden son siparişlerinizi görüntüleyebilir, kargo ve fatura adreslerinizi
+                        yönetebilir ve şifrenizi değiştirebilirsiniz.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders" class="content-section">
+                <h2 class="section-title">Siparişlerim</h2>
+                <div id="orders-list">
+                    <p style="color:#666;">Yükleniyor...</p>
+                </div>
+            </div>
+
+            <!-- Addresses Section -->
+            <div id="addresses" class="content-section">
+                <h2 class="section-title">Adreslerim</h2>
+                <div class="address-grid" id="address-list">
+                    <div class="address-card add-address-btn" onclick="openAddressModal()">
+                        <i class="fa-solid fa-plus" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <span>Yeni Adres Ekle</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="invoices" class="content-section">
+                <h2 class="section-title">Faturalarım</h2>
+                <p style="color:#666; font-size:14px;">Şu an için görüntülenecek e-arşiv fatura bulunmamaktadır.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Redesigned Modal -->
+    <div id="address-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 style="margin-bottom:30px; font-family:var(--font-heading); font-size:22px;">Yeni Adres Ekle</h3>
+            <form id="new-address-form">
+
+                <div class="form-floating">
+                    <input type="text" name="title" id="addr-title" placeholder=" " required>
+                    <label for="addr-title">Adres Başlığı (Ev, İş vb.)</label>
+                </div>
+
+                <div class="form-floating">
+                    <textarea name="address" id="addr-text" placeholder=" " required></textarea>
+                    <label for="addr-text">Açık Adres</label>
+                </div>
+
+                <div class="form-row" style="display:flex; gap:20px;">
+                    <div class="form-floating" style="flex:1;">
+                        <input type="text" name="city" id="addr-city" placeholder=" " required>
+                        <label for="addr-city">Şehir</label>
+                    </div>
+                    <div class="form-floating" style="flex:1;">
+                        <input type="text" name="district" id="addr-dist" placeholder=" " required>
+                        <label for="addr-dist">İlçe</label>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:15px; margin-top:20px;">
+                    <button type="button" onclick="closeAddressModal()"
+                        style="padding:15px; border:1px solid #ddd; background:#fff; cursor:pointer; border-radius:4px; font-weight:600; min-width:100px;">
+                        İPTAL
+                    </button>
+                    <button type="submit" class="btn btn-primary"
+                        style="flex:1; padding:15px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
+                        KAYDET
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <footer id="dynamic-footer">
+        <!-- Footer content will be dynamically rendered by script.js -->
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yÃ¼kleniyor...
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Tab Switching Logic
+        function showSection(sectionId, element) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.account-menu-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // Modal Logic with Animation class
+        function openAddressModal() {
+            const modal = document.getElementById('address-modal');
+            modal.style.display = 'flex';
+            // Force reflow
+            void modal.offsetWidth;
+            modal.classList.add('show');
+        }
+
+        function closeAddressModal() {
+            const modal = document.getElementById('address-modal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // Close on backdrop click
+        document.getElementById('address-modal').addEventListener('click', function (e) {
+            if (e.target === this) closeAddressModal();
+        });
+
+        document.getElementById('new-address-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (window.addAddress) {
+                window.addAddress({
+                    title: this.title.value,
+                    address: this.address.value,
+                    city: this.city.value,
+                    district: this.district.value
+                });
+
+                if (window.showToast) window.showToast('Yeni adres başarıyla eklendi.', 'success');
+
+                closeAddressModal();
+                this.reset();
+            }
+        });
+
+        // Init Data Load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.renderAccountPage) window.renderAccountPage();
+        });
+    </script>
+</body>
+
+</html>

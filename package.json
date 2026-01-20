@@ -1,0 +1,16 @@
+{
+    "name": "deer-deri-ecommerce",
+    "version": "1.0.0",
+    "description": "DEER DERI E-Ticaret Platformu",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "dependencies": {
+        "resend": "^3.0.0"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}

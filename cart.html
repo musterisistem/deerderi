@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
+    <title>DEER DERI | Sepetim</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .cart-container {
+            padding: 60px 0;
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .cart-items {
+            background: #fff;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-meta {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .qty-controls button {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .qty-controls span {
+            padding: 5px 10px;
+            font-weight: 600;
+        }
+
+        .remove-btn {
+            color: #999;
+            font-size: 13px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            color: #D32F2F;
+        }
+
+        .cart-summary {
+            background: #f9f9f9;
+            padding: 30px;
+            height: fit-content;
+            border-radius: 4px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .summary-total {
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+            margin-top: 20px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .empty-cart i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="nav-desktop">
+                <div class="nav-item">
+                    <a href="index.html" class="nav-link">Aksesuar <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#">Bileklik</a>
+                        <a href="#">Kolye</a>
+                        <a href="#">Pasaport Kılıfı</a>
+                        <a href="#">Telefon Kılıfı</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Çanta</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Cüzdan <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#">Erkek Cüzdan</a>
+                        <a href="#">Kadın Cüzdan</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">Kartlık</a>
+                </div>
+            </nav>
+
+            <!-- Icons & Dropdowns -->
+            <div class="header-icons">
+                <!-- Login Dropdown -->
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label">Giriş Yap</span>
+                    <div class="dropdown-menu login-dropdown">
+                        <form class="login-form">
+                            <input type="email" placeholder="E-Posta Adresi">
+                            <input type="password" placeholder="Şifre">
+                            <button class="btn btn-primary">GİRİŞ YAP</button>
+                            <a href="#" class="register-btn">ÜYE OL</a>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Cart Dropdown -->
+                <div class="icon-group">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                    <div class="dropdown-menu cart-dropdown">
+                        <div id="header-cart-preview">
+                            <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <div class="mobile-nav-wrapper">
+            <nav class="mobile-horizontal-nav">
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
+                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="#">ÇANTA</a>
+                </div>
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
+                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="#">KARTLIK</a>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="index.html">KOLEKSİYON</a>
+                </div>
+            </nav>
+            <!-- Mobile Submenus -->
+            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
+                <a href="#">Bileklik</a>
+                <a href="#">Kolye</a>
+                <a href="#">Pasaport Kılıfı</a>
+                <a href="#">Telefon Kılıfı</a>
+            </div>
+            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
+                <a href="#">Erkek Cüzdan</a>
+                <a href="#">Kadın Cüzdan</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container cart-container">
+        <h1>Alışveriş Sepetim</h1>
+
+        <div id="cart-content">
+            <!-- Content injected by JS -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <footer id="dynamic-footer">
+        <!-- Footer content will be dynamically rendered by script.js -->
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yÃ¼kleniyor...
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            renderCartItems();
+        });
+
+        // Make renderCartItems global or accessible by script.js calls
+        window.renderCartItems = function () {
+            const container = document.getElementById('cart-content');
+
+            if (window.cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <h3>Sepetinizde ürün bulunmamaktadır.</h3>
+                        <a href="index.html" class="btn btn-primary" style="margin-top:20px;">ALIŞVERİŞE BAŞLA</a>
+                    </div>
+                `;
+                return;
+            }
+
+            let itemsHtml = '<div class="cart-items">';
+            let subtotal = 0;
+
+            window.cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                itemsHtml += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-meta">Renk: ${item.color}</div>
+                            ${item.embossing ? `<div class="cart-item-meta" style="color: #2E7D32; font-weight: 600;">Özel Baskı: ${item.embossing}</div>` : ''}
+                            <div class="cart-item-price">${formatPriceGlobal(item.price)}₺</div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="qty-controls">
+                                <button onclick="window.updateCartQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="window.updateCartQuantity(${index}, 1)">+</button>
+                            </div>
+                            <div class="item-total" style="font-weight:600; width: 80px; text-align:right;">${formatPriceGlobal(itemTotal)}₺</div>
+                            <div class="remove-btn" onclick="window.removeFromCart(${index})">Sil</div>
+                        </div>
+                    </div>
+                `;
+            });
+            itemsHtml += '</div>';
+
+            const summaryHtml = `
+                <div class="cart-summary">
+                    <h3>Sipariş Özeti</h3>
+                    <div class="summary-row">
+                        <span>Ara Toplam</span>
+                        <span>${formatPriceGlobal(subtotal)}₺</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Kargo</span>
+                        <span>Ücretsiz</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Toplam</span>
+                        <span>${formatPriceGlobal(subtotal)}₺</span>
+                    </div>
+                    <a href="/checkout.html" class="btn btn-primary" style="display:block; text-align:center; text-decoration:none; width:100%; margin-top:20px;">ÖDEME ADIMINA GEÇ</a>
+                    <div style="margin-top:20px; font-size:12px; color:#666; text-align:center;">
+                        <i class="fa-solid fa-lock"></i> Güvenli Ödeme
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = `
+                <div class="cart-layout">
+                    ${itemsHtml}
+                    ${summaryHtml}
+                </div>
+            `;
+
+            // Also update badge in case it changed
+            if (window.updateCartBadge) window.updateCartBadge(); // script.js function
+        };
+    </script>
+</body>
+
+</html>

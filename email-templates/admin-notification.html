@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Yeni Sipariş Bildirimi</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border-top: 5px solid #000;
+        }
+
+        .header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            height: 30px;
+        }
+
+        .alert-box {
+            background: #E8F5E9;
+            border-left: 5px solid #2E7D32;
+            padding: 20px;
+            margin: 30px;
+            border-radius: 4px;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1B5E20;
+            margin-bottom: 5px;
+        }
+
+        .content {
+            padding: 0 30px 40px;
+        }
+
+        .section-header {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #999;
+            letter-spacing: 1px;
+            margin: 25px 0 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 8px;
+        }
+
+        .info-label {
+            color: #666;
+        }
+
+        .info-val {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .p-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .p-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #f5f5f5;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 0;
+            margin-top: 30px;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.deerderi.com/assets/logo.png" alt="DEER DERİ" class="logo">
+        </div>
+
+        <div class="alert-box">
+            <div class="alert-title">🔔 Yeni Sipariş Alındı!</div>
+            <div>Sipariş No: <strong>#{{orderNumber}}</strong></div>
+        </div>
+
+        <div class="content">
+            <div class="section-header">MÜŞTERİ</div>
+            <div class="info-row"><span class="info-label">Ad Soyad:</span> <span
+                    class="info-val">{{customerName}}</span></div>
+            <div class="info-row"><span class="info-label">E-posta:</span> <span
+                    class="info-val">{{customerEmail}}</span></div>
+            <div class="info-row"><span class="info-label">Telefon:</span> <span
+                    class="info-val">{{customerPhone}}</span></div>
+
+            <div class="section-header">SİPARİŞ İÇERİĞİ</div>
+            <table class="p-table">
+                {{#products}}
+                <tr>
+                    <td><b style="color:#2E7D32;">{{quantity}}x</b> {{name}}</td>
+                    <td style="text-align:right;">{{price}}₺</td>
+                </tr>
+                {{/products}}
+            </table>
+
+            <div style="text-align:right; font-size:18px; font-weight:700; margin-top:15px;">
+                Toplam: <span style="color:#2E7D32;">{{total}}₺</span>
+            </div>
+
+            <a href="https://www.deerderi.com/yonetim" class="btn">ADMİN PANELİNE GİT</a>
+        </div>
+    </div>
+</body>
+
+</html>

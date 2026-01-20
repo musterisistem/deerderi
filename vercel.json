@@ -1,0 +1,48 @@
+{
+  "rewrites": [
+    {
+      "source": "/yonetim",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/api/send-email",
+      "destination": "/api/send-email"
+    },
+    {
+      "source": "/urun-:slug",
+      "destination": "/product.html"
+    },
+    {
+      "source": "/kategori/:slug",
+      "destination": "/category.html"
+    },
+    {
+      "source": "/hakkimizda",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/iletisim",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/sepet",
+      "destination": "/cart.html"
+    },
+    {
+      "source": "/odeme",
+      "destination": "/checkout.html"
+    },
+    {
+      "source": "/hesabim",
+      "destination": "/account.html"
+    },
+    {
+      "source": "/kayit-ol",
+      "destination": "/register.html"
+    },
+    {
+      "source": "/siparis-tamamlandi",
+      "destination": "/order-complete.html"
+    }
+  ]
+}

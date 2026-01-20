@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
+    <title>DEER DERI | Kadim Miras</title>
+    <link rel="stylesheet" href="styles.css?v=203">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Global Page Loader (Static Injection) -->
+    <div id="global-loader">
+        <div class="loader-spinner"></div>
+        <div
+            style="font-family: var(--font-heading); font-size: 14px; letter-spacing: 2px; color: var(--primary-color);">
+            DEER DERİ</div>
+    </div>
+
+    <!-- 1. Duyuru Bandı -->
+    <div class="announcement-bar">
+        <div class="marquee-content">
+            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
+            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
+            Gün: 31 Ocak
+        </div>
+    </div>
+
+    <!-- 2. Header -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="nav-desktop" id="desktop-nav">
+                <!-- Populated by script.js based on Admin Categories -->
+            </nav>
+
+            <!-- Icons & Dropdowns -->
+            <div class="header-icons">
+                <!-- Login Dropdown -->
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label" id="header-user-name">Giriş Yap</span>
+                    <div class="dropdown-menu login-dropdown">
+                        <form class="login-form">
+                            <input type="email" placeholder="E-Posta Adresi">
+                            <input type="password" placeholder="Şifre">
+                            <button class="btn btn-primary">GİRİŞ YAP</button>
+                            <a href="register.html" class="register-btn">ÜYE OL</a>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Cart Dropdown -->
+                <div class="icon-group">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                    <div class="dropdown-menu cart-dropdown">
+                        <div class="cart-preview-wrapper">
+                            <div id="cart-image-preview" class="cart-image-preview">
+                                <!-- Hover image will appear here -->
+                            </div>
+                            <div id="header-cart-preview" class="cart-items-list">
+                                <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <div class="mobile-nav-wrapper">
+            <nav class="mobile-horizontal-nav">
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
+                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/canta">ÇANTA</a>
+                </div>
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
+                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/kartlik">KARTLIK</a>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/index.html">KOLEKSİYON</a>
+                </div>
+            </nav>
+            <!-- Mobile Submenus -->
+            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
+                <a href="/kategori/aksesuar">Bileklik</a>
+                <a href="/kategori/aksesuar">Kolye</a>
+                <a href="/kategori/aksesuar">Pasaport Kılıfı</a>
+                <a href="/kategori/aksesuar">Telefon Kılıfı</a>
+            </div>
+            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
+                <a href="/kategori/cuzdan">Erkek Cüzdan</a>
+                <a href="/kategori/cuzdan">Kadın Cüzdan</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. Hero Slider -->
+    <!-- 3. Hero Slider -->
+    <!-- 3. Hero Slider -->
+    <section class="hero-section">
+        <!-- Single Slide: Leather Bag -->
+        <div class="slide active">
+            <div class="video-background">
+                <div id="player">
+                    <!-- Fallback if JS API fails -->
+                    <iframe width="100%" height="100%"
+                        src="https://www.youtube.com/embed/i2CkLotShyA?autoplay=1&mute=1&controls=0&loop=1&playlist=i2CkLotShyA&showinfo=0&modestbranding=1"
+                        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
+                        style="width:100%; height:56.25vw; min-height:100vh; min-width:177.77vh; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none;">
+                    </iframe>
+                </div>
+            </div>
+            <!-- Overlay remains via CSS ::after -->
+            <div class="container relative h-100">
+                <div class="slide-content">
+                    <h2 class="slide-title">USTALIĞIN ZARAFETİ</h2>
+                    <p class="slide-subtitle">ZAMANSIZ TASARIMLAR, SONSUZ HİKAYELER</p>
+                    <a href="#" class="btn btn-primary btn-lg">KOLEKSİYONU KEŞFET</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Category Split -->
+    <!-- 4. Creative Category Mosaic (Full Width) -->
+    <section class="creative-mosaic-section" id="creative-mosaic">
+        <div class="mosaic-grid">
+            <!-- Mosaic items will be dynamically loaded via script.js from localStorage -->
+        </div>
+    </section>
+
+    <!-- 6. Product Grid -->
+    <!-- 6. Random Selection (New Collection) -->
+    <section class="product-grid-section">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <p class="section-subtitle">Yepyeni Koleksiyon</p>
+                <h2 class="section-title">KADİM HİSLERLE DOLU</h2>
+            </div>
+            <div class="grid-products" id="random-product-grid">
+                <!-- Random Products loaded via JS (8 items) -->
+            </div>
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="/kategori/yeni" class="btn btn-secondary btn-lg">HEPSİNİ İNCELE</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Bags Section (4 Items) -->
+    <section class="product-grid-section" style="background-color: #fafafa; padding-top: 40px;">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <h2 class="section-title">ÇANTA</h2>
+                <p class="section-subtitle">Zarafetin Tamamlayıcısı</p>
+            </div>
+            <div class="grid-products" id="bag-product-grid">
+                <!-- Bag Products loaded via JS -->
+            </div>
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="/kategori/canta" class="btn btn-secondary btn-lg">TÜM ÇANTALARI GÖR</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Wallets Section (4 Items) -->
+    <section class="product-grid-section">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <h2 class="section-title">CÜZDAN</h2>
+                <p class="section-subtitle">Kusursuz Detaylar</p>
+            </div>
+            <div class="grid-products" id="wallet-product-grid">
+                <!-- Wallet Products loaded via JS -->
+            </div>
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="/kategori/cuzdan" class="btn btn-secondary btn-lg">CÜZDAN KOLEKSİYONU</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Card Holders Section (4 Items) -->
+    <section class="product-grid-section" style="background-color: #fafafa; padding-top: 40px;">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <h2 class="section-title">KARTLIK</h2>
+                <p class="section-subtitle">Pratik ve Şık</p>
+            </div>
+            <div class="grid-products" id="cardholder-product-grid">
+                <!-- Cardholder Products loaded via JS -->
+            </div>
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="/kategori/kartlik" class="btn btn-secondary btn-lg">TÜM KARTLIKLARI GÖR</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. Technology Section (4 Items) -->
+    <section class="product-grid-section">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <h2 class="section-title">TEKNOLOJİ</h2>
+                <p class="section-subtitle">Modern Çağın Deri Dokunuşu</p>
+            </div>
+            <div class="grid-products" id="tech-product-grid">
+                <!-- Tech Products loaded via JS -->
+            </div>
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="/kategori/teknoloji" class="btn btn-secondary btn-lg">TEKNOLOJİ KOLEKSİYONU</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. USP Section -->
+    <section class="usp-section">
+        <div class="container">
+            <div class="usp-grid" id="usp-grid">
+                <!-- USP features will be loaded dynamically from admin panel -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FAQ Section -->
+    <section class="faq-section">
+        <h2 class="text-center mb-4">Sıkça Sorulan Sorular</h2>
+
+        <div class="faq-accordion" id="faq-accordion">
+            <!-- FAQ items will be loaded dynamically from admin panel -->
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer id="dynamic-footer">
+        <!-- Footer content will be dynamically rendered by script.js -->
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yükleniyor...
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="/script.js?v=207"></script>
+</body>
+
+</html>

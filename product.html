@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEER DERI | Ürün Detayı</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Specific Styles for Product Page */
+
+        /* Luxury Minimal Breadcrumbs */
+        .breadcrumbs {
+            padding: 18px 0;
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .breadcrumbs::before {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .breadcrumbs a {
+            color: #888;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 4px 0;
+        }
+
+        .breadcrumbs a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .breadcrumbs a:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumbs a:hover::after {
+            width: 100%;
+        }
+
+        .breadcrumbs .separator {
+            margin: 0 15px;
+            color: #ccc;
+            font-size: 8px;
+            opacity: 0.7;
+        }
+
+        .breadcrumbs .separator::after {
+            content: '—';
+            font-weight: 300;
+        }
+
+        .breadcrumbs .current {
+            color: var(--primary-color);
+            font-weight: 600;
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .breadcrumbs .current::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 5px;
+            background: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .product-detail-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 300px;
+            column-gap: 50px;
+            row-gap: 0;
+            padding: 20px 0 40px 0;
+        }
+
+        .product-tabs-wrapper {
+            grid-column: 1 / -1;
+            margin-top: 0;
+        }
+
+        .product-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            background: #f9f9f9;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        .zoom-lens {
+            position: absolute;
+            border: 2px solid #000;
+            width: 150px;
+            height: 150px;
+            pointer-events: none;
+            display: none;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .zoom-result {
+            position: absolute;
+            right: -320px;
+            top: 0;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ddd;
+            background: white;
+            display: none;
+            overflow: hidden;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-gallery:hover .zoom-result {
+            display: block;
+        }
+
+        .thumbnails {
+            display: flex;
+            gap: 10px;
+        }
+
+        .thumb {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .thumb:hover,
+        .thumb.active {
+            opacity: 1;
+            border: 1px solid #000;
+        }
+
+        .related-products h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .product-detail-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px 15px;
+            }
+
+            .product-sidebar {
+                position: static;
+            }
+
+            .breadcrumbs {
+                padding: 15px 15px;
+                font-size: 13px;
+            }
+
+            .main-image {
+                height: 350px;
+            }
+
+            .product-info {
+                padding: 0 15px;
+            }
+
+            .product-title {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+
+            .product-price {
+                font-size: 26px;
+                margin-bottom: 20px;
+            }
+
+            .product-description,
+            .product-features,
+            .size-guide {
+                padding: 0;
+                margin-bottom: 20px;
+            }
+
+            .quantity-selector {
+                margin: 20px 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .tab {
+                flex: 1 1 45%;
+                text-align: center;
+            }
+
+            .related-products {
+                padding: 40px 15px;
+            }
+
+            .related-products h2 {
+                font-size: 22px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .delivery-info {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        .product-price-lg {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .product-desc-lg {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .product-options {
+            margin-bottom: 30px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .color-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .color-opt {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .color-opt.selected {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            width: fit-content;
+        }
+
+        .qty-btn {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 16px;
+        }
+
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            font-weight: 600;
+        }
+
+        .add-to-cart-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-lg {
+            padding: 15px 40px;
+            font-size: 16px;
+        }
+
+        .product-tabs {
+            margin-top: 60px;
+            border-top: 1px solid #eee;
+        }
+
+        .tab-headers {
+            display: flex;
+            gap: 40px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-link {
+            padding: 20px 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-link.active {
+            color: #000;
+            border-color: #000;
+        }
+
+        .tab-content {
+            padding: 40px 0;
+            display: none;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .reviews-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-author {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .review-rating i {
+            color: #FFC107;
+            font-size: 14px;
+        }
+
+        .review-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .feature-category {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .feature-category h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+
+        .feature-category ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-category li {
+            padding: 8px 0;
+            color: var(--text-light);
+            line-height: 1.6;
+            border-bottom: 1px solid #eee;
+        }
+
+        .feature-category li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-category strong {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .delivery-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .delivery-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .delivery-section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .delivery-section h4 i {
+            font-size: 20px;
+        }
+
+        .delivery-section p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .delivery-section strong {
+            color: var(--text-color);
+        }
+
+        .product-info-boxes {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-box {
+            background: white;
+            color: #333;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-box i {
+            font-size: 24px;
+            color: #000;
+        }
+
+        .info-box-text {
+            flex: 1;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #000;
+        }
+
+        .info-box-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-container {
+                grid-template-columns: 1fr;
+            }
+
+            .main-image {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Global Page Loader (Static Injection) -->
+    <div id="global-loader">
+        <div class="loader-spinner"></div>
+        <div
+            style="font-family: var(--font-heading); font-size: 14px; letter-spacing: 2px; color: var(--primary-color);">
+            DEER DERİ</div>
+    </div>
+
+    <!-- 1. Duyuru Bandı -->
+    <div class="announcement-bar">
+        <div class="marquee-content">
+            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
+            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
+            Gün: 31 Ocak
+        </div>
+    </div>
+
+    <!-- 2. Header -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <!-- Desktop Nav -->
+            <!-- Desktop Nav -->
+            <!-- Desktop Navigation -->
+            <nav class="nav-desktop" id="desktop-nav">
+                <!-- Populated by script.js based on Admin Categories -->
+            </nav>
+
+            <!-- Icons & Dropdowns -->
+            <div class="header-icons">
+                <!-- Login Dropdown -->
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label" id="header-user-name">Giriş Yap</span>
+                    <div class="dropdown-menu login-dropdown">
+                        <form class="login-form">
+                            <input type="email" placeholder="E-Posta Adresi">
+                            <input type="password" placeholder="Şifre">
+                            <button class="btn btn-primary">GİRİŞ YAP</button>
+                            <a href="register.html" class="register-btn">ÜYE OL</a>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Cart Dropdown -->
+                <div class="icon-group">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                    <div class="dropdown-menu cart-dropdown">
+                        <div class="cart-preview-wrapper">
+                            <div id="cart-image-preview" class="cart-image-preview">
+                                <!-- Hover image will appear here -->
+                            </div>
+                            <div id="header-cart-preview" class="cart-items-list">
+                                <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Horizontal Nav (Below Header) -->
+        <div class="mobile-nav-wrapper">
+            <nav class="mobile-horizontal-nav">
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
+                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/canta">ÇANTA</a>
+                </div>
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
+                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/kartlik">KARTLIK</a>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="index.html">KOLEKSİYON</a>
+                </div>
+            </nav>
+            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
+                <a href="/kategori/aksesuar">Bileklik</a>
+                <a href="/kategori/aksesuar">Kolye</a>
+                <a href="/kategori/aksesuar">Pasaport Kılıfı</a>
+                <a href="/kategori/aksesuar">Telefon Kılıfı</a>
+            </div>
+            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
+                <a href="/kategori/cuzdan">Erkek Cüzdan</a>
+                <a href="/kategori/cuzdan">Kadın Cüzdan</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container breadcrumbs">
+        <a href="index.html">Ana Sayfa</a>
+        <span class="separator"></span>
+        <a href="#" id="bread-category">Kategori</a>
+        <span class="separator"></span>
+        <span class="current" id="bread-product">Ürün Adı</span>
+    </div>
+
+    <div class="container product-detail-container" id="product-content">
+        <!-- Dynamic Content will load here -->
+        <!-- Dynamic Content will load here -->
+    </div>
+
+    <!-- Related Products -->
+    <section class="product-grid-section" style="background: #fafafa; padding: 60px 0;">
+        <div class="container">
+            <h3 class="mb-4">Bunları da Beğenebilirsiniz</h3>
+            <div class="grid-products" id="related-products">
+                <!-- Related items loaded via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Same as index) -->
+    <!-- Footer -->
+    <footer id="dynamic-footer">
+        <!-- Footer content will be dynamically rendered by script.js -->
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yÃ¼kleniyor...
+            </div>
+        </div>
+    </footer>
+
+    <script src="/data.js"></script>
+    <script src="/script.js?v=207"></script>
+    <script>
+        // Inline script for Product Detail Logic to keep it simple
+        document.addEventListener('DOMContentLoaded', function () {
+            // Use products from localStorage if available
+            const localProducts = localStorage.getItem('deerDeriProducts');
+            const productsData = localProducts ? JSON.parse(localProducts) : (typeof products !== 'undefined' ? products : []);
+
+            let product = null;
+
+            // Check for SEO-friendly slug URL first (injected by server)
+            // Check for SEO-friendly slug URL first (injected by server OR client-side fallback)
+            let slug = window.PRODUCT_SLUG;
+
+            // Client-Side Fallback for Vercel/Static Hosting
+            if (!slug) {
+                const path = window.location.pathname;
+                // Match /urun-something
+                if (path.includes('/urun-')) {
+                    const parts = path.split('/');
+                    const lastPart = parts[parts.length - 1]; // "urun-canta-123"
+                    if (lastPart.startsWith('urun-')) {
+                        slug = lastPart; // "urun-canta-123"
+                    } else {
+                        // Case: /urun/canta-123 (if generic rewrite used)
+                        // But our rewrite is usually /urun-:slug
+                        // so browser sees /urun-slug, lastPart is "urun-slug"
+                        slug = lastPart;
+                    }
+                }
+            }
+
+            if (slug) {
+                console.log('Looking for product with slug:', slug);
+
+                // Remove 'urun-' prefix if present
+                if (slug.startsWith('urun-')) {
+                    slug = slug.substring(5);
+                }
+
+                // Check for numeric slug (acting as ID)
+                if (/^\d+$/.test(slug)) {
+                    const id = parseInt(slug);
+                    product = productsData.find(p => p.id === id);
+                }
+
+                if (!product) {
+                    // Try finding by exact slug match
+                    product = productsData.find(p => p.slug === slug);
+                }
+
+                // If not found, try matching by generated slug from name
+                if (!product) {
+                    product = productsData.find(p => {
+                        const generatedSlug = generateSlug(p.name);
+                        return generatedSlug === slug;
+                    });
+                }
+
+                // If still not found, try matching any product whose generated slug starts with the given slug
+                if (!product) {
+                    product = productsData.find(p => {
+                        const generatedSlug = generateSlug(p.name);
+                        return slug.startsWith(generatedSlug) || generatedSlug.startsWith(slug);
+                    });
+                }
+
+                // Log result for debugging
+                if (product) {
+                    console.log('Found product:', product.name);
+                } else {
+                    console.log('Product not found for slug:', slug);
+                    console.log('Available slugs:', productsData.map(p => generateSlug(p.name)));
+                }
+            }
+
+            // Fallback to legacy ?id= parameter
+            if (!product) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = parseInt(urlParams.get('id'));
+                if (productId) {
+                    product = productsData.find(p => p.id === productId);
+                }
+            }
+
+            // Render product or show error
+            if (product) {
+                window.currentLoadedProduct = product; // Store globally
+                renderProductDetail(product);
+                renderRelatedProducts(product, productsData);
+
+                // Update meta tags for SEO
+                updateMetaTags(product);
+
+                // Track visited products and show last visited
+                trackVisitedProduct(product, productsData);
+            } else if (productsData.length > 0) {
+                // Default to first product if nothing specified
+                window.currentLoadedProduct = productsData[0]; // Store globally
+                renderProductDetail(productsData[0]);
+                renderRelatedProducts(productsData[0], productsData);
+
+                // Track visited products and show last visited
+                trackVisitedProduct(productsData[0], productsData);
+            } else {
+                document.getElementById('product-content').innerHTML = '<h2>Ürün bulunamadı.</h2>';
+            }
+
+            // Hide Global Loader manually since script.js doesn't do it for product pages
+            if (window.hideLoader) window.hideLoader();
+        });
+
+        // Track visited products and show last visited
+        function trackVisitedProduct(currentProduct, allProducts) {
+            const STORAGE_KEY = 'deerDeriVisitedProducts';
+            let visited = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+            // Get the previous product (the one before the current one)
+            const previousProductId = visited.length > 0 && visited[visited.length - 1] !== currentProduct.id
+                ? visited[visited.length - 1]
+                : (visited.length > 1 ? visited[visited.length - 2] : null);
+
+            // Add current product to visited list (if not already the last one)
+            if (visited[visited.length - 1] !== currentProduct.id) {
+                visited.push(currentProduct.id);
+                // Keep only last 10 items
+                if (visited.length > 10) visited = visited.slice(-10);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(visited));
+            }
+
+            // Show last visited product if exists
+            if (previousProductId) {
+                const prevProduct = allProducts.find(p => p.id === previousProductId);
+                if (prevProduct) {
+                    renderLastVisitedProduct(prevProduct);
+                }
+            }
+        }
+
+        function renderLastVisitedProduct(product) {
+            const container = document.getElementById('last-visited-product');
+            if (!container) return;
+
+            const slug = product.slug || generateSlug(product.name);
+            const productUrl = '/urun-' + slug;
+            const mainImage = product.images && product.images.length > 0 ? product.images[0] : product.image;
+
+            container.className = 'last-visited-luxury';
+            container.innerHTML = `
+                <div class="last-visited-header">
+                    <i class="fa-solid fa-clock-rotate-left" style="margin-right: 5px;"></i> Son Ziyaret Ettiğiniz
+                </div>
+                <a href="${productUrl}" class="last-visited-card">
+                    <img src="${mainImage}" alt="${product.name}" class="last-visited-img">
+                    <div class="last-visited-info">
+                        <div class="last-visited-name">${product.name}</div>
+                        <div class="last-visited-price">${formatPrice(product.price)}₺</div>
+                    </div>
+                </a>
+            `;
+            container.style.display = 'block';
+        }
+
+        // Generate SEO-friendly slug from text
+        function generateSlug(text) {
+            if (!text) return '';
+            const trMap = {
+                'ç': 'c', 'Ç': 'c', 'ğ': 'g', 'Ğ': 'g', 'ş': 's', 'Ş': 's',
+                'ü': 'u', 'Ü': 'u', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'Ö': 'o'
+            };
+            let result = text.toLowerCase();
+            for (let key in trMap) {
+                result = result.replace(new RegExp(key, 'g'), trMap[key]);
+            }
+            return result
+                .replace(/[^-a-zA-Z0-9\s]+/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+        }
+
+        // Update page meta tags for SEO
+        function updateMetaTags(product) {
+            // Update canonical URL
+            let canonicalLink = document.querySelector('link[rel="canonical"]');
+            if (!canonicalLink) {
+                canonicalLink = document.createElement('link');
+                canonicalLink.rel = 'canonical';
+                document.head.appendChild(canonicalLink);
+            }
+            const slug = product.slug || generateSlug(product.name);
+            canonicalLink.href = window.location.origin + '/' + slug;
+
+            // Update meta description
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if (!metaDesc) {
+                metaDesc = document.createElement('meta');
+                metaDesc.name = 'description';
+                document.head.appendChild(metaDesc);
+            }
+            metaDesc.content = product.seoDescription || product.shortDescription || product.description?.substring(0, 160) || '';
+
+            // Update Open Graph tags
+            updateOGTag('og:title', product.seoTitle || product.name);
+            updateOGTag('og:description', product.seoDescription || product.shortDescription || '');
+            updateOGTag('og:url', window.location.origin + '/' + slug);
+
+            const mainImage = product.images && product.images.length > 0
+                ? (typeof product.images[0] === 'object' ? product.images[0].url : product.images[0])
+                : '';
+            if (mainImage) {
+                updateOGTag('og:image', mainImage.startsWith('http') ? mainImage : window.location.origin + '/' + mainImage);
+            }
+        }
+
+        function updateOGTag(property, content) {
+            let tag = document.querySelector(`meta[property="${property}"]`);
+            if (!tag) {
+                tag = document.createElement('meta');
+                tag.setAttribute('property', property);
+                document.head.appendChild(tag);
+            }
+            tag.content = content;
+        }
+
+        function renderRelatedProducts(currentProduct, allProducts) {
+            const relatedGrid = document.getElementById('related-products');
+            if (!relatedGrid) return;
+
+            const related = allProducts.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id).slice(0, 4);
+            // ... reuse existing render logic or trigger global one ...
+            // For brevity, let's assume we logic in script.js covers this or we can call renderProducts from here if exported.
+        }
+
+        function renderProductDetail(product) {
+            // Update Title
+            document.title = `${product.name} | DEER DERI`;
+
+            // Breadcrumbs
+            document.getElementById('bread-category').textContent = product.category.toUpperCase();
+            document.getElementById('bread-product').textContent = product.name;
+
+            // HTML Structure
+            const container = document.getElementById('product-content');
+
+            let priceHtml = product.oldPrice
+                ? `<span class="price-old" style="text-decoration:line-through; color:#999;">${formatPrice(product.oldPrice)}₺</span> ${formatPrice(product.price)}₺`
+                : `${formatPrice(product.price)}₺`;
+
+            // Get images array
+            const images = product.images && product.images.length > 0 ? product.images : [product.image];
+            const mainImage = images[0];
+
+            // Generate thumbnails HTML
+            let thumbnailsHtml = '';
+            images.forEach((img, index) => {
+                const activeClass = index === 0 ? 'active' : '';
+                thumbnailsHtml += `<img src="${img}" class="thumb ${activeClass}" onclick="changeImage(this)">`;
+            });
+
+            // Description Truncation Logic
+            const fullDesc = product.description || "";
+            const maxLength = 150;
+            let descHtml = fullDesc;
+
+            if (fullDesc.length > maxLength) {
+                const shortDesc = fullDesc.substring(0, maxLength) + '...';
+                descHtml = `${shortDesc} <span class="read-more-btn" onclick="readMoreDescription()" style="color: black; font-weight: bold; cursor: pointer; text-decoration: underline; margin-left: 5px;">Devamını Oku</span>`;
+            } else {
+                descHtml += " El yapımı, birinci sınıf kalite deri kullanılarak üretilmiştir. Her bir parça benzersiz dokuya sahiptir.";
+            }
+
+            container.innerHTML = `
+                <div class="product-gallery">
+                    <div style="position: relative;">
+                        <img src="${mainImage}" id="main-img" class="main-image">
+                        <div class="zoom-lens" id="zoom-lens"></div>
+                        <div class="zoom-result" id="zoom-result"></div>
+                    </div>
+                    <div class="thumbnails">
+                        ${thumbnailsHtml}
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h1>${product.name}</h1>
+                    
+                    <div class="product-meta-header" style="margin-bottom: 20px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <div class="review-scroll-anchor" onclick="scrollToReviews()" style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <div class="star-rating" style="color: #FFC107; font-size: 14px;">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <span style="font-size: 13px; color: #666; text-decoration: underline;">+25 Değerlendirme</span>
+                        </div>
+                        <div class="product-sku" style="font-size: 13px; color: #999;">
+                            Ürün Kodu: <span>DR-${Math.floor(1000 + Math.random() * 9000)}</span>
+                        </div>
+                    </div>
+
+                    <div class="product-price-lg" style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-top: -10px; margin-bottom: 20px;">
+                        ${priceHtml}<span style="font-size: 1rem; color: #999; font-weight: 400; margin-left: 10px; font-family: sans-serif;">(KDV Dahil)</span>
+                    </div>
+                    <div class="product-desc-lg">${descHtml}</div>
+                    
+                    <div class="product-options">
+                        <div class="option-group embossing-section">
+                            <div class="embossing-header" style="margin-bottom: 10px;">
+                                <span class="option-label">İSİM BASKISI İSTİYORUM <span style="color: red;">*</span></span>
+                            </div>
+                            <div class="embossing-options" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                <div class="emboss-opt btn-opt" onclick="toggleEmbossing(true)" style="border: 1px solid #ddd; padding: 10px 20px; cursor: pointer; border-radius: 4px;">İSTİYORUM</div>
+                                <div class="emboss-opt btn-opt selected" onclick="toggleEmbossing(false)" style="border: 1px solid #000; padding: 10px 20px; cursor: pointer; border-radius: 4px; background: #f9f9f9;">İSTEMİYORUM</div>
+                            </div>
+                            
+                            <div id="embossing-input-area" style="display: none; margin-bottom: 15px; padding: 15px; background: #fff3e0; border: 1px solid #ffe0b2; border-radius: 4px;">
+                                <p style="font-size: 12px; color: #e65100; font-weight: bold; margin-bottom: 10px;">
+                                    KUTUCUĞA AŞAĞIDA AÇIKLAMALARDAKİ ÖRNEKLER GİBİ İSİM SOYAD GİRİNİZ!!*
+                                </p>
+                                <input type="text" id="custom-name-input" placeholder="İsim Soyad" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                        </div>
+
+                        <div class="options-row" style="display: flex; gap: 20px; align-items: flex-start;">
+                            <div class="option-group" style="flex: 1;">
+                                <span class="option-label">Adet</span>
+                                <div class="quantity-selector">
+                                    <button class="qty-btn">-</button>
+                                    <input type="text" value="1" class="qty-input">
+                                    <button class="qty-btn">+</button>
+                                </div>
+                            </div>
+
+                            <div class="option-group" style="flex: 1;">
+                                <span class="option-label">Renk</span>
+                                <div class="color-selector">
+                                    <div class="color-opt selected" style="background: #3E2723;"></div>
+                                    <div class="color-opt" style="background: #000;"></div>
+                                    <div class="color-opt" style="background: #8D6E63;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="add-to-cart-section">
+                        <button class="btn btn-primary btn-lg" style="flex:1;" onclick="addProductToCart()">SEPETE EKLE</button>
+                        <button class="btn btn-secondary" style="padding:15px;"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+
+
+                </div>
+                
+                <div class="product-sidebar">
+                    <div class="product-info-boxes" id="product-info-boxes" style="display: flex; flex-direction: column; gap: 12px;">
+                        <!-- Elegant Info Boxes matching site design -->
+                        <!-- Elegant Info Boxes matching site design -->
+                        <div class="luxury-info-box">
+                            <div class="luxury-info-icon-wrapper">
+                                <i class="fa-solid fa-truck luxury-info-icon"></i>
+                            </div>
+                            <div class="luxury-info-content">
+                                <span class="luxury-info-title">Ücretsiz Kargo</span>
+                                <span class="luxury-info-subtitle">1.500₺ üzeri siparişlerde</span>
+                            </div>
+                        </div>
+                        
+                        <div class="luxury-info-box">
+                            <div class="luxury-info-icon-wrapper">
+                                <i class="fa-solid fa-rotate-left luxury-info-icon"></i>
+                            </div>
+                            <div class="luxury-info-content">
+                                <span class="luxury-info-title">14 Gün İade</span>
+                                <span class="luxury-info-subtitle">Koşulsuz değişim garantisi</span>
+                            </div>
+                        </div>
+                        
+                        <div class="luxury-info-box">
+                            <div class="luxury-info-icon-wrapper">
+                                <i class="fa-solid fa-lock luxury-info-icon"></i>
+                            </div>
+                            <div class="luxury-info-content">
+                                <span class="luxury-info-title">Güvenli Ödeme</span>
+                                <span class="luxury-info-subtitle">256-bit SSL şifreleme</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Trust Badges Section -->
+                    <div class="trust-badges-section">
+                        <div class="trust-badges-title">Güvenli Alışveriş</div>
+                        <div class="trust-badges-row">
+                            <div class="trust-badge">
+                                <i class="fa-solid fa-certificate"></i>
+                                <span>SSL</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fa-brands fa-cc-visa"></i>
+                                <span>Visa</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fa-brands fa-cc-mastercard"></i>
+                                <span>Mastercard</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fa-solid fa-award"></i>
+                                <span>Kalite</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Last Visited Product -->
+                    <div id="last-visited-product" style="margin-top: 20px; display: none;">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+                
+                <div class="product-tabs-wrapper">
+                    <div class="product-tabs">
+                        <div class="tab-headers">
+                            <div class="tab-link active" onclick="switchTab(0)">Açıklama</div>
+                            <div class="tab-link" onclick="switchTab(1)">Özellikler</div>
+                            <div class="tab-link" onclick="switchTab(2)">Teslimat</div>
+                            <div class="tab-link" onclick="switchTab(3)">Yorumlar & Değerlendirmeler</div>
+                        </div>
+                        <div class="tab-content active" id="tab-0">
+                            <p>${product.description}</p>
+                            <p>Bu ürün geleneksel yöntemlerle, %100 bitkisel tabaklanmış dana derisinden üretilmiştir. Zamanla kullanıldıkça deri, kendine has bir patina (yaşanmışlık izi) kazanacaktır.</p>
+                        </div>
+                        <div class="tab-content" id="tab-1">
+                            <div class="features-grid">
+                                <div class="feature-category">
+                                    <h4>Malzeme Özellikleri</h4>
+                                    <ul>
+                                        <li><strong>Ana Malzeme:</strong> %100 Gerçek Dana Derisi</li>
+                                        <li><strong>Tabaklanma:</strong> Bitkisel Tabaklanmış (Vegetable Tanned)</li>
+                                        <li><strong>Deri Kalınlığı:</strong> 1.8-2.0 mm</li>
+                                        <li><strong>Deri Tipi:</strong> Full Grain (Tam Tahıl)</li>
+                                        <li><strong>Astar:</strong> Premium Pamuklu Kumaş</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="feature-category">
+                                    <h4>Üretim Detayları</h4>
+                                    <ul>
+                                        <li><strong>Üretim Şekli:</strong> El Yapımı</li>
+                                        <li><strong>Dikiş Tipi:</strong> Çift Sıra Semer Dikişi</li>
+                                        <li><strong>İplik:</strong> Balmumu Kaplı Polyester</li>
+                                        <li><strong>Kenar İşleme:</strong> Elle Kenar Boyama</li>
+                                        <li><strong>Üretim Yeri:</strong> Türkiye</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="feature-category">
+                                    <h4>Ürün Özellikleri</h4>
+                                    <ul>
+                                        <li><strong>Su Geçirmezlik:</strong> Doğal Su İtici</li>
+                                        <li><strong>Dayanıklılık:</strong> Yüksek Mukavemet</li>
+                                        <li><strong>Patina:</strong> Zamanla Güzelleşir</li>
+                                        <li><strong>Bakım:</strong> Kolay Bakım</li>
+                                        <li><strong>Garanti:</strong> 2 Yıl Üretim Hatası Garantisi</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="feature-category">
+                                    <h4>Bakım Talimatları</h4>
+                                    <ul>
+                                        <li>Düzenli olarak deri kremi ile nemlendiriniz</li>
+                                        <li>Suya maruz kaldığında doğal kurumaya bırakınız</li>
+                                        <li>Direkt güneş ışığından uzak tutunuz</li>
+                                        <li>Kimyasal temizleyici kullanmayınız</li>
+                                        <li>Yumuşak, nemli bezle siliniz</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="tab-2">
+                            <div class="delivery-info">
+                                <div class="delivery-section">
+                                    <h4><i class="fa-solid fa-truck"></i> Kargo Bilgileri</h4>
+                                    <p><strong>Kargo Süresi:</strong> Siparişiniz 1-3 iş günü içinde kargoya verilir.</p>
+                                    <p><strong>Teslimat Süresi:</strong> Kargoya verildikten sonra 2-5 iş günü içinde adresinize teslim edilir.</p>
+                                    <p><strong>Kargo Firması:</strong> Aras Kargo, MNG Kargo, Yurtiçi Kargo</p>
+                                </div>
+                                
+                                <div class="delivery-section">
+                                    <h4><i class="fa-solid fa-gift"></i> Ücretsiz Kargo</h4>
+                                    <p>1500 TL ve üzeri alışverişlerinizde kargo ücretsizdir.</p>
+                                    <p>Türkiye'nin her yerine ücretsiz kargo imkanı.</p>
+                                </div>
+                                
+                                <div class="delivery-section">
+                                    <h4><i class="fa-solid fa-box"></i> Paketleme</h4>
+                                    <p>Ürünleriniz özel DEER DERİ kutusunda, koruyucu ambalaj ile gönderilir.</p>
+                                    <p>Her ürün için bakım kılavuzu ve garanti belgesi eklenir.</p>
+                                </div>
+                                
+                                <div class="delivery-section">
+                                    <h4><i class="fa-solid fa-rotate-left"></i> İade ve Değişim</h4>
+                                    <p><strong>İade Süresi:</strong> Ürünü teslim aldıktan sonra 14 gün içinde iade edebilirsiniz.</p>
+                                    <p><strong>Koşullar:</strong> Ürün kullanılmamış, etiketleri sökülmemiş ve orijinal ambalajında olmalıdır.</p>
+                                    <p><strong>İade Ücreti:</strong> İade kargo ücreti müşteriye aittir.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="tab-3">
+                            <div class="reviews-section">
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <div class="review-author">Ahmet K.</div>
+                                        <div class="review-rating">
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <p class="review-text">Harika bir ürün! Kalitesi ve işçiliği mükemmel. Kesinlikle tavsiye ederim.</p>
+                                    <div class="review-date">15 Aralık 2025</div>
+                                </div>
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <div class="review-author">Zeynep M.</div>
+                                        <div class="review-rating">
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <p class="review-text">Çok beğendim, deri kalitesi gerçekten çok iyi. Tek eksi kargo biraz geç geldi.</p>
+                                    <div class="review-date">10 Aralık 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Inject Product Schema (JSON-LD) for Google Shopping & Rich Snippets
+            const productSchema = {
+                "@context": "https://schema.org/",
+                "@type": "Product",
+                "name": product.name,
+                "image": images,
+                "description": product.description || `${product.name} - El yapımı, birinci sınıf deri kullanılarak üretilmiştir.`,
+                "sku": `DR-${product.id}`,
+                "brand": {
+                    "@type": "Brand",
+                    "name": "DEER DERI"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "url": window.location.href,
+                    "priceCurrency": "TRY",
+                    "price": product.price,
+                    "priceValidUntil": "2026-12-31",
+                    "availability": "https://schema.org/InStock",
+                    "seller": {
+                        "@type": "Organization",
+                        "name": "DEER DERI"
+                    }
+                },
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "4.8",
+                    "reviewCount": "25"
+                }
+            };
+
+            // Remove existing schema if any
+            const existingSchema = document.getElementById('product-schema');
+            if (existingSchema) existingSchema.remove();
+
+            // Add new schema to head
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.id = 'product-schema';
+            script.textContent = JSON.stringify(productSchema);
+            document.head.appendChild(script);
+
+            // Re-attach listeners for dynamically added elements
+            setupProductInteractions();
+            initImageZoom();
+        }
+
+        function switchTab(index) {
+            document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+
+            document.querySelectorAll('.tab-link')[index].classList.add('active');
+            document.getElementById(`tab-${index}`).style.display = 'block';
+        }
+
+        function initImageZoom() {
+            const img = document.getElementById('main-img');
+            const lens = document.getElementById('zoom-lens');
+            const result = document.getElementById('zoom-result');
+
+            if (!img || !lens || !result) return;
+
+            const cx = result.offsetWidth / lens.offsetWidth;
+            const cy = result.offsetHeight / lens.offsetHeight;
+
+            result.style.backgroundImage = `url('${img.src}')`;
+            result.style.backgroundSize = `${img.width * cx}px ${img.height * cy}px`;
+
+            img.addEventListener('mousemove', function (e) {
+                // Determine Ratio again in case size changed
+                const cx = result.offsetWidth / lens.offsetWidth;
+                const cy = result.offsetHeight / lens.offsetHeight;
+                result.style.backgroundSize = `${img.width * cx}px ${img.height * cy}px`;
+
+                const pos = getCursorPos(e, img);
+                let x = pos.x - (lens.offsetWidth / 2);
+                let y = pos.y - (lens.offsetHeight / 2);
+
+                // Prevent lens from positioning outside the image
+                if (x > img.width - lens.offsetWidth) x = img.width - lens.offsetWidth;
+                if (x < 0) x = 0;
+                if (y > img.height - lens.offsetHeight) y = img.height - lens.offsetHeight;
+                if (y < 0) y = 0;
+
+                lens.style.left = x + 'px';
+                lens.style.top = y + 'px';
+                lens.style.display = 'block';
+
+                result.style.backgroundPosition = `-${x * cx}px -${y * cy}px`;
+            });
+
+            img.addEventListener('mouseenter', () => {
+                lens.style.display = 'block';
+            });
+
+            img.addEventListener('mouseleave', () => {
+                lens.style.display = 'none';
+            });
+        }
+
+        function getCursorPos(e, img) {
+            const a = img.getBoundingClientRect();
+            const x = e.pageX - a.left - window.pageXOffset;
+            const y = e.pageY - a.top - window.pageYOffset;
+            return { x, y };
+        }
+
+        let selectedColor = 'Standart';
+
+        function setupProductInteractions() {
+            // Color Selection
+            document.querySelectorAll('.color-opt').forEach(opt => {
+                opt.addEventListener('click', function () {
+                    document.querySelectorAll('.color-opt').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    // Map color codes to names roughly for demo
+                    const colorMap = { 'rgb(62, 39, 35)': 'Koyu Kahve', 'rgb(0, 0, 0)': 'Siyah', 'rgb(141, 110, 99)': 'Taba' };
+                    // Fix: simpler detection or just use index/attribute
+                    selectedColor = "Seçilen Renk"; // Placeholder, normally we'd get data-color attribute
+                });
+            });
+
+            // Quantity
+            const qtyInput = document.querySelector('.qty-input');
+            document.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    let current = parseInt(qtyInput.value);
+                    if (this.textContent === '+' && current < 10) qtyInput.value = current + 1;
+                    if (this.textContent === '-' && current > 1) qtyInput.value = current - 1;
+                });
+            });
+        }
+
+        // Wrapper to get current values
+        window.addProductToCart = function () {
+            const product = window.currentLoadedProduct;
+
+            if (!product) {
+                console.error("No product loaded.");
+                return;
+            }
+
+            const qtyInput = document.querySelector('.qty-input');
+            const qty = qtyInput ? parseInt(qtyInput.value) : 1;
+
+            // Embossing Validation
+            let embossingName = null;
+            const embossingInputArea = document.getElementById('embossing-input-area');
+            if (embossingInputArea && embossingInputArea.style.display !== 'none') {
+                const input = document.getElementById('custom-name-input');
+                if (!input.value.trim()) {
+                    alert('Lütfen isim baskısı için metin giriniz veya "İSTEMİYORUM" seçeneğini seçiniz.');
+                    input.focus();
+                    return;
+                }
+                embossingName = input.value.trim();
+            }
+
+            window.addToCart(product, qty, selectedColor, embossingName);
+        };
+
+        function changeImage(element) {
+            const mainImg = document.getElementById('main-img');
+            mainImg.src = element.src;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+
+            // Reinitialize zoom with new image
+            setTimeout(() => initImageZoom(), 100);
+        }
+
+        function renderRelatedProducts(currentProductId) {
+            const container = document.getElementById('related-products');
+            if (!container) return;
+
+            // Get 4 random products excluding current
+            const related = products.filter(p => p.id !== currentProductId).slice(0, 4);
+
+            let html = '';
+            related.forEach(product => {
+                // Badge
+                let badgeHtml = '';
+                if (product.badge) {
+                    let badgeClass = 'badge-new';
+                    if (product.badge.includes('İNDİRİM') || product.badge.includes('FIRSAT')) {
+                        badgeClass = 'badge-sale';
+                    }
+                    badgeHtml = `<span class="product-badge ${badgeClass}">${product.badge}</span>`;
+                }
+
+                // Stars
+                let starsHtml = '';
+                const rating = product.rating || 5;
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= Math.floor(rating)) {
+                        starsHtml += '<i class="fa-solid fa-star checked"></i>';
+                    } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
+                        starsHtml += '<i class="fa-solid fa-star-half-stroke checked"></i>';
+                    } else {
+                        starsHtml += '<i class="fa-regular fa-star"></i>';
+                    }
+                }
+
+                // Price
+                let priceHtml = '';
+                if (product.oldPrice) {
+                    priceHtml = `
+                        <div class="price-container">
+                            <span class="price-old">${formatPrice(product.oldPrice)}₺</span>
+                            <span class="price-current">${formatPrice(product.price)}₺</span>
+                            <span class="vat-text">(KDV Dahil)</span>
+                        </div>`;
+                } else {
+                    priceHtml = `
+                        <div class="price-container">
+                            <span class="price-current">${formatPrice(product.price)}₺</span>
+                            <span class="vat-text">(KDV Dahil)</span>
+                        </div>`;
+                }
+
+                // Images
+                const images = product.images && product.images.length > 0 ? product.images : [product.image];
+                let imagesHtml = '';
+                images.forEach((img, index) => {
+                    const activeClass = index === 0 ? 'active' : '';
+                    imagesHtml += `<img src="${img}" class="slide-img ${activeClass}" alt="${product.name}">`;
+                });
+
+                const productUrl = 'product.html?id=' + product.id;
+                html += `
+                    <div class="product-card">
+                        <a href="${productUrl}">
+                            <div class="product-thumb">
+                                ${badgeHtml}
+                                ${imagesHtml}
+                            </div>
+                        </a>
+                        <div class="product-details">
+                            <div class="star-rating">${starsHtml}</div>
+                            <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>
+                            <div class="product-price">${priceHtml}</div>
+                            <button class="btn btn-primary btn-sm add-to-cart-listing" data-id="${product.id}" style="width: 100%; margin-top: 10px;">SEPETE EKLE</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function formatPrice(price) {
+            if (!price) return "0";
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // Global function for Read More button
+        window.readMoreDescription = function () {
+            // Switch to Description tab (index 0)
+            if (typeof switchTab === 'function') {
+                switchTab(0);
+            }
+            // Scroll to tabs wrapper
+            const tabs = document.querySelector('.product-tabs-wrapper');
+            if (tabs) {
+                tabs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+    </script>
+</body>
+
+</html>

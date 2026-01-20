@@ -1,0 +1,207 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Hoş Geldiniz</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f4f4f4;
+            padding-bottom: 40px;
+        }
+
+        .main-table {
+            background-color: #ffffff;
+            margin: 0 auto;
+            width: 600px;
+            max-width: 600px;
+            border-spacing: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo-img {
+            display: block;
+            margin: 0 auto;
+            width: 140px;
+            height: auto;
+        }
+
+        .hero-section {
+            background-color: #1a1a1a;
+            background-image: linear-gradient(135deg, #111 0%, #2e2e2e 100%);
+            padding: 60px 40px;
+            text-align: center;
+            color: #ffffff;
+            border-bottom: 4px solid #2E7D32;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0 0 10px 0;
+            color: #ffffff;
+        }
+
+        .welcome-subtitle {
+            font-size: 14px;
+            color: #aaaaaa;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        .content-section {
+            padding: 50px 40px;
+            text-align: center;
+            color: #444444;
+        }
+
+        .feature-table {
+            width: 100%;
+            border-spacing: 0;
+            margin-top: 30px;
+        }
+
+        .feature-box {
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            background-color: #fafafa;
+            border-radius: 4px;
+        }
+
+        .feature-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .feature-text {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .cta-button {
+            background-color: #2E7D32;
+            color: #ffffff;
+            padding: 16px 35px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        .footer {
+            background-color: #eeeeee;
+            padding: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #888888;
+        }
+
+        a {
+            color: #2E7D32;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <center class="wrapper">
+        <table class="main-table" width="600">
+            <!-- HEADER -->
+            <tr>
+                <td style="padding: 30px 0; border-bottom: 1px solid #eeeeee;">
+                    <img src="https://www.deerderi.com/assets/logo.png" alt="DEER DERİ" class="logo-img" />
+                </td>
+            </tr>
+
+            <!-- HERO AREA -->
+            <tr>
+                <td class="hero-section">
+                    <h1 class="welcome-title">Hoş Geldiniz</h1>
+                    <div style="width: 50px; height: 1px; background: #2E7D32; margin: 20px auto;"></div>
+                    <p class="welcome-subtitle">KALİTE VE ZARAFETİN BULUŞMA NOKTASI</p>
+                </td>
+            </tr>
+
+            <!-- CONTENT -->
+            <tr>
+                <td class="content-section">
+                    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 20px;">
+                        Sayın <strong style="color:#000;">{{customerName}}</strong>,
+                    </p>
+                    <p style="font-size: 15px; line-height: 1.8; color: #666;">
+                        DEER DERİ ailesine katıldığınız için teşekkür ederiz.
+                        Artık el işçiliğinin modern tasarımla buluştuğu koleksiyonlarımıza,
+                        sadece üyelere özel fırsatlara ve kampanyalara öncelikli erişim hakkına sahipsiniz.
+                    </p>
+
+                    <!-- FEATURES GRID (Table inside table) -->
+                    <table class="feature-table">
+                        <tr>
+                            <td width="33%" style="padding: 5px;">
+                                <div class="feature-box">
+                                    <div style="font-size:24px; color:#2E7D32; margin-bottom:10px;">★</div>
+                                    <div class="feature-title">Özel Fırsatlar</div>
+                                    <div class="feature-text">Üyelere özel indirimler</div>
+                                </div>
+                            </td>
+                            <td width="33%" style="padding: 5px;">
+                                <div class="feature-box">
+                                    <div style="font-size:24px; color:#2E7D32; margin-bottom:10px;">✈</div>
+                                    <div class="feature-title">Hızlı Kargo</div>
+                                    <div class="feature-text">Öncelikli gönderim</div>
+                                </div>
+                            </td>
+                            <td width="33%" style="padding: 5px;">
+                                <div class="feature-box">
+                                    <div style="font-size:24px; color:#2E7D32; margin-bottom:10px;">♥</div>
+                                    <div class="feature-title">Favoriler</div>
+                                    <div class="feature-text">İstek listesi oluşturma</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br /><br />
+                    <a href="https://www.deerderi.com/" class="cta-button">KOLEKSİYONU KEŞFET</a>
+                </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+                <td class="footer">
+                    <p>DEER DERİ - Kadim Mirasın İzinde</p>
+                    <p>
+                        <a href="https://www.deerderi.com/">Anasayfa</a> &nbsp;|&nbsp;
+                        <a href="https://www.deerderi.com/account.html">Hesabım</a> &nbsp;|&nbsp;
+                        <a href="https://www.deerderi.com/contact.html">İletişim</a>
+                    </p>
+                    <p>© 2026 Tüm Hakları Saklıdır.</p>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+
+</html>

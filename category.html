@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
+    <title>DEER DERİ | Koleksiyon</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Category Page Specific Styles */
+        .category-page-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+            margin-top: 20px;
+        }
+
+        /* Sidebar Styles */
+        .filter-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            background: #fff;
+            padding-right: 20px;
+            border-right: 1px solid #f0f0f0;
+        }
+
+        .filter-group {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .filter-group:last-child {
+            border-bottom: none;
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .filter-title i {
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .filter-content {
+            display: block;
+        }
+
+        .filter-content.hidden {
+            display: none;
+        }
+
+        /* Category Links in Sidebar */
+        .sidebar-categories {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-categories li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-categories a {
+            color: #666;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-categories a:hover,
+        .sidebar-categories a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .sidebar-categories .sub-cat {
+            padding-left: 15px;
+            font-size: 13px;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .sidebar-categories .sub-cat.active {
+            display: block;
+        }
+
+        /* Checkbox Styles */
+        .filter-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #444;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .filter-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            appearance: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .filter-checkbox:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .filter-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Price Slider Placeholder */
+        .price-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .price-input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Main Content Header */
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .category-title {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .sort-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sort-select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .category-page-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-sidebar {
+                display: none;
+                /* Hide for now on mobile, add toggle later if needed */
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 80%;
+                z-index: 2000;
+                padding: 20px;
+                overflow-y: auto;
+            }
+
+            .filter-sidebar.active {
+                display: block;
+            }
+
+            .mobile-filter-btn {
+                display: inline-block;
+                margin-bottom: 20px;
+                padding: 10px 20px;
+                border: 1px solid #000;
+                background: none;
+            }
+        }
+
+        @media (min-width: 993px) {
+            .mobile-filter-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Global Page Loader (Static Injection) -->
+    <div id="global-loader">
+        <div class="loader-spinner"></div>
+        <div
+            style="font-family: var(--font-heading); font-size: 14px; letter-spacing: 2px; color: var(--primary-color);">
+            DEER DERİ</div>
+    </div>
+
+    <!-- 1. Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="marquee-content">
+            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
+            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
+            Gün: 31 Ocak
+        </div>
+    </div>
+
+    <!-- 2. Header (Dynamically loaded nav) -->
+    <header id="main-header">
+        <div class="container header-main">
+            <!-- Logo & Shipping Info Group -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="/" class="logo">
+                    <img src="/assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
+                </a>
+                <div class="shipping-info-box d-none d-md-block">
+                    1500 TL ve Üzeri Kargo Bizden!
+                </div>
+            </div>
+
+            <!-- Desktop Nav (Will be filled by script.js) -->
+            <!-- Desktop Nav (Static) -->
+            <!-- Desktop Navigation -->
+            <nav class="nav-desktop" id="desktop-nav">
+                <!-- Populated by script.js based on Admin Categories -->
+            </nav>
+
+            <!-- Icons -->
+            <div class="header-icons">
+                <div class="icon-group">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="icon-label" id="header-user-name">Giriş Yap</span>
+                    <!-- Login Dropdown omitted for brevity, handled by common scripts if present -->
+                </div>
+                <div class="icon-group" onclick="toggleCart(true)">
+                    <div class="cart-icon">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span class="cart-badge">0</span>
+                    </div>
+                    <span class="icon-label">Sepetim</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Nav Wrapper -->
+        <!-- Mobile Nav Wrapper -->
+        <div class="mobile-nav-wrapper">
+            <nav class="mobile-horizontal-nav">
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
+                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/canta">ÇANTA</a>
+                </div>
+                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
+                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/kategori/kartlik">KARTLIK</a>
+                </div>
+                <div class="nav-item-mobile">
+                    <a href="/index.html">KOLEKSİYON</a>
+                </div>
+            </nav>
+            <!-- Mobile Submenus -->
+            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
+                <a href="/kategori/aksesuar">Bileklik</a>
+                <a href="/kategori/aksesuar">Kolye</a>
+                <a href="/kategori/aksesuar">Pasaport Kılıfı</a>
+                <a href="/kategori/aksesuar">Telefon Kılıfı</a>
+            </div>
+            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
+                <a href="/kategori/cuzdan">Erkek Cüzdan</a>
+                <a href="/kategori/cuzdan">Kadın Cüzdan</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. Breadcrumbs -->
+    <div class="container" style="padding: 20px 20px 0;">
+        <div class="breadcrumbs" style="font-size: 13px; color: #666;">
+            <a href="/">Ana Sayfa</a> <span style="margin:0 5px;">/</span> <span
+                id="bread-category-name">Kategori</span>
+        </div>
+    </div>
+
+    <!-- 4. Category Content -->
+    <div class="container category-page-container">
+
+        <!-- Sidebar Filters -->
+        <aside class="filter-sidebar" id="filter-sidebar">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;"
+                class="d-lg-none">
+                <h3>Filtreler</h3>
+                <i class="fa-solid fa-xmark" onclick="toggleMobileFilters(false)" style="font-size:24px;"></i>
+            </div>
+
+            <!-- Categories Widget -->
+            <div class="filter-group">
+                <div class="filter-title" onclick="toggleFilterGroup(this)">
+                    KATEGORİLER <i class="fa-solid fa-chevron-up"></i>
+                </div>
+                <div class="filter-content">
+                    <ul class="sidebar-categories" id="sidebar-categories-list">
+                        <!-- Dynamic Categories -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="filter-group">
+                <div class="filter-title" onclick="toggleFilterGroup(this)">
+                    FİYAT ARALIĞI <i class="fa-solid fa-chevron-up"></i>
+                </div>
+                <div class="filter-content">
+                    <div class="price-inputs">
+                        <input type="number" id="min-price" class="price-input" placeholder="Min">
+                        <span>-</span>
+                        <input type="number" id="max-price" class="price-input" placeholder="Max">
+                        <button class="btn btn-sm btn-secondary" onclick="applyFilters()"><i
+                                class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rating Filter -->
+            <div class="filter-group">
+                <div class="filter-title" onclick="toggleFilterGroup(this)">
+                    YILDIZ SAYISI <i class="fa-solid fa-chevron-up"></i>
+                </div>
+                <div class="filter-content" id="rating-filters">
+                    <!-- Dynamic Ratings -->
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" style="width:100%" onclick="clearFilters()">FİLTRELERİ TEMİZLE</button>
+
+        </aside>
+
+        <!-- Main Grid -->
+        <main>
+            <button class="mobile-filter-btn" onclick="toggleMobileFilters(true)">
+                <i class="fa-solid fa-filter"></i> FİLTRELE
+            </button>
+
+            <div class="category-header">
+                <h1 class="category-title" id="page-category-title">Tüm Ürünler</h1>
+                <div class="sort-wrapper">
+                    <span style="font-size:14px; color:#666;">Sırala:</span>
+                    <select class="sort-select" onchange="sortProducts(this.value)">
+                        <option value="newest">Yeniden Eskiye</option>
+                        <option value="price-asc">Fiyat (Artan)</option>
+                        <option value="price-desc">Fiyat (Azalan)</option>
+                        <option value="name-asc">İsim (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <p id="result-count" style="margin-bottom: 20px; font-size:14px; color:#666;">0 ürün listeleniyor</p>
+
+            <div class="grid-products" id="category-product-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <!-- Products -->
+                <p>Yükleniyor...</p>
+            </div>
+        </main>
+    </div>
+    <!-- Footer -->
+    <footer id="dynamic-footer">
+        <!-- Footer content will be dynamically rendered by script.js -->
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yÃ¼kleniyor...
+            </div>
+        </div>
+    </footer>
+
+    <script src="/data.js"></script>
+    <script src="/script.js?v=207"></script>
+    <script>
+        // Category name mapping for display
+        const categoryDisplayNames = {
+            'canta': 'Çantalar',
+            'cuzdan': 'Cüzdanlar',
+            'aksesuar': 'Aksesuarlar',
+            'teknoloji': 'Teknoloji',
+            'kirtasiye': 'Kırtasiye',
+            'hediye': 'Hediye',
+            'kartlik': 'Kartlık'
+        };
+
+        // Inline Category Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Get current Slug from server-injected variable OR URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            // Handle both /kategori/slug (server) and ?category=slug (static/fallback)
+            let slug = window.CATEGORY_SLUG || urlParams.get('category') || '';
+
+            // Fallback: Check if path contains /kategori/
+            if (!slug && window.location.pathname.includes('/kategori/')) {
+                const parts = window.location.pathname.split('/');
+                // /kategori/canta -> parts usually ["", "kategori", "canta"]
+                slug = parts[parts.length - 1];
+            }
+
+            console.log('Current Category Slug:', slug);
+
+            // 2. Use localStorage products as primary source (contains new adds), fall back to data.js
+            const localProducts = JSON.parse(localStorage.getItem('deerDeriProducts') || '[]');
+            const productList = (localProducts.length > 0)
+                ? localProducts
+                : (typeof products !== 'undefined' ? products : []);
+
+            const categories = JSON.parse(localStorage.getItem('deerDeriCategories') || '[]');
+
+            // 3. Check if slug is valid and filter products
+            const categoryName = categoryDisplayNames[slug] || slug.charAt(0).toUpperCase() + slug.slice(1);
+
+            // Filter products by category slug directly
+            const categoryProducts = productList.filter(p => p.category === slug);
+
+            if (categoryProducts.length > 0 || categoryDisplayNames[slug]) {
+                // Update Title
+                document.getElementById('page-category-title').textContent = categoryName;
+                document.getElementById('bread-category-name').textContent = categoryName;
+                document.title = `DEER DERİ | ${categoryName}`;
+
+                // Render Sidebar Categories from known category slugs
+                renderSidebarCategories(slug);
+
+                // Initial Render
+                window.currentProducts = categoryProducts;
+                renderCategoryProducts(categoryProducts);
+                renderFilters(categoryProducts);
+
+            } else {
+                document.getElementById('page-category-title').textContent = 'Kategori Bulunamadı';
+                document.getElementById('category-product-grid').innerHTML = '<p>Aradığınız kategori bulunamadı.</p>';
+            }
+        });
+
+        function renderSidebarCategories(activeSlug) {
+            const list = document.getElementById('sidebar-categories-list');
+
+            // Get all products to determine which categories have products
+            const localProducts = JSON.parse(localStorage.getItem('deerDeriProducts') || '[]');
+            const productList = (localProducts.length > 0)
+                ? localProducts
+                : (typeof products !== 'undefined' ? products : []);
+
+            // Use the known category slugs
+            const categoryList = [
+                { id: 'canta', name: 'Çantalar' },
+                { id: 'cuzdan', name: 'Cüzdanlar' },
+                { id: 'aksesuar', name: 'Aksesuarlar' },
+                { id: 'teknoloji', name: 'Teknoloji' },
+                { id: 'kirtasiye', name: 'Kırtasiye' },
+                { id: 'hediye', name: 'Hediye' },
+                { id: 'kartlik', name: 'Kartlık' }
+            ];
+
+            // Filter categories to show only those with products
+            const categoriesWithProducts = categoryList.filter(cat => {
+                return productList.some(p => p.category === cat.id);
+            });
+
+            let html = '';
+            categoriesWithProducts.forEach(cat => {
+                const isActive = cat.id === activeSlug;
+                const productCount = productList.filter(p => p.category === cat.id).length;
+                html += `<li>`;
+                html += `<a href="/kategori/${cat.id}" class="${isActive ? 'active' : ''}">${cat.name} <span style="color:#999;font-size:12px;">(${productCount})</span></a>`;
+                html += `</li>`;
+            });
+
+            list.innerHTML = html;
+        }
+
+        function renderCategoryProducts(productList) {
+            const grid = document.getElementById('category-product-grid');
+            const countLabel = document.getElementById('result-count');
+
+            countLabel.textContent = `${productList.length} ürün listeleniyor`;
+
+            if (productList.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;">Bu kategoride henüz ürün bulunmuyor.</div>';
+                return;
+            }
+
+            grid.innerHTML = ''; // Clear container
+
+            productList.forEach(product => {
+                // --- Replicate script.js Logic ---
+
+                // Badges
+                let badgeHtml = '';
+                if (product.badge) {
+                    let badgeClass = 'badge-new';
+                    if (product.badge.includes('İNDİRİM') || product.badge.includes('FIRSAT')) {
+                        badgeClass = 'badge-sale';
+                    }
+                    badgeHtml = `<span class="product-badge ${badgeClass}">${product.badge}</span>`;
+                }
+
+                // Star Rating
+                let starsHtml = '';
+                const rating = product.rating || 5;
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= Math.floor(rating)) {
+                        starsHtml += '<i class="fa-solid fa-star checked"></i>';
+                    } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
+                        starsHtml += '<i class="fa-solid fa-star-half-stroke checked"></i>';
+                    } else {
+                        starsHtml += '<i class="fa-regular fa-star"></i>';
+                    }
+                }
+
+                // Price Section
+                let priceHtml = '';
+                if (product.oldPrice) {
+                    priceHtml = `
+                        <div class="price-container">
+                            <span class="price-old">${formatPriceLocal(product.oldPrice)}₺</span>
+                            <span class="price-current">${formatPriceLocal(product.price)}₺</span>
+                            <span class="vat-text">(KDV Dahil)</span>
+                        </div>`;
+                } else {
+                    priceHtml = `
+                        <div class="price-container">
+                            <span class="price-current">${formatPriceLocal(product.price)}₺</span>
+                            <span class="vat-text">(KDV Dahil)</span>
+                        </div>`;
+                }
+
+                // Image Slider
+                let imageList = product.images && product.images.length > 0 ? product.images : [product.image];
+
+                let imagesHtml = '';
+                imageList.forEach((imgSrc, index) => {
+                    const activeClass = index === 0 ? 'active' : '';
+                    imagesHtml += `<img src="${imgSrc}" class="slide-img ${activeClass}" data-index="${index}" alt="${product.name}">`;
+                });
+
+                let indicatorsHtml = '';
+                if (imageList.length > 1) {
+                    indicatorsHtml = '<div class="slider-indicators">';
+                    imageList.forEach((_, index) => {
+                        const activeClass = index === 0 ? 'active' : '';
+                        indicatorsHtml += `<div class="slider-bar ${activeClass}" data-index="${index}"></div>`;
+                    });
+                    indicatorsHtml += '</div>';
+                }
+
+                const productUrl = getProductUrl(product);
+
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <a href="${productUrl}">
+                        <div class="product-thumb" data-image-count="${imageList.length}">
+                            ${badgeHtml}
+                            ${imagesHtml}
+                            ${indicatorsHtml}
+                        </div>
+                    </a>
+                    <div class="product-details">
+                        <div class="star-rating">${starsHtml}</div>
+                        <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>
+                        <div class="product-price">${priceHtml}</div>
+                        <button class="btn btn-primary btn-sm add-to-cart-listing" onclick='window.addToCart(${JSON.stringify(product).replace(/'/g, "&#39;")})' style="width: 100%; margin-top: 10px;">SEPETE EKLE</button>
+                    </div>
+                `;
+
+                // Add card to grid
+                grid.appendChild(productCard);
+
+                // Add Hover Event Listener (Mouse Navigation)
+                const thumb = productCard.querySelector('.product-thumb');
+                if (thumb && imageList.length > 1) {
+                    const images = thumb.querySelectorAll('.slide-img');
+                    const bars = thumb.querySelectorAll('.slider-bar');
+
+                    thumb.addEventListener('mousemove', (e) => {
+                        const rect = thumb.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const width = rect.width;
+                        const count = imageList.length;
+
+                        // Determine section
+                        let index = Math.floor((x / width) * count);
+                        if (index < 0) index = 0;
+                        if (index >= count) index = count - 1;
+
+                        // Update Active Classes
+                        images.forEach(img => img.classList.remove('active'));
+                        if (images[index]) images[index].classList.add('active');
+
+                        bars.forEach(bar => bar.classList.remove('active'));
+                        if (bars[index]) bars[index].classList.add('active');
+                    });
+
+                    thumb.addEventListener('mouseleave', () => {
+                        // Reset to first logic if desired, matching homepage behavior usually involves leaving it or resetting. 
+                        // Homepage script didn't show reset logic in snippets, usually leaving likely stays or resets.
+                        // Impl: Reset to 0
+                        images.forEach(img => img.classList.remove('active'));
+                        if (images[0]) images[0].classList.add('active');
+                        bars.forEach(bar => bar.classList.remove('active'));
+                        if (bars[0]) bars[0].classList.add('active');
+                    });
+                }
+            });
+        }
+
+        function formatPriceLocal(p) {
+            return p.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // Dynamic Filters
+        function renderFilters(products) {
+            // Ratings - Show star filters (5 to 1 stars)
+            const ratingContainer = document.getElementById('rating-filters');
+            const ratings = [5, 4, 3, 2, 1];
+
+            ratingContainer.innerHTML = ratings.map(r => {
+                let starsHtml = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= r) {
+                        starsHtml += '<i class="fa-solid fa-star" style="color:#FFD700;font-size:12px;"></i>';
+                    } else {
+                        starsHtml += '<i class="fa-regular fa-star" style="color:#ddd;font-size:12px;"></i>';
+                    }
+                }
+                return `
+                <label class="filter-label">
+                    <input type="checkbox" class="filter-checkbox rating-filter" value="${r}" onchange="applyFilters()">
+                    <span>${starsHtml}</span>
+                </label>
+            `;
+            }).join('');
+        }
+
+        window.applyFilters = function () {
+            let filtered = [...window.currentProducts];
+
+            // Price
+            const min = document.getElementById('min-price').value;
+            const max = document.getElementById('max-price').value;
+
+            if (min) filtered = filtered.filter(p => p.price >= parseInt(min));
+            if (max) filtered = filtered.filter(p => p.price <= parseInt(max));
+
+            // Ratings - Filter by selected star ratings
+            const checkedRatings = Array.from(document.querySelectorAll('.rating-filter:checked')).map(cb => parseInt(cb.value));
+            if (checkedRatings.length > 0) {
+                filtered = filtered.filter(p => {
+                    const productRating = Math.floor(p.rating || 5); // Round down to get the star count
+                    return checkedRatings.includes(productRating);
+                });
+            }
+
+            renderCategoryProducts(filtered);
+        };
+
+        window.clearFilters = function () {
+            document.getElementById('min-price').value = '';
+            document.getElementById('max-price').value = '';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            renderCategoryProducts(window.currentProducts);
+        };
+
+        window.sortProducts = function (method) {
+            let sorted = [...(window.currentProducts || [])]; // Sort the filtered list ideally? 
+            // Actually capturing "currently rendered" is harder without state.
+            // Let's re-sort window.currentProducts and re-apply filters? 
+            // Simplified: Sort window.currentProducts, then apply filters.
+
+            if (method === 'price-asc') sorted.sort((a, b) => a.price - b.price);
+            if (method === 'price-desc') sorted.sort((a, b) => b.price - a.price);
+            if (method === 'name-asc') sorted.sort((a, b) => a.name.localeCompare(b.name));
+            // newest? usually by ID desc
+            if (method === 'newest') sorted.sort((a, b) => b.id - a.id);
+
+            // Re-assign to keeping sort order? No, keep master list sorted?
+            // Correct way: sort the displayed list.
+            // Hack: just call applyFilters() which uses currentProducts.
+            // So we sort currentProducts first.
+
+            window.currentProducts = sorted;
+            applyFilters();
+        };
+
+        window.toggleFilterGroup = function (el) {
+            const content = el.nextElementSibling;
+            const icon = el.querySelector('i');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        };
+
+        window.toggleMobileFilters = function (show) {
+            const sidebar = document.getElementById('filter-sidebar');
+            if (show) sidebar.classList.add('active');
+            else sidebar.classList.remove('active');
+        };
+    </script>
+</body>
+
+</html>
