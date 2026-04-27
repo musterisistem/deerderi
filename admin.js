@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     // --- Configuration & State ---
     const state = {
         currentView: 'dashboard',
@@ -7,7 +7,7 @@
         categories: [],
         siteSettings: {
             announcement: {
-                text: "1500 TL ve Üzeri Kargo Bizden!",
+                text: "2000 TL ve Üzeri Kargo Bizden!",
                 active: true
             }
         },
@@ -149,14 +149,14 @@
         return [
             { id: 1, icon: 'fa-solid fa-rotate-left', title: 'İADE GARANTİSİ', description: '14 gün içinde iade garantisi*', order: 0, active: true },
             { id: 2, icon: 'fa-solid fa-earth-americas', title: 'ULUSLARARASI GÖNDERİM', description: '86\'dan fazla ülkeye gönderim', order: 1, active: true },
-            { id: 3, icon: 'fa-solid fa-truck-fast', title: 'ÜCRETSİZ KARGO', description: '1500 TL ve üzeri siparişlerde', order: 2, active: true },
+            { id: 3, icon: 'fa-solid fa-truck-fast', title: 'ÜCRETSİZ KARGO', description: '2000 TL ve üzeri siparişlerde', order: 2, active: true },
             { id: 4, icon: 'fa-solid fa-box-open', title: 'KOLAY İADE', description: '14 gün içinde değişim ve iade', order: 3, active: true }
         ];
     }
     function getDefaultDelivery() {
         return {
             shipping: { title: 'Kargo Bilgileri', icon: 'fa-solid fa-truck', items: [{ label: 'Kargo Süresi', text: 'Siparişiniz 1-3 iş günü içinde kargoya verilir.' }, { label: 'Teslimat Süresi', text: 'Kargoya verildikten sonra 2-5 iş günü içinde adresinize teslim edilir.' }, { label: 'Kargo Firması', text: 'Aras Kargo, MNG Kargo, Yurtiçi Kargo' }] },
-            freeShipping: { title: 'Ücretsiz Kargo', icon: 'fa-solid fa-gift', items: [{ label: '', text: '1500 TL ve üzeri alışverişlerinizde kargo ücretsizdir.' }, { label: '', text: 'Türkiye\'nin her yerine ücretsiz kargo imkanı.' }] },
+            freeShipping: { title: 'Ücretsiz Kargo', icon: 'fa-solid fa-gift', items: [{ label: '', text: '2000 TL ve üzeri alışverişlerinizde kargo ücretsizdir.' }, { label: '', text: 'Türkiye\'nin her yerine ücretsiz kargo imkanı.' }] },
             packaging: { title: 'Paketleme', icon: 'fa-solid fa-box', items: [{ label: '', text: 'Ürünleriniz özel DEER DERİ kutusunda, koruyucu ambalaj ile gönderilir.' }, { label: '', text: 'Her ürün için bakım kılavuzu ve garanti belgesi eklenir.' }] },
             returns: { title: 'İade ve Değişim', icon: 'fa-solid fa-rotate-left', items: [{ label: 'İade Süresi', text: 'Ürünü teslim aldıktan sonra 14 gün içinde iade edebilirsiniz.' }, { label: 'Koşullar', text: 'Ürün kullanılmamış, etiketleri sökülmemiş ve orijinal ambalajında olmalıdır.' }, { label: 'İade Ücreti', text: 'İade kargo ücreti müşteriye aittir.' }] }
         };
@@ -2286,7 +2286,7 @@
 
             <div class="receipt-footer">
                 <p>Bizi tercih ettiğiniz için teşekkür ederiz!</p>
-                <p>Deer Deri - İstanbul, Türkiye</p>
+                <p>Deer Deri - Bursa, Türkiye</p>
             </div>
         `;
 

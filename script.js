@@ -1,4 +1,4 @@
-﻿// === SEO HELPER FUNCTIONS ===
+// === SEO HELPER FUNCTIONS ===
 // Generate SEO-friendly slug from text (Turkish character support)
 function slugifyText(text) {
     if (!text) return '';
@@ -34,8 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- GLOBAL PAGE LOADER ---
     const loaderHTML = `
         <div id="global-loader">
-            <div class="loader-spinner"></div>
-            <div style="font-family: var(--font-heading); font-size: 14px; letter-spacing: 2px; color: var(--primary-color);">DEER DERİ</div>
+            <div class="loader-inner">
+                <img src="/assets/logo.png" alt="DEER DERİ" class="loader-logo-img">
+                <div class="loader-tagline">Yükleniyor...</div>
+                <div class="loader-spinner-creative"></div>
+            </div>
         </div>
     `;
     if (!document.getElementById('global-loader')) {
@@ -867,8 +870,8 @@ window.renderHeaderCart = function () {
         // Calculate Total
         const fullTotal = window.cart.reduce((t, i) => t + i.price * i.quantity, 0);
 
-        // Free Shipping Logic (Limit 1500 TL)
-        const freeShippingLimit = 1500;
+        // Free Shipping Logic (Limit 2000 TL)
+        const freeShippingLimit = 2000;
         const progress = Math.min((fullTotal / freeShippingLimit) * 100, 100);
         const remaining = freeShippingLimit - fullTotal;
 
@@ -2251,16 +2254,16 @@ function renderFooter() {
 
         // Special handling for first column (DEER DERİ) with description and social
         if (column.description) {
-            columnContent += `<p style="color:#ccc; font-size:14px; margin-bottom: 20px;">
+            columnContent += `<p class="footer-desc">
                 ${column.description}
             </p>`;
         }
 
         if (column.showSocial && column.socialLinks) {
-            columnContent += `<div class="social-icons" style="font-size: 20px; gap: 15px; display: flex;">
-                <a href="${column.socialLinks.instagram || '#'}"><i class="fa-brands fa-instagram"></i></a>
-                <a href="${column.socialLinks.facebook || '#'}"><i class="fa-brands fa-facebook"></i></a>
-                <a href="${column.socialLinks.pinterest || '#'}"><i class="fa-brands fa-pinterest"></i></a>
+            columnContent += `<div class="social-icons">
+                <a href="javascript:void(0);"><i class="fa-brands fa-instagram"></i></a>
+                <a href="javascript:void(0);"><i class="fa-brands fa-facebook"></i></a>
+                <a href="javascript:void(0);"><i class="fa-brands fa-pinterest"></i></a>
             </div>`;
         }
 
@@ -2268,7 +2271,7 @@ function renderFooter() {
         if (column.links && column.links.length > 0) {
             columnContent += `<ul class="footer-links">`;
             column.links.forEach(link => {
-                columnContent += `<li><a href="${link.url}">${link.text}</a></li>`;
+                columnContent += `<li><a href="javascript:void(0);">${link.text}</a></li>`;
             });
             columnContent += `</ul>`;
         }
@@ -2285,27 +2288,27 @@ function renderFooter() {
             </div>
 
             <!-- SEO Content Section -->
-            <div class="footer-seo-section" style="margin-top: 40px; padding-top: 50px; border-top: 1px solid #333;">
-                <div style="max-width: 900px; margin: 0 auto; text-align: center;">
-                    <h3 style="color: #fff; font-size: 18px; margin-bottom: 15px; font-weight: 600;">Hakiki Deri Ürünleri ile Farkı Keşfedin</h3>
-                    <p style="color: #999; font-size: 14px; line-height: 1.8; margin-bottom: 25px;">
+            <div class="footer-seo-section">
+                <div class="seo-content-wrapper">
+                    <h3 class="seo-title">Hakiki Deri Ürünleri ile Farkı Keşfedin</h3>
+                    <p class="seo-text">
                         DEER DERİ olarak, birinci sınıf hakiki deri <strong>deri çanta</strong>, <strong>deri cüzdan</strong>, <strong>deri kartlık</strong> ve <strong>deri telefon kılıfı</strong> ürünleri ile zarafeti ve kaliteyi bir araya getiriyoruz. 
                         El işçiliği ile özenle üretilen her bir <strong>deri ürünü</strong>, dayanıklılığı ve şıklığı ile ömür boyu yanınızda olacak. 
                         En kaliteli <strong>deri çanta ürünleri</strong>ni keşfetmek ve hayalinizdeki deri ürünü satın almak için koleksiyonumuzu inceleyin.
                     </p>
-                    <div class="seo-keywords" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                        <a href="/kategori/canta" class="keyword-btn" style="background: rgba(255,255,255,0.1); color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 13px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">Deri Çanta Ürünleri</a>
-                        <a href="/kategori/cuzdan" class="keyword-btn" style="background: rgba(255,255,255,0.1); color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 13px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">Deri Cüzdan Ürünleri</a>
-                        <a href="/kategori/kartlik" class="keyword-btn" style="background: rgba(255,255,255,0.1); color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 13px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">Deri Kartlık Ürünleri</a>
-                        <a href="/kategori/teknoloji" class="keyword-btn" style="background: rgba(255,255,255,0.1); color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 13px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">Deri Telefon Kılıfı Ürünleri</a>
-                        <a href="/" class="keyword-btn" style="background: rgba(255,255,255,0.1); color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 13px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;">Hakiki Deri Ürünleri</a>
+                    <div class="seo-keywords">
+                        <a href="javascript:void(0);" class="keyword-btn">Deri Çanta Ürünleri</a>
+                        <a href="javascript:void(0);" class="keyword-btn">Deri Cüzdan Ürünleri</a>
+                        <a href="javascript:void(0);" class="keyword-btn">Deri Kartlık Ürünleri</a>
+                        <a href="javascript:void(0);" class="keyword-btn">Deri Telefon Kılıfı Ürünleri</a>
+                        <a href="javascript:void(0);" class="keyword-btn">Hakiki Deri Ürünleri</a>
                     </div>
                 </div>
             </div>
 
             <div class="bottom-bar">
-                <div>&copy; 2026 DEER DERİ. Tüm hakları saklıdır. | Web: <a href="https://bursawebtasarimhizmeti.com.tr/" target="_blank" rel="noopener" style="color: #fff; text-decoration: none; font-weight: 600;">Bursa Web Tasarım</a></div>
-                <div class="payment-icons" style="font-size: 24px; gap: 10px; display: flex;">
+                <div class="copyright-text">&copy; 2026 DEER DERİ. Tüm hakları saklıdır. | Web: <a href="javascript:void(0);">Bursa Web Tasarım</a></div>
+                <div class="payment-icons">
                     <i class="fa-brands fa-cc-visa"></i>
                     <i class="fa-brands fa-cc-mastercard"></i>
                     <i class="fa-brands fa-cc-amex"></i>
