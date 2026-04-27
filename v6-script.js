@@ -278,3 +278,64 @@ function onPlayerStateChange(event) {
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 })();
+
+// ============================================
+// Filter Button Sliding Animation
+// ============================================
+(function initFilters() {
+    function setup() {
+        const filtersContainer = document.querySelector('.v6-filters');
+        if (!filtersContainer) return;
+        
+        const activeBg = filtersContainer.querySelector('.v6-filter-active-bg');
+        const btns = filtersContainer.querySelectorAll('.v6-filter-btn');
+        if (!activeBg || !btns.length) return;
+
+        function updateActiveBg(activeBtn) {
+            activeBg.style.width = `${activeBtn.offsetWidth}px`;
+            activeBg.style.height = `${activeBtn.offsetHeight}px`;
+            activeBg.style.transform = `translate(${activeBtn.offsetLeft}px, ${activeBtn.offsetTop}px)`;
+            activeBg.style.opacity = '1';
+        }
+
+        // Initialize position based on active button
+        const initialActive = Array.from(btns).find(b => b.classList.contains('active')) || btns[0];
+        if (initialActive) {
+            // Small timeout to ensure fonts/layout are rendered
+            setTimeout(() => updateActiveBg(initialActive), 100);
+        }
+
+        // Handle clicks
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.classList.contains('active')) return;
+                
+                btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                updateActiveBg(btn);
+                
+                const productsGrid = document.querySelector('.v6-products-grid');
+                if (productsGrid) {
+                    productsGrid.style.opacity = '0';
+                    setTimeout(() => {
+                        // Geliştirme aşamasında şimdilik aynı ürünler listeleniyor.
+                        // İleride farklı kategori ürünleri buraya yüklenebilir.
+                        productsGrid.style.opacity = '1';
+                    }, 400);
+                }
+            });
+        });
+
+        // Handle resize to fix position
+        window.addEventListener('resize', () => {
+            const activeBtn = Array.from(btns).find(b => b.classList.contains('active'));
+            if (activeBtn) updateActiveBg(activeBtn);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setup);
+    } else {
+        setup();
+    }
+})();
