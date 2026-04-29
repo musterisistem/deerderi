@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DEER DERİ | Siparişiniz Alındı</title>
-    <link rel="stylesheet" href="styles.css?v=203">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
@@ -300,61 +300,144 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/styles.css?v=203">
+    <link rel="stylesheet" href="/v6-design.css?v=206">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* ── FULL WIDTH RESPONSIVE OVERRIDE ── */
+        html, body { width: 100%; overflow-x: hidden; }
+
+        /* Remove max-width constraints on page wrappers */
+        .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 40px !important;
+            padding-right: 40px !important;
+        }
+
+        /* Checkout, cart, success inner wrappers */
+        .checkout-wrapper,
+        .cart-wrapper,
+        .cart-container,
+        .checkout-container,
+        .success-wrapper {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            box-sizing: border-box;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 900px) {
+            .container { padding-left: 16px !important; padding-right: 16px !important; }
+            .checkout-wrapper, .cart-wrapper, .cart-container, .checkout-container { padding: 20px 16px 60px; }
+        }
+
+        /* Full width header/footer/sections */
+        .v6-top-bar, .v6-main-header, footer, .v6-hero {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    </style>
 </head>
 
 <body>
-
-    <!-- 1. Duyuru Bandı -->
-    <div class="announcement-bar">
-        <div class="marquee-content">
-            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
-            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
-            Gün: 31 Ocak
+    <!-- Global Page Loader -->
+    <div id="global-loader">
+        <div class="loader-inner">
+            <img src="/assets/logo.png" alt="DEER DERİ" class="loader-logo-img">
+            <div class="loader-tagline">Yükleniyor...</div>
+            <div class="loader-spinner-creative"></div>
         </div>
     </div>
 
-    <!-- 2. Header (Yapısal olarak Index ile aynı, ancak statik yüklendi) -->
-    <header id="main-header">
-        <div class="container header-main">
-            <!-- Logo & Shipping Info Group -->
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="index.html" class="logo">
-                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
-                </a>
-                <div class="shipping-info-box d-none d-md-block">
-                    2000 TL ve Üzeri Kargo Bizden!
+    <!-- 1. Duyuru Bandı -->
+        <!-- 1. Top Bar (Campaign Marquee) -->
+    <div class="v6-top-bar">
+        <div class="v6-top-bar-container v6-marquee-container">
+            <div class="v6-marquee">
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+                <span class="v6-marquee-dot">•</span>
+                <!-- Duplicate for seamless scrolling -->
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Main Header -->
+    <header class="v6-main-header">
+        <div class="v6-header-container">
+            <div class="v6-header-left">
+                <!-- Mobile Menu Icon (Now visible on desktop too) -->
+                <i class="fa-solid fa-bars v6-mobile-menu-icon" onclick="document.querySelector('.v6-sidebar').classList.toggle('active'); document.querySelector('.v6-sidebar-overlay').classList.toggle('active');"></i>
+                <!-- Desktop Search -->
+                <div class="v6-search-box">
+                    <i class="fa-solid fa-search" style="color: #999;"></i>
+                    <input type="text" placeholder="Ürünleri ara...">
                 </div>
             </div>
-
-            <!-- Desktop Navigation -->
-            <nav class="nav-desktop" id="desktop-nav">
-                <!-- JS ile dolacak, ama statik linkler de koyabiliriz güvenli olması için -->
-                <a href="index.html" class="nav-link">KOLEKSİYON</a>
-                <a href="index.html" class="nav-link">YENİ GELENLER</a>
-                <a href="index.html" class="nav-link">ÇANTA</a>
-                <a href="index.html" class="nav-link">CÜZDAN</a>
-                <a href="index.html" class="nav-link">AKSESUAR</a>
-                <a href="contact.html" class="nav-link">İLETİŞİM</a>
-            </nav>
-
-            <!-- Icons & Dropdowns -->
-            <div class="header-icons">
-                <div class="icon-group">
-                    <i class="fa-regular fa-user"></i>
-                    <span class="icon-label" id="header-user-name">Giriş Yap</span>
-                    <!-- JS Dropdown -->
-                </div>
-
-                <div class="icon-group">
-                    <div class="cart-icon">
-                        <i class="fa-solid fa-basket-shopping"></i>
-                        <span class="cart-badge">0</span>
-                    </div>
-                    <span class="icon-label">Sepetim</span>
+            <div class="v6-header-center">
+                <a href="/" class="v6-logo">
+                    <img src="/assets/logo.png" alt="DEER DERI" style="height: 40px; transform: scale(1.2);">
+                </a>
+            </div>
+            <div class="v6-header-right">
+                <div class="v6-header-actions">
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span>HESABIM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-heart"></i>
+                        <span>FAVORİLERİM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-solid fa-gift"></i>
+                        <span>SEPET</span>
+                    </a>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Sidebar Menu -->
+    <div class="v6-sidebar-overlay" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></div>
+    <div class="v6-sidebar">
+        <div class="v6-sidebar-header">
+            <i class="fa-solid fa-times v6-sidebar-close" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></i>
+        </div>
+        <nav class="v6-sidebar-nav">
+            <a href="/">ANA SAYFA</a>
+            <a href="#">CÜZDANLAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ÇANTALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">GÖZLÜKLER <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ŞAPKALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">AKSESUAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">KEMER</a>
+            <a href="#">OFİS GEREÇLERİ</a>
+            <a href="#" style="color: red;">İNDİRİM FIRSATI! 🔥</a>
+            <a href="/contact.html">İLETİŞİM</a>
+        </nav>
+    </div>
+
 
     <!-- SUCCESS CONTENT -->
     <div class="success-hero">
@@ -457,35 +540,70 @@
         </div>
     </footer>
 
-    <script src="data.js"></script>
+    
     <script src="order_email_helper.js"></script>
-    <script src="script.js?v=206"></script>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // JS fonksiyonlarını çalıştır (Dynamic içerik için)
             if (typeof renderFooter === 'function') renderFooter();
             if (typeof renderHeaderNav === 'function') renderHeaderNav();
             if (typeof updateCartBadge === 'function') updateCartBadge();
             if (typeof checkAuth === 'function') checkAuth();
 
             const urlParams = new URLSearchParams(window.location.search);
-            const targetOrderId = urlParams.get('orderid');
+            // Accept both ?orderNumber=... and ?orderid=... params
+            const targetOrderNumber = urlParams.get('orderNumber') || urlParams.get('orderid');
             const loading = document.getElementById('loading-box');
             const card = document.getElementById('order-card');
 
-            // Find Order Logic
             let foundOrder = null;
-            let currentUser = JSON.parse(localStorage.getItem('deerDeriCurrentUser') || 'null');
 
-            if (currentUser && currentUser.orders) {
-                foundOrder = currentUser.orders.find(o => o.id === targetOrderId);
+            // 1. First try MongoDB API
+            if (targetOrderNumber) {
+                try {
+                    const res = await fetch(`/api/orders/${encodeURIComponent(targetOrderNumber)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.success && data.data) {
+                            // Map API response to expected format
+                            const o = data.data;
+                            foundOrder = {
+                                orderNumber: o.orderNumber,
+                                date: new Date(o.createdAt).toLocaleDateString('tr-TR'),
+                                items: o.items,
+                                address: {
+                                    title: o.shippingAddress.title || 'Adres',
+                                    address: o.shippingAddress.line1,
+                                    district: o.shippingAddress.district,
+                                    city: o.shippingAddress.city,
+                                },
+                                shipping: o.shippingMethod,
+                                total: o.total,
+                                subtotal: o.subtotal,
+                                shippingCost: o.shippingCost,
+                                discount: o.discount,
+                            };
+                        }
+                    }
+                } catch (err) {
+                    console.warn('API order fetch failed, falling back to localStorage:', err.message);
+                }
             }
+
+            // 2. Fallback to localStorage
             if (!foundOrder) {
-                const globalOrders = JSON.parse(localStorage.getItem('deerDeriOrders') || '[]');
-                foundOrder = globalOrders.find(o => o.id === targetOrderId || o.orderNumber === targetOrderId);
-                if (!foundOrder && !targetOrderId && globalOrders.length > 0) {
-                    foundOrder = globalOrders[globalOrders.length - 1];
+                let currentUser = JSON.parse(localStorage.getItem('deerDeriCurrentUser') || 'null');
+
+                if (currentUser && currentUser.orders) {
+                    foundOrder = currentUser.orders.find(o => o.id === targetOrderNumber);
+                }
+                if (!foundOrder) {
+                    const globalOrders = JSON.parse(localStorage.getItem('deerDeriOrders') || '[]');
+                    foundOrder = globalOrders.find(o => o.id === targetOrderNumber || o.orderNumber === targetOrderNumber);
+                    if (!foundOrder && !targetOrderNumber && globalOrders.length > 0) {
+                        foundOrder = globalOrders[globalOrders.length - 1];
+                    }
                 }
             }
 
@@ -497,12 +615,12 @@
                 document.getElementById('display-date').textContent = foundOrder.date || new Date().toLocaleDateString('tr-TR');
 
                 const container = document.getElementById('items-container');
-                let subTotal = 0;
+                let subTotal = foundOrder.subtotal || 0;
 
                 (foundOrder.items || []).forEach(item => {
                     const price = item.price || 0;
                     const qty = item.quantity || 1;
-                    subTotal += price * qty;
+                    if (!foundOrder.subtotal) subTotal += price * qty;
 
                     container.innerHTML += `
                         <div class="item-row">
@@ -517,47 +635,32 @@
                     `;
                 });
 
-                const shippingCost = foundOrder.shipping === 'door' ? 50 : 100;
-                const total = foundOrder.total || (subTotal + shippingCost);
+                const shippingCost = foundOrder.shippingCost !== undefined ? foundOrder.shippingCost : (foundOrder.shipping === 'door' ? 50 : 100);
+                const discount = foundOrder.discount || 0;
+                const total = foundOrder.total || (subTotal - discount + shippingCost);
 
                 document.getElementById('summ-subtotal').textContent = subTotal.toLocaleString('tr-TR') + '₺';
-                document.getElementById('summ-shipping').textContent = shippingCost.toLocaleString('tr-TR') + '₺';
+                document.getElementById('summ-shipping').textContent = shippingCost === 0 ? 'Ücretsiz' : shippingCost.toLocaleString('tr-TR') + '₺';
                 document.getElementById('summ-total').textContent = total.toLocaleString('tr-TR') + '₺';
 
                 if (foundOrder.address) {
                     const a = foundOrder.address;
                     document.getElementById('summ-address').innerHTML = `
-                        <strong>${a.title}</strong><br>
-                        ${a.address}<br>
-                        ${a.district} / ${a.city}
+                        <strong>${a.title || 'Adres'}</strong><br>
+                        ${a.address || a.line1 || ''}<br>
+                        ${a.district ? a.district + ' / ' : ''}${a.city}
                     `;
                 }
 
-                // Mail Trigger
-                const sentEmails = JSON.parse(sessionStorage.getItem('sentOrderEmails') || '[]');
-                const orderUniqueId = foundOrder.id || foundOrder.orderNumber;
-
-                if (!sentEmails.includes(orderUniqueId)) {
-                    if (!foundOrder.customerEmail && currentUser) {
-                        foundOrder.customerEmail = currentUser.email;
-                        foundOrder.customerName = currentUser.firstName + ' ' + currentUser.lastName;
-                        foundOrder.customerPhone = currentUser.phone;
-                    }
-                    if (typeof window.sendOrderEmails === 'function') {
-                        const res = await window.sendOrderEmails(foundOrder);
-                        if (res && res.success) {
-                            sentEmails.push(orderUniqueId);
-                            sessionStorage.setItem('sentOrderEmails', JSON.stringify(sentEmails));
-                        }
-                    }
-                }
-
             } else {
-                loading.innerHTML = '<p>Sipariş bulunamadı. Hesabıma yönlendiriliyorsunuz...</p>';
-                setTimeout(() => window.location.href = 'account.html', 2000);
+                if (loading) loading.innerHTML = '<p>Sipariş bulunamadı. Ana sayfaya yönlendiriliyorsunuz...</p>';
+                setTimeout(() => window.location.href = '/', 2500);
             }
         });
     </script>
+    <script src="/data.js"></script>
+    <script src="/script.js?v=207"></script>
+    <script src="/v6-script.js"></script>
 </body>
 
 </html>

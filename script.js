@@ -1146,82 +1146,130 @@ window.goToStep3 = function () {
     goToStep(3);
 };
 
-window.processOrder = function () {
+window.processOrder = async function () {
     if (window.currentShippingType !== 'door') {
         if (!validateFields(['card-name', 'card-number', 'card-expiry', 'card-cvv'])) {
-            showToast('Ödeme bilgilerini girin.', 'error');
+            showToast('Ödeme bilgilerini eksiksiz girin.', 'error');
             return;
         }
     }
 
-    const user = UserManager.getCurrentUser();
-    if (!user) {
-        showToast('Oturum zaman aşımına uğradı. Lütfen tekrar giriş yapın.', 'error');
+    const finalAddr = window.currentCheckoutAddress;
+    if (!finalAddr) {
+        showToast('Lütfen teslimat adresini giriniz.', 'error');
         return;
     }
 
-    let finalAddr = window.currentCheckoutAddress;
-
-    // Requirement: Save address to member panel if it's new
-    if (finalAddr && (finalAddr.id && finalAddr.id.toString().startsWith('temp-') || !user.addresses || !user.addresses.find(a => a.address === finalAddr.address))) {
-        const isAlreadyInSaved = user.addresses && user.addresses.find(a => a.address === finalAddr.address);
-
-        if (!isAlreadyInSaved) {
-            const persistentAddr = {
-                ...finalAddr,
-                id: Date.now().toString() + Math.floor(Math.random() * 1000)
-            };
-            user.addresses = user.addresses || [];
-            user.addresses.push(persistentAddr);
-            finalAddr = persistentAddr; // Use the persistent one for the order record
-
-            // Sync to all user storage
-            UserManager.setCurrentUser(user);
-            const users = UserManager.getUsers();
-            const idx = users.findIndex(u => u.id === user.id);
-            if (idx > -1) {
-                users[idx].addresses = user.addresses;
-                UserManager.saveUsers(users);
-            }
-        }
+    if (!window.cart || window.cart.length === 0) {
+        showToast('Sepetiniz boş.', 'error');
+        return;
     }
 
-    const orderId = saveOrderToHistory(window.cart, calculateTotal(), window.currentShippingType, finalAddr);
+    // Gather customer info from form
+    const name = ((document.getElementById('guest-name') || {}).value || '').trim();
+    const surname = ((document.getElementById('guest-surname') || {}).value || '').trim();
+    const email = ((document.getElementById('guest-email') || {}).value || '').trim();
+    const phone = ((document.getElementById('guest-phone') || {}).value || '').trim();
 
-    // --- MAIL GONDERIMI ---
-    const totalAmount = calculateTotal();
-    const shippingCost = (typeof currentShippingCost !== 'undefined' ? currentShippingCost : 0);
+    // Try to get from logged-in user
+    const user = (typeof UserManager !== 'undefined') ? UserManager.getCurrentUser() : null;
+    const customerName = name + (surname ? ' ' + surname : '') || (user ? user.firstName + ' ' + (user.lastName || '') : '');
+    const customerEmail = email || (user ? user.email : '');
+    const customerPhone = phone || (user ? user.phone : '');
 
-    // Create mail data copy before clearing cart
-    const mailData = {
-        orderNumber: orderId,
-        date: new Date().toLocaleDateString('tr-TR'),
-        customerName: (user.firstName + ' ' + (user.lastName || '')).trim(),
-        customerEmail: user.email,
-        customerPhone: user.phone || (finalAddr ? finalAddr.phone : ''),
-        paymentMethod: window.currentShippingType === 'door' ? 'Kapıda Ödeme' : 'Kredi Kartı',
-        items: JSON.parse(JSON.stringify(window.cart)),
-        subtotal: totalAmount - shippingCost,
-        shipping: window.currentShippingType,
-        total: totalAmount,
-        address: finalAddr
+    if (!customerName.trim() || !customerEmail.trim()) {
+        showToast('Ad ve e-posta zorunludur.', 'error');
+        goToStep(1);
+        return;
+    }
+
+    // Build order payload
+    const cartItems = window.cart.map(item => ({
+        productId: item._id || item.mongoId || null,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image || '',
+        slug: item.slug || '',
+    }));
+
+    const shippingMethod = window.currentShippingType === 'door' ? 'standard' : (window.currentShippingType || 'standard');
+    const paymentMethod = window.currentShippingType === 'door' ? 'cashOnDelivery' : 'creditCard';
+
+    const orderPayload = {
+        customer: {
+            name: customerName.trim(),
+            email: customerEmail.trim(),
+            phone: customerPhone,
+        },
+        shippingAddress: {
+            title: finalAddr.title || 'Ev',
+            line1: finalAddr.address || finalAddr.line1 || '',
+            city: finalAddr.city || '',
+            district: finalAddr.district || '',
+        },
+        items: cartItems,
+        shippingMethod,
+        paymentMethod,
+        couponCode: window.appliedCouponCode || null,
     };
 
-    if (typeof window.sendOrderEmails === 'function') {
-        console.log('📨 Triggering emails for order: ' + orderId);
-        window.sendOrderEmails(mailData);
+    // Disable button to prevent double submit
+    const submitBtn = document.querySelector('[onclick="processOrder()"]');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'İşleniyor...';
     }
 
-    // Sepeti temizle
-    window.cart = [];
-    localStorage.setItem('deerDeriCart', JSON.stringify([]));
-    if (typeof updateCartBadge === 'function') updateCartBadge();
+    try {
+        showToast('Siparişiniz işleniyor...', 'info');
 
-    // Sipariş verisi garantilensin diye kısa bir bekleme ve yönlendirme
-    console.log('✅ Sipariş oluşturuldu:', orderId);
-    setTimeout(() => {
-        window.location.href = `success.html?orderid=${orderId}`;
-    }, 2000);
+        const res = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderPayload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || 'Sipariş oluşturulamadı');
+        }
+
+        const orderNumber = data.data.orderNumber;
+
+        // Also save to localStorage as backup
+        const localOrder = {
+            id: orderNumber,
+            orderNumber,
+            date: new Date().toLocaleDateString('tr-TR'),
+            items: window.cart,
+            address: finalAddr,
+            shipping: shippingMethod,
+            total: data.data.total,
+        };
+        const localOrders = JSON.parse(localStorage.getItem('deerDeriOrders') || '[]');
+        localOrders.push(localOrder);
+        localStorage.setItem('deerDeriOrders', JSON.stringify(localOrders));
+
+        // Clear cart
+        window.cart = [];
+        localStorage.setItem('deerDeriCart', JSON.stringify([]));
+        if (typeof updateCartBadge === 'function') updateCartBadge();
+
+        showToast('Siparişiniz alındı! Yönlendiriliyorsunuz...', 'success');
+        setTimeout(() => {
+            window.location.href = `/siparis-tamamlandi?orderNumber=${encodeURIComponent(orderNumber)}`;
+        }, 1500);
+
+    } catch (err) {
+        console.error('processOrder error:', err);
+        showToast('Hata: ' + err.message, 'error');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'SİPARİŞİ TAMAMLA';
+        }
+    }
 };
 
 window.updateCheckoutSummary = function () {

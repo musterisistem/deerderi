@@ -7,8 +7,8 @@
     <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
     <title>İletişim | DEER DERİ</title>
     <meta name="description" content="DEER DERİ ile iletişime geçin. Adres, telefon ve iletişim formu.">
-    <link rel="stylesheet" href="styles.css?v=200">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    
     <style>
         .page-header {
             background-color: #f8f8f8;
@@ -141,107 +141,144 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/styles.css?v=203">
+    <link rel="stylesheet" href="/v6-design.css?v=206">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* ── FULL WIDTH RESPONSIVE OVERRIDE ── */
+        html, body { width: 100%; overflow-x: hidden; }
+
+        /* Remove max-width constraints on page wrappers */
+        .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 40px !important;
+            padding-right: 40px !important;
+        }
+
+        /* Checkout, cart, success inner wrappers */
+        .checkout-wrapper,
+        .cart-wrapper,
+        .cart-container,
+        .checkout-container,
+        .success-wrapper {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            box-sizing: border-box;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 900px) {
+            .container { padding-left: 16px !important; padding-right: 16px !important; }
+            .checkout-wrapper, .cart-wrapper, .cart-container, .checkout-container { padding: 20px 16px 60px; }
+        }
+
+        /* Full width header/footer/sections */
+        .v6-top-bar, .v6-main-header, footer, .v6-hero {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    </style>
 </head>
 
 <body>
-
-    <!-- 1. Duyuru Bandı -->
-    <div class="announcement-bar">
-        <div class="marquee-content">
-            %30'a Varan İndirim | Son Gün: 31 Ocak &nbsp;&nbsp;•&nbsp;&nbsp; Kargo ve İsim Baskısı Ücretsiz!
-            &nbsp;&nbsp;•&nbsp;&nbsp; Yeni Koleksiyon Mağazalarda &nbsp;&nbsp;•&nbsp;&nbsp; %30'a Varan İndirim | Son
-            Gün: 31 Ocak
+    <!-- Global Page Loader -->
+    <div id="global-loader">
+        <div class="loader-inner">
+            <img src="/assets/logo.png" alt="DEER DERİ" class="loader-logo-img">
+            <div class="loader-tagline">Yükleniyor...</div>
+            <div class="loader-spinner-creative"></div>
         </div>
     </div>
 
-    <!-- 2. Header -->
-    <header id="main-header">
-        <div class="container header-main">
-            <!-- Logo & Shipping Info Group -->
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="index.html" class="logo">
-                    <img src="assets/logo.png" alt="DEER DERİ" style="height: 40px; width: auto;">
-                </a>
-                <div class="shipping-info-box d-none d-md-block">
-                    2000 TL ve Üzeri Kargo Bizden!
-                </div>
-            </div>
-
-            <!-- Desktop Navigation -->
-            <nav class="nav-desktop" id="desktop-nav">
-                <!-- Populated by script.js based on Admin Categories -->
-            </nav>
-
-            <!-- Icons & Dropdowns -->
-            <div class="header-icons">
-                <!-- Login Dropdown -->
-                <div class="icon-group">
-                    <i class="fa-regular fa-user"></i>
-                    <span class="icon-label" id="header-user-name">Giriş Yap</span>
-                    <div class="dropdown-menu login-dropdown">
-                        <form class="login-form">
-                            <input type="email" placeholder="E-Posta Adresi">
-                            <input type="password" placeholder="Şifre">
-                            <button class="btn btn-primary">GİRİŞ YAP</button>
-                            <a href="register.html" class="register-btn">ÜYE OL</a>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Cart Dropdown -->
-                <div class="icon-group">
-                    <div class="cart-icon">
-                        <i class="fa-solid fa-basket-shopping"></i>
-                        <span class="cart-badge">0</span>
-                    </div>
-                    <span class="icon-label">Sepetim</span>
-                    <div class="dropdown-menu cart-dropdown">
-                        <div class="cart-preview-wrapper">
-                            <div id="cart-image-preview" class="cart-image-preview">
-                                <!-- Hover image will appear here -->
-                            </div>
-                            <div id="header-cart-preview" class="cart-items-list">
-                                <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- 1. Duyuru Bandı -->
+        <!-- 1. Top Bar (Campaign Marquee) -->
+    <div class="v6-top-bar">
+        <div class="v6-top-bar-container v6-marquee-container">
+            <div class="v6-marquee">
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+                <span class="v6-marquee-dot">•</span>
+                <!-- Duplicate for seamless scrolling -->
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
             </div>
         </div>
+    </div>
 
-        <!-- Mobile Horizontal Nav (Below Header) -->
-        <!-- Mobile Horizontal Nav (Below Header) -->
-        <div class="mobile-nav-wrapper">
-            <nav class="mobile-horizontal-nav">
-                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
-                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+    <!-- 2. Main Header -->
+    <header class="v6-main-header">
+        <div class="v6-header-container">
+            <div class="v6-header-left">
+                <!-- Mobile Menu Icon (Now visible on desktop too) -->
+                <i class="fa-solid fa-bars v6-mobile-menu-icon" onclick="document.querySelector('.v6-sidebar').classList.toggle('active'); document.querySelector('.v6-sidebar-overlay').classList.toggle('active');"></i>
+                <!-- Desktop Search -->
+                <div class="v6-search-box">
+                    <i class="fa-solid fa-search" style="color: #999;"></i>
+                    <input type="text" placeholder="Ürünleri ara...">
                 </div>
-                <div class="nav-item-mobile">
-                    <a href="/kategori/canta">ÇANTA</a>
-                </div>
-                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
-                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
-                </div>
-                <div class="nav-item-mobile">
-                    <a href="/kategori/kartlik">KARTLIK</a>
-                </div>
-                <div class="nav-item-mobile">
-                    <a href="/index.html">KOLEKSİYON</a>
-                </div>
-            </nav>
-            <!-- Mobile Submenus -->
-            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
-                <a href="/kategori/aksesuar">Bileklik</a>
-                <a href="/kategori/aksesuar">Kolye</a>
-                <a href="/kategori/aksesuar">Pasaport Kılıfı</a>
-                <a href="/kategori/aksesuar">Telefon Kılıfı</a>
             </div>
-            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
-                <a href="/kategori/cuzdan">Erkek Cüzdan</a>
-                <a href="/kategori/cuzdan">Kadın Cüzdan</a>
+            <div class="v6-header-center">
+                <a href="/" class="v6-logo">
+                    <img src="/assets/logo.png" alt="DEER DERI" style="height: 40px; transform: scale(1.2);">
+                </a>
+            </div>
+            <div class="v6-header-right">
+                <div class="v6-header-actions">
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span>HESABIM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-heart"></i>
+                        <span>FAVORİLERİM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-solid fa-gift"></i>
+                        <span>SEPET</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
+
+    <!-- Sidebar Menu -->
+    <div class="v6-sidebar-overlay" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></div>
+    <div class="v6-sidebar">
+        <div class="v6-sidebar-header">
+            <i class="fa-solid fa-times v6-sidebar-close" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></i>
+        </div>
+        <nav class="v6-sidebar-nav">
+            <a href="/">ANA SAYFA</a>
+            <a href="#">CÜZDANLAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ÇANTALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">GÖZLÜKLER <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ŞAPKALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">AKSESUAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">KEMER</a>
+            <a href="#">OFİS GEREÇLERİ</a>
+            <a href="#" style="color: red;">İNDİRİM FIRSATI! 🔥</a>
+            <a href="/contact.html">İLETİŞİM</a>
+        </nav>
+    </div>
+
 
     <!-- Page Content -->
     <div class="page-header">
@@ -348,8 +385,11 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="data.js"></script>
-    <script src="script.js"></script>
+    
+    
+    <script src="/data.js"></script>
+    <script src="/script.js?v=207"></script>
+    <script src="/v6-script.js"></script>
 </body>
 
 </html>

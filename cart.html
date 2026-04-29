@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="kLmZs2xRHV_V-byOVIHxyP3cAKrClsnj0JUWQRgfgBM" />
     <title>DEER DERI | Sepetim</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    
     <style>
         .cart-container {
             padding: 60px 0;
@@ -130,119 +130,151 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/styles.css?v=203">
+    <link rel="stylesheet" href="/v6-design.css?v=206">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* ── FULL WIDTH RESPONSIVE OVERRIDE ── */
+        html, body { width: 100%; overflow-x: hidden; }
+
+        /* Remove max-width constraints on page wrappers */
+        .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 40px !important;
+            padding-right: 40px !important;
+        }
+
+        /* Checkout, cart, success inner wrappers */
+        .checkout-wrapper,
+        .cart-wrapper,
+        .cart-container,
+        .checkout-container,
+        .success-wrapper {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            box-sizing: border-box;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 900px) {
+            .container { padding-left: 16px !important; padding-right: 16px !important; }
+            .checkout-wrapper, .cart-wrapper, .cart-container, .checkout-container { padding: 20px 16px 60px; }
+        }
+
+        /* Full width header/footer/sections */
+        .v6-top-bar, .v6-main-header, footer, .v6-hero {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    </style>
 </head>
 
 <body>
-
-    <!-- Header -->
-    <header id="main-header">
-        <div class="container header-main">
-            <!-- Logo & Shipping Info Group -->
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="index.html" class="logo">
-                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; width: auto;">
-                </a>
-                <div class="shipping-info-box d-none d-md-block">
-                    2000 TL ve Üzeri Kargo Bizden!
-                </div>
-            </div>
-
-            <!-- Desktop Nav -->
-            <nav class="nav-desktop">
-                <div class="nav-item">
-                    <a href="index.html" class="nav-link">Aksesuar <i class="fa-solid fa-chevron-down"
-                            style="font-size: 10px; margin-left: 4px;"></i></a>
-                    <div class="nav-dropdown">
-                        <a href="#">Bileklik</a>
-                        <a href="#">Kolye</a>
-                        <a href="#">Pasaport Kılıfı</a>
-                        <a href="#">Telefon Kılıfı</a>
-                    </div>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link">Çanta</a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link">Cüzdan <i class="fa-solid fa-chevron-down"
-                            style="font-size: 10px; margin-left: 4px;"></i></a>
-                    <div class="nav-dropdown">
-                        <a href="#">Erkek Cüzdan</a>
-                        <a href="#">Kadın Cüzdan</a>
-                    </div>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link">Kartlık</a>
-                </div>
-            </nav>
-
-            <!-- Icons & Dropdowns -->
-            <div class="header-icons">
-                <!-- Login Dropdown -->
-                <div class="icon-group">
-                    <i class="fa-regular fa-user"></i>
-                    <span class="icon-label">Giriş Yap</span>
-                    <div class="dropdown-menu login-dropdown">
-                        <form class="login-form">
-                            <input type="email" placeholder="E-Posta Adresi">
-                            <input type="password" placeholder="Şifre">
-                            <button class="btn btn-primary">GİRİŞ YAP</button>
-                            <a href="#" class="register-btn">ÜYE OL</a>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Cart Dropdown -->
-                <div class="icon-group">
-                    <div class="cart-icon">
-                        <i class="fa-solid fa-basket-shopping"></i>
-                        <span class="cart-badge">0</span>
-                    </div>
-                    <span class="icon-label">Sepetim</span>
-                    <div class="dropdown-menu cart-dropdown">
-                        <div id="header-cart-preview">
-                            <p style="color:#999; text-align:center; padding:20px 0;">Yükleniyor...</p>
-                        </div>
-                    </div>
-                </div>
+    <!-- Global Page Loader -->
+    <div id="global-loader">
+        <div class="loader-inner">
+            <img src="/assets/logo.png" alt="DEER DERİ" class="loader-logo-img">
+            <div class="loader-tagline">Yükleniyor...</div>
+            <div class="loader-spinner-creative"></div>
+        </div>
+    </div>
+    <!-- 1. Top Bar (Campaign Marquee) -->
+    <div class="v6-top-bar">
+        <div class="v6-top-bar-container v6-marquee-container">
+            <div class="v6-marquee">
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+                <span class="v6-marquee-dot">•</span>
+                <!-- Duplicate for seamless scrolling -->
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
             </div>
         </div>
+    </div>
 
-        <!-- Mobile Horizontal Nav (Below Header) -->
-        <!-- Mobile Horizontal Nav (Below Header) -->
-        <div class="mobile-nav-wrapper">
-            <nav class="mobile-horizontal-nav">
-                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-aksesuar')">
-                    AKSESUAR <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+    <!-- 2. Main Header -->
+    <header class="v6-main-header">
+        <div class="v6-header-container">
+            <div class="v6-header-left">
+                <!-- Mobile Menu Icon (Now visible on desktop too) -->
+                <i class="fa-solid fa-bars v6-mobile-menu-icon" onclick="document.querySelector('.v6-sidebar').classList.toggle('active'); document.querySelector('.v6-sidebar-overlay').classList.toggle('active');"></i>
+                <!-- Desktop Search -->
+                <div class="v6-search-box">
+                    <i class="fa-solid fa-search" style="color: #999;"></i>
+                    <input type="text" placeholder="Ürünleri ara...">
                 </div>
-                <div class="nav-item-mobile">
-                    <a href="#">ÇANTA</a>
-                </div>
-                <div class="nav-item-mobile" onclick="toggleMobileSubmenu('mobile-sub-cuzdan')">
-                    CÜZDAN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
-                </div>
-                <div class="nav-item-mobile">
-                    <a href="#">KARTLIK</a>
-                </div>
-                <div class="nav-item-mobile">
-                    <a href="index.html">KOLEKSİYON</a>
-                </div>
-            </nav>
-            <!-- Mobile Submenus -->
-            <div id="mobile-sub-aksesuar" class="mobile-submenu-container">
-                <a href="#">Bileklik</a>
-                <a href="#">Kolye</a>
-                <a href="#">Pasaport Kılıfı</a>
-                <a href="#">Telefon Kılıfı</a>
             </div>
-            <div id="mobile-sub-cuzdan" class="mobile-submenu-container">
-                <a href="#">Erkek Cüzdan</a>
-                <a href="#">Kadın Cüzdan</a>
+            <div class="v6-header-center">
+                <a href="/" class="v6-logo">
+                    <img src="/assets/logo.png" alt="DEER DERI" style="height: 40px; transform: scale(1.2);">
+                </a>
+            </div>
+            <div class="v6-header-right">
+                <div class="v6-header-actions">
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span>HESABIM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-heart"></i>
+                        <span>FAVORİLERİM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-solid fa-gift"></i>
+                        <span>SEPET</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
+    <!-- Sidebar Menu -->
+    <div class="v6-sidebar-overlay" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></div>
+    <div class="v6-sidebar">
+        <div class="v6-sidebar-header">
+            <i class="fa-solid fa-times v6-sidebar-close" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></i>
+        </div>
+        <nav class="v6-sidebar-nav">
+            <a href="/">ANA SAYFA</a>
+            <a href="#">CÜZDANLAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ÇANTALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">GÖZLÜKLER <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ŞAPKALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">AKSESUAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">KEMER</a>
+            <a href="#">OFİS GEREÇLERİ</a>
+            <a href="#" style="color: red;">İNDİRİM FIRSATI! 🔥</a>
+            <a href="/contact.html">İLETİŞİM</a>
+        </nav>
+    </div>
+
+
+
     <div class="container cart-container">
         <h1>Alışveriş Sepetim</h1>
+
+        <!-- Free Shipping Banner -->
+        <div id="free-shipping-banner" style="display:none; background: linear-gradient(135deg, #1b5e20, #2e7d32); color:#fff; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; font-weight: 600; text-align: center;">
+            <i class="fa-solid fa-truck-fast"></i> <span id="free-shipping-msg"></span>
+        </div>
 
         <div id="cart-content">
             <!-- Content injected by JS -->
@@ -250,39 +282,54 @@
     </div>
 
     <!-- Footer -->
-    <!-- Footer -->
     <footer id="dynamic-footer">
-        <!-- Footer content will be dynamically rendered by script.js -->
         <div class="container" style="padding: 60px 20px; text-align: center;">
             <div style="color: #999; font-size: 14px;">
-                <i class="fa-solid fa-spinner fa-spin"></i> Footer yÃ¼kleniyor...
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yükleniyor...
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        // Cart globals
+        let siteSettings = { freeShippingThreshold: 2000, shippingRates: { standard: { price: 100 }, express: { price: 200 } } };
+        let appliedCoupon = null;
+        let selectedShipping = 'standard';
+
+        // Load site settings from API
+        async function loadSettings() {
+            try {
+                const res = await fetch('/api/settings');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) siteSettings = data.data;
+                }
+            } catch (e) { /* use defaults */ }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            await loadSettings();
             renderCartItems();
         });
 
-        // Make renderCartItems global or accessible by script.js calls
         window.renderCartItems = function () {
             const container = document.getElementById('cart-content');
 
-            if (window.cart.length === 0) {
+            if (!window.cart || window.cart.length === 0) {
                 container.innerHTML = `
                     <div class="empty-cart">
                         <i class="fa-solid fa-basket-shopping"></i>
                         <h3>Sepetinizde ürün bulunmamaktadır.</h3>
-                        <a href="index.html" class="btn btn-primary" style="margin-top:20px;">ALIŞVERİŞE BAŞLA</a>
+                        <a href="/" class="btn btn-primary" style="margin-top:20px;">ALIŞVERİŞE BAŞLA</a>
                     </div>
                 `;
+                document.getElementById('free-shipping-banner').style.display = 'none';
                 return;
             }
 
-            let itemsHtml = '<div class="cart-items">';
             let subtotal = 0;
+            let itemsHtml = '<div class="cart-items">';
 
             window.cart.forEach((item, index) => {
                 const itemTotal = item.price * item.quantity;
@@ -293,13 +340,13 @@
                         <img src="${item.image}" alt="${item.name}">
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-meta">Renk: ${item.color}</div>
+                            ${item.color ? `<div class="cart-item-meta">Renk: ${item.color}</div>` : ''}
                             ${item.embossing ? `<div class="cart-item-meta" style="color: #2E7D32; font-weight: 600;">Özel Baskı: ${item.embossing}</div>` : ''}
                             <div class="cart-item-price">${formatPriceGlobal(item.price)}₺</div>
                         </div>
                         <div class="cart-item-actions">
                             <div class="qty-controls">
-                                <button onclick="window.updateCartQuantity(${index}, -1)">-</button>
+                                <button onclick="window.updateCartQuantity(${index}, -1)">−</button>
                                 <span>${item.quantity}</span>
                                 <button onclick="window.updateCartQuantity(${index}, 1)">+</button>
                             </div>
@@ -311,24 +358,92 @@
             });
             itemsHtml += '</div>';
 
+            // Coupon discount
+            let discount = 0;
+            let couponHtml = '';
+            if (appliedCoupon) {
+                discount = appliedCoupon.discount || 0;
+                couponHtml = `<div class="summary-row" style="color: #2E7D32; font-weight: 600;">
+                    <span><i class="fa-solid fa-tag"></i> ${appliedCoupon.code}</span>
+                    <span>−${formatPriceGlobal(discount)}₺</span>
+                </div>`;
+            }
+
+            // Shipping cost
+            const threshold = siteSettings.freeShippingThreshold || 2000;
+            const stdPrice = (siteSettings.shippingRates && siteSettings.shippingRates.standard) ? siteSettings.shippingRates.standard.price : 100;
+            const expPrice = (siteSettings.shippingRates && siteSettings.shippingRates.express) ? siteSettings.shippingRates.express.price : 200;
+
+            let shippingCost = selectedShipping === 'express' ? expPrice : (subtotal - discount >= threshold ? 0 : stdPrice);
+            const total = subtotal - discount + shippingCost;
+
+            // Update free shipping banner
+            const banner = document.getElementById('free-shipping-banner');
+            const bannerMsg = document.getElementById('free-shipping-msg');
+            if (subtotal - discount >= threshold) {
+                banner.style.display = 'block';
+                bannerMsg.textContent = 'Ücretsiz kargo hakkı kazandınız! 🎉';
+            } else {
+                const remaining = threshold - (subtotal - discount);
+                banner.style.display = 'block';
+                bannerMsg.innerHTML = `<i class="fa-solid fa-truck-fast"></i> ${formatPriceGlobal(remaining)}₺ daha alışveriş yapın, standart kargo ücretsiz!`;
+            }
+
             const summaryHtml = `
                 <div class="cart-summary">
                     <h3>Sipariş Özeti</h3>
+
+                    <!-- Coupon Code -->
+                    <div style="margin-bottom: 20px;">
+                        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: #333;">İndirim Kodu</div>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="coupon-input" placeholder="Kupon kodunuz" style="flex: 1; padding: 10px; border: 1px solid #ddd; font-size: 13px;" value="${appliedCoupon ? appliedCoupon.code : ''}">
+                            <button onclick="applyCoupon()" style="padding: 10px 14px; background: #000; color: #fff; border: none; cursor: pointer; font-size: 12px; font-weight: 700;" id="coupon-btn">
+                                ${appliedCoupon ? 'KALDIR' : 'UYGULA'}
+                            </button>
+                        </div>
+                        <div id="coupon-msg" style="font-size: 12px; margin-top: 6px; ${appliedCoupon ? 'color: #2E7D32;' : 'color: #D32F2F;'}">
+                            ${appliedCoupon ? `✓ "${appliedCoupon.code}" kodu uygulandı, ${formatPriceGlobal(discount)}₺ indirim kazandınız!` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Shipping Selection -->
+                    <div style="margin-bottom: 20px;">
+                        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: #333;">Kargo Yöntemi</div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid ${selectedShipping === 'standard' ? '#000' : '#ddd'}; cursor: pointer; border-radius: 4px;">
+                                <input type="radio" name="shipping-cart" value="standard" ${selectedShipping === 'standard' ? 'checked' : ''} onchange="selectShippingCart('standard')">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 13px;">Standart Kargo <span style="font-size:11px; color:#666;">(2-3 İş Günü)</span></div>
+                                </div>
+                                <div style="font-weight: 700;">${subtotal - discount >= threshold ? '<span style="color:#2E7D32;">Ücretsiz</span>' : formatPriceGlobal(stdPrice) + '₺'}</div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid ${selectedShipping === 'express' ? '#000' : '#ddd'}; cursor: pointer; border-radius: 4px;">
+                                <input type="radio" name="shipping-cart" value="express" ${selectedShipping === 'express' ? 'checked' : ''} onchange="selectShippingCart('express')">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 13px;">Hızlı Kargo <span style="font-size:11px; color:#666;">(1 İş Günü)</span></div>
+                                </div>
+                                <div style="font-weight: 700;">${formatPriceGlobal(expPrice)}₺</div>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="summary-row">
                         <span>Ara Toplam</span>
                         <span>${formatPriceGlobal(subtotal)}₺</span>
                     </div>
+                    ${couponHtml}
                     <div class="summary-row">
                         <span>Kargo</span>
-                        <span>Ücretsiz</span>
+                        <span>${shippingCost === 0 ? '<span style="color:#2E7D32; font-weight:700;">Ücretsiz</span>' : formatPriceGlobal(shippingCost) + '₺'}</span>
                     </div>
                     <div class="summary-row summary-total">
                         <span>Toplam</span>
-                        <span>${formatPriceGlobal(subtotal)}₺</span>
+                        <span>${formatPriceGlobal(total)}₺</span>
                     </div>
-                    <a href="/checkout.html" class="btn btn-primary" style="display:block; text-align:center; text-decoration:none; width:100%; margin-top:20px;">ÖDEME ADIMINA GEÇ</a>
+                    <a href="/odeme" class="btn btn-primary" style="display:block; text-align:center; text-decoration:none; width:100%; margin-top:20px;">ÖDEME ADIMINA GEÇ</a>
                     <div style="margin-top:20px; font-size:12px; color:#666; text-align:center;">
-                        <i class="fa-solid fa-lock"></i> Güvenli Ödeme
+                        <i class="fa-solid fa-lock"></i> Güvenli Ödeme · SSL Korumalı
                     </div>
                 </div>
             `;
@@ -340,10 +455,71 @@
                 </div>
             `;
 
-            // Also update badge in case it changed
-            if (window.updateCartBadge) window.updateCartBadge(); // script.js function
+            if (window.updateCartBadge) window.updateCartBadge();
         };
+
+        // Shipping selection
+        function selectShippingCart(type) {
+            selectedShipping = type;
+            window.currentShippingType = type;
+            localStorage.setItem('deerDeriSelectedShipping', type);
+            window.renderCartItems();
+        }
+
+        // Coupon handling
+        async function applyCoupon() {
+            const input = document.getElementById('coupon-input');
+            const msgEl = document.getElementById('coupon-msg');
+
+            if (appliedCoupon) {
+                // Remove coupon
+                appliedCoupon = null;
+                window.appliedCouponCode = null;
+                input.value = '';
+                if (msgEl) { msgEl.textContent = ''; msgEl.style.color = '#D32F2F'; }
+                window.renderCartItems();
+                return;
+            }
+
+            const code = input.value.trim().toUpperCase();
+            if (!code) {
+                if (msgEl) { msgEl.textContent = 'Lütfen kupon kodu girin.'; msgEl.style.color = '#D32F2F'; }
+                return;
+            }
+
+            // Calculate subtotal
+            const subtotal = window.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+            try {
+                const res = await fetch('/api/coupons/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, cartTotal: subtotal }),
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    appliedCoupon = data.data;
+                    window.appliedCouponCode = data.data.code;
+                    window.renderCartItems();
+                } else {
+                    if (msgEl) { msgEl.textContent = data.error || 'Geçersiz kupon kodu.'; msgEl.style.color = '#D32F2F'; }
+                }
+            } catch (err) {
+                if (msgEl) { msgEl.textContent = 'Kupon doğrulanamadı, lütfen tekrar deneyin.'; msgEl.style.color = '#D32F2F'; }
+            }
+        }
+
+        // Allow Enter key for coupon
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('coupon-input') === document.activeElement) {
+                applyCoupon();
+            }
+        });
     </script>
+    <script src="/data.js"></script>
+    <script src="/script.js?v=207"></script>
+    <script src="/v6-script.js"></script>
 </body>
 
 </html>

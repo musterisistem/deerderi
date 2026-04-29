@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    window.initProductCards = setup;
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', setup);
     } else {
