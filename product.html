@@ -1013,7 +1013,7 @@
             }
 
             try {
-                const response = await fetch('/api/products/' + productSlug);
+                const response = await fetch('/api/products?slug=' + encodeURIComponent(productSlug));
                 const data = await response.json();
 
                 if (data.success && (data.data || data.product)) {
