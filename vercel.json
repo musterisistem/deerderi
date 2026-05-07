@@ -5,6 +5,10 @@
       "destination": "/admin.html"
     },
     {
+      "source": "/api/products",
+      "destination": "/api/products"
+    },
+    {
       "source": "/api/send-email",
       "destination": "/api/send-email"
     },
@@ -15,6 +19,10 @@
     {
       "source": "/api/auth/login",
       "destination": "/api/auth/login"
+    },
+    {
+      "source": "/urun/:slug",
+      "destination": "/product.html"
     },
     {
       "source": "/urun-:slug",
