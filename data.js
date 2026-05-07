@@ -3,232 +3,197 @@ const products = [
         "id": 1,
         "name": "London Vintage Kartlık",
         "price": 799.9,
-        "oldPrice": null,
+        "oldPrice": 999.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/114e6924-317c-3309-8ad1-bcc1df2fe1a7/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/76faf5ad-3564-3290-9245-d536588a78a1/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/f8286100-fc78-3188-9f58-e1d4b71e6ede/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/eac9a41b-b6c5-395b-8df5-89c7c0f6113f/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/86dc2e3c-a322-3244-b8cc-9512ee667547/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/cd8f0873-44b7-3039-ad6b-151ae666fb82/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/3ce44386-8b0d-3982-96f9-b4d86c586c1b/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/909acd78-9139-3f46-aa7d-f03d46674dcc/1_org_zoom.jpg"
+            "/assets/urun3/1.jpg",
+            "/assets/urun3/2.jpg",
+            "/assets/urun3/3.jpg"
         ],
         "description": "- Basic koleksiyonun bir parçası olarak, günlük kullanım için ideal bir aksesuar.; - Yetişkinlerin şıklığını tamamlayacak, zamansız tasarımıyla dikkat çeken bir kartlık.; - Gerçek deri materyali sayesinde uzun ömürlü ve dayanıklı kullanım sunar.; - Kumaş tipi belirtilmemiş olup, deri kalitesinin ön plana çıktığı bir tasarıma sahiptir.; - Materyal bileşeni hakkında bilgi verilmemiş olsa da, hakiki deriden üretilmiştir.; - Türkiye'de üretilmiş olup, yerel işçiliği ve kalite standartlarını yansıtır.; - Düz deseniyle sade ve şık bir görünüm sağlar; her türlü kıyafetle kolayca uyum sağlar.; - Casual ortamlarda rahatlıkla tercih edilebilecek, günlük kullanım için uygundur.; - Unisex tasarımı ile hem kadınlar hem de erkekler tarafından rahatlıkla kullanılabilir.;",
         "badge": "YENİ",
-        "rating": 4.8
+        "rating": 4.8,
+        "mainImage": "/assets/urun3/1.jpg"
     },
     {
         "id": 2,
         "name": "London Vintage Deri Kartlık",
         "price": 799.9,
-        "oldPrice": null,
+        "oldPrice": 999.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/9a284dda-61c7-3619-a4c3-26d4428b52de/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/a347749e-82ef-3dd7-af7a-1f99f9006d65/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/e1a1028e-0ff9-363e-9c50-eba35acc558f/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/7467a116-548f-34ca-af29-f6b226e1bf81/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/0a438c14-4ef5-33e0-82b3-07608c8e153c/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/9da3c654-a556-36f9-aa27-40c5c490c6ee/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/16d64afa-ca98-38e2-a1bc-628ba05b73dd/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/76bc5155-84cd-32a8-9187-5a0abd9e665b/1_org_zoom.jpg"
+            "/assets/urun3/1.jpg",
+            "/assets/urun3/2.jpg",
+            "/assets/urun3/3.jpg"
         ],
         "description": "- Basic koleksiyonun bir parçası olarak, günlük kullanım için ideal bir aksesuar.; - Yetişkinlerin şıklığını tamamlayacak, zamansız tasarımıyla dikkat çeken bir kartlık.; - Gerçek deri materyali sayesinde uzun ömürlü ve dayanıklı kullanım sunar.; - Kumaş tipi belirtilmemiş olup, deri kalitesinin ön plana çıktığı bir tasarıma sahiptir.; - Materyal bileşeni hakkında bilgi verilmemiş olsa da, hakiki deriden üretilmiştir.; - Türkiye'de üretilmiş olup, yerel işçiliği ve kalite standartlarını yansıtır.; - Düz deseniyle sade ve şık bir görünüm sağlar; her türlü kıyafetle kolayca uyum sağlar.; - Casual ortamlarda rahatlıkla tercih edilebilecek, günlük kullanım için uygundur.; - Unisex tasarımı ile hem kadınlar hem de erkekler tarafından rahatlıkla kullanılabilir.;",
         "badge": "YENİ",
-        "rating": 4.8
+        "rating": 4.8,
+        "mainImage": "/assets/urun3/1.jpg"
     },
     {
         "id": 3,
         "name": "London Vintage Deri Kartlık",
         "price": 799.9,
-        "oldPrice": null,
+        "oldPrice": 999.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/38584832-b156-33a5-b078-dbb87595d4d0/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/089c560b-b915-380b-9da7-fd3765dae3f7/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/04b8523c-1764-3413-9ed1-d7ee9f7e4bf4/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/2a13413d-f9b0-3376-a7a9-378459d24746/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/7e565a05-94c4-3747-9eeb-d7c37069a497/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/2323fa52-d662-3a36-ae7f-37226efb3f41/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/33c3f033-cb3c-38d1-a7a9-ac170b423d7a/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/7509232d-2c55-3039-b60b-6530c7aa0b22/1_org_zoom.jpg"
+            "/assets/urun4/1.jpg",
+            "/assets/urun4/2.jpg",
+            "/assets/urun4/3.jpg"
         ],
         "description": "- Basic koleksiyonun bir parçası olarak, günlük kullanım için ideal bir aksesuar.; - Yetişkinlerin şıklığını tamamlayacak, zamansız tasarımıyla dikkat çeken bir kartlık.; - Gerçek deri materyali sayesinde uzun ömürlü ve dayanıklı kullanım sunar.; - Kumaş tipi belirtilmemiş olup, deri kalitesinin ön plana çıktığı bir tasarıma sahiptir.; - Materyal bileşeni hakkında bilgi verilmemiş olsa da, hakiki deriden üretilmiştir.; - Türkiye'de üretilmiş olup, yerel işçiliği ve kalite standartlarını yansıtır.; - Düz deseniyle sade ve şık bir görünüm sağlar; her türlü kıyafetle kolayca uyum sağlar.; - Casual ortamlarda rahatlıkla tercih edilebilecek, günlük kullanım için uygundur.; - Unisex tasarımı ile hem kadınlar hem de erkekler tarafından rahatlıkla kullanılabilir.;",
         "badge": "YENİ",
-        "rating": 4.2
+        "rating": 4.2,
+        "mainImage": "/assets/urun4/1.jpg"
     },
     {
         "id": 4,
         "name": "London Vintage Deri Kartlık",
         "price": 799.9,
-        "oldPrice": null,
+        "oldPrice": 999.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/7550ab8e-d6e8-38ad-8000-a9f42f521b37/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/877d11be-9a0d-38b8-9c08-53a1c3487be4/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/ca611c0a-d215-3991-919b-b3ffca6b2527/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/b7323564-6cdd-31e4-866f-11cba51ace44/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/feb896e1-54a4-3ed4-97c4-f6aa4d7df931/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/4b1730e9-f89e-37b7-8e9d-e338a34c43e1/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/1a77a33f-a3f1-335d-ad6b-932b082c1725/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/19cecb0a-5f9c-35db-9059-9a96f78209ff/1_org_zoom.jpg"
+            "/assets/urun2/1.jpg",
+            "/assets/urun2/2.jpg"
         ],
         "description": "- Basic koleksiyonun bir parçası olarak, günlük kullanım için ideal bir aksesuar.; - Yetişkinlerin şıklığını tamamlayacak, zamansız tasarımıyla dikkat çeken bir kartlık.; - Gerçek deri materyali sayesinde uzun ömürlü ve dayanıklı kullanım sunar.; - Kumaş tipi belirtilmemiş olup, deri kalitesinin ön plana çıktığı bir tasarıma sahiptir.; - Materyal bileşeni hakkında bilgi verilmemiş olsa da, hakiki deriden üretilmiştir.; - Türkiye'de üretilmiş olup, yerel işçiliği ve kalite standartlarını yansıtır.; - Düz deseniyle sade ve şık bir görünüm sağlar; her türlü kıyafetle kolayca uyum sağlar.; - Casual ortamlarda rahatlıkla tercih edilebilecek, günlük kullanım için uygundur.; - Unisex tasarımı ile hem kadınlar hem de erkekler tarafından rahatlıkla kullanılabilir.;",
         "badge": "YENİ",
-        "rating": 4.2
+        "rating": 4.2,
+        "mainImage": "/assets/urun2/1.jpg"
     },
     {
         "id": 5,
         "name": "London Vintage Kartlık",
         "price": 799.9,
-        "oldPrice": null,
+        "oldPrice": 999.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/199bb581-794c-3017-a54a-a8d95e0410e8/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/165262bd-2dcc-30db-a41a-51104b91b1a2/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/7e4f7597-d78f-3a98-acef-a70398468013/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/22f3bf85-b441-3b6c-8219-c2e086709d98/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/16/3627c156-77e5-3020-9bbf-d43f6fe3136e/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/68df3931-ebb3-3f89-bb76-e4aed22e39c7/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/16/e8e8c146-af05-35da-ab25-27660a10a7b5/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/16/d9f4f96d-d8bb-3ad0-b0eb-3968d69336a5/1_org_zoom.jpg"
+            "/assets/urun2/1.jpg",
+            "/assets/urun2/2.jpg"
         ],
         "description": "- Basic koleksiyonun bir parçası olarak, günlük kullanım için ideal bir aksesuar.; - Yetişkinlerin şıklığını tamamlayacak, zamansız tasarımıyla dikkat çeken bir kartlık.; - Gerçek deri materyali sayesinde uzun ömürlü ve dayanıklı kullanım sunar.; - Kumaş tipi belirtilmemiş olup, deri kalitesinin ön plana çıktığı bir tasarıma sahiptir.; - Materyal bileşeni hakkında bilgi verilmemiş olsa da, hakiki deriden üretilmiştir.; - Türkiye'de üretilmiş olup, yerel işçiliği ve kalite standartlarını yansıtır.; - Düz deseniyle sade ve şık bir görünüm sağlar; her türlü kıyafetle kolayca uyum sağlar.; - Casual ortamlarda rahatlıkla tercih edilebilecek, günlük kullanım için uygundur.; - Unisex tasarımı ile hem kadınlar hem de erkekler tarafından rahatlıkla kullanılabilir.;",
         "badge": "YENİ",
-        "rating": 4.9
+        "rating": 4.9,
+        "mainImage": "/assets/urun2/1.jpg"
     },
     {
         "id": 6,
         "name": "Kaos Hakiki Deri Kartlık",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/f167c85b-6d8b-38b8-b7ff-1fdc6927b0a7/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/a21918f4-7645-3268-ab3a-f9132b77815c/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/b1e92016-be93-378d-a9b8-826914b0622d/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/8adc4312-c825-302c-bc1c-f435580bdd31/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/289bcc2a-8f5e-3156-9353-b5611ea37c6b/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/2cf34347-c1df-3cb3-9c69-fa647a572525/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/25a8c1da-df24-35ed-b9c6-10312afd4247/1_org_zoom.jpg"
+            "/assets/urun1/1.jpg",
+            "/assets/urun1/2.jpg",
+            "/assets/urun1/3.jpg"
         ],
         "description": "TSE standartlarında Türkiye’de el işçiliğiyle titizlilikle üretilmiştir.; ; Tüm ürünlerimiz birinci sınıf deriden üretilmiş olup yırtılmalara karşı dayanıklıdır.; ; 2 adet kart bölmesi, 1 adet mekanizması mevcuttur.; ; 9.5 cm × 6.5 cm ölçülerine sahiptir.; ; Deri yüzeyindeki ton farklılıkları ve gözenek lekeleri, gerçek derinin doğal yapısından kaynaklanmaktadır.; ; Ürünlerimiz, özel Premium kutusunda veya alternatifli olarak hediye paketi ile gönderilmektedir.; ;",
         "badge": "YENİ",
-        "rating": 4.4
+        "rating": 4.4,
+        "mainImage": "/assets/urun1/1.jpg"
     },
     {
         "id": 7,
         "name": "Kaos Hakiki Deri Kartlık",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/f99b88c0-4e9c-3bcf-9301-da86a39165da/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/9d7e3e02-ce68-324f-b42e-082fde1a68af/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/03bec55b-5b96-3b04-8f4e-43e2671979f3/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/8c00e385-4fca-3e48-a0ab-3323525ec3a7/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/78f46c37-2b02-3f2d-bab3-c0ee7f4b05ce/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/8d96b2f3-31bc-3ade-8afb-85517c89cff4/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/6ec6ddc2-88cc-363e-8d42-566f2447a684/1_org_zoom.jpg"
+            "/assets/urun3/1.jpg",
+            "/assets/urun3/2.jpg",
+            "/assets/urun3/3.jpg"
         ],
         "description": "TSE standartlarında Türkiye’de el işçiliğiyle titizlilikle üretilmiştir.; ; Tüm ürünlerimiz birinci sınıf deriden üretilmiş olup yırtılmalara karşı dayanıklıdır.; ; 2 adet kart bölmesi, 1 adet mekanizması mevcuttur.; ; 9.5 cm × 6.5 cm ölçülerine sahiptir.; ; Deri yüzeyindeki ton farklılıkları ve gözenek lekeleri, gerçek derinin doğal yapısından kaynaklanmaktadır.; ; Ürünlerimiz, özel Premium kutusunda veya alternatifli olarak hediye paketi ile gönderilmektedir.; ;",
         "badge": "YENİ",
-        "rating": 4.2
+        "rating": 4.2,
+        "mainImage": "/assets/urun3/1.jpg"
     },
     {
         "id": 8,
         "name": "Kaos Hakiki Deri Kartlık",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/cccf3ac3-6c13-3e4b-a649-e083a367edf3/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/72e18f3d-df9f-3ffd-b5af-dc59897341e3/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/62d03f2f-9efd-399a-b86b-49787d1f9faa/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/34591b37-bc45-3183-87a5-ac9d23f5208c/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/0cf28238-056b-3657-90dd-2fa4e9be5c00/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/d92b7cf5-8e78-34a5-9b6a-85810f44a1ae/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/ead81151-7a7c-34b9-b5c4-db097b38da66/1_org_zoom.jpg"
+            "/assets/urun1/1.jpg",
+            "/assets/urun1/2.jpg",
+            "/assets/urun1/3.jpg"
         ],
         "description": "TSE standartlarında Türkiye’de el işçiliğiyle titizlilikle üretilmiştir.; ; Tüm ürünlerimiz birinci sınıf deriden üretilmiş olup yırtılmalara karşı dayanıklıdır.; ; 2 adet kart bölmesi, 1 adet mekanizması mevcuttur.; ; 9.5 cm × 6.5 cm ölçülerine sahiptir.; ; Deri yüzeyindeki ton farklılıkları ve gözenek lekeleri, gerçek derinin doğal yapısından kaynaklanmaktadır.; ; Ürünlerimiz, özel Premium kutusunda veya alternatifli olarak hediye paketi ile gönderilmektedir.; ;",
         "badge": "YENİ",
-        "rating": 4.2
+        "rating": 4.2,
+        "mainImage": "/assets/urun1/1.jpg"
     },
     {
         "id": 9,
         "name": "Jüpiter Vintage Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/c50dd7aa-347d-37f2-865f-bf4c524177a5/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/4f58258a-ee7a-3afd-9cad-909bd12a09aa/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/2fb04031-8942-35b5-a180-b8b7bc28aa6c/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/a7b83366-849b-3cb1-952f-5243e9996bc3/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/3baeb11c-ed7a-3fd1-994d-7f4fa9a1b941/1_org_zoom.jpg"
+            "/assets/urun4/1.jpg",
+            "/assets/urun4/2.jpg",
+            "/assets/urun4/3.jpg"
         ],
         "description": "",
         "badge": "YENİ",
-        "rating": 4.5
+        "rating": 4.5,
+        "mainImage": "/assets/urun4/1.jpg"
     },
     {
         "id": 10,
         "name": "Jüpiter Vintage Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/910e4733-6e67-3e09-9004-e9b62fea1e11/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/977b195b-7121-3a1d-a86a-52eb31e6e02a/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/96f81cf8-7b0f-30d3-96d2-84411195a831/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/60c93a19-8772-390e-85e7-1764a09cf410/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/aa4162a8-7a9d-3ac0-afca-1627b84e9bb1/1_org_zoom.jpg"
+            "/assets/urun4/1.jpg",
+            "/assets/urun4/2.jpg",
+            "/assets/urun4/3.jpg"
         ],
         "description": "",
         "badge": "YENİ",
-        "rating": 4
+        "rating": 4,
+        "mainImage": "/assets/urun4/1.jpg"
     },
     {
         "id": 11,
         "name": "Jüpiter Vintage Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/61a8823a-6473-3429-8978-daa6d36ff140/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/7a8bc524-d8a3-3a95-b782-0dfa0c71e2fb/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/9774c1c4-b4a0-39ad-9812-24a68de7e1c5/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/6840ea8c-c913-3cb4-a27f-69c7eb7b97a5/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1790/prod/QC_PREP/20251112/15/9b46b1a3-a326-3926-bb79-9ee807acbefd/1_org_zoom.jpg"
+            "/assets/urun1/1.jpg",
+            "/assets/urun1/2.jpg",
+            "/assets/urun1/3.jpg"
         ],
         "description": "",
         "badge": "YENİ",
-        "rating": 4.1
+        "rating": 4.1,
+        "mainImage": "/assets/urun1/1.jpg"
     },
     {
         "id": 12,
         "name": "Jüpiter Vintage Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "kartlik",
         "images": [
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/764b703c-86f5-3552-8f29-5a8acdf29ceb/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1789/prod/QC_PREP/20251112/15/aab31c71-ba7c-3cc0-8751-b2c2059e1047/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/3ba9718b-77ab-3acf-9675-396ef6bfb381/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/e2eeb5bd-192a-3940-8b12-9a10fca3634c/1_org_zoom.jpg",
-            "https://cdn.dsmcdn.com/ty1788/prod/QC_PREP/20251112/15/9804d0e6-de54-316a-b7f9-c335ccc1f3c5/1_org_zoom.jpg"
+            "/assets/urun4/1.jpg",
+            "/assets/urun4/2.jpg",
+            "/assets/urun4/3.jpg"
         ],
         "description": "",
         "badge": "YENİ",
-        "rating": 4.9
+        "rating": 4.9,
+        "mainImage": "/assets/urun4/1.jpg"
     },
     {
         "id": 13,
         "name": "Hypnos Hakiki Deri Telefon Bölmeli Portföy Cüzdan",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1785/prod/QC_PREP/20251111/09/5ef2fb87-57f7-3b05-8414-079ac0d7e4b1/1_org_zoom.jpg",
@@ -244,7 +209,7 @@ const products = [
         "id": 14,
         "name": "Hypnos Hakiki Deri Telefon Bölmeli Portföy Cüzdan",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1786/prod/QC_PREP/20251111/09/9c3626a5-e889-349b-bada-bb99c9abd676/1_org_zoom.jpg",
@@ -260,7 +225,7 @@ const products = [
         "id": 15,
         "name": "Hypnos Hakiki Deri Telefon Bölmeli Portföy Cüzdan",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1787/prod/QC_PREP/20251111/09/a93f6eaf-b610-37a9-8eb8-8292fc3c880a/1_org_zoom.jpg",
@@ -276,7 +241,7 @@ const products = [
         "id": 16,
         "name": "Hestia Hakiki & Vintage Deri El Çantası",
         "price": 1999.9,
-        "oldPrice": null,
+        "oldPrice": 2199.9,
         "category": "canta",
         "images": [
             "https://cdn.dsmcdn.com/ty1785/prod/QC_PREP/20251111/09/fb4104da-a312-35d3-ba4b-351f878eb005/1_org_zoom.jpg",
@@ -293,7 +258,7 @@ const products = [
         "id": 17,
         "name": "Hestia Hakiki & Vintage Deri El Çantası",
         "price": 1999.9,
-        "oldPrice": null,
+        "oldPrice": 2199.9,
         "category": "canta",
         "images": [
             "https://cdn.dsmcdn.com/ty1785/prod/QC_PREP/20251111/09/bf34bb4e-43e0-322a-8956-b29c6c459703/1_org_zoom.jpg",
@@ -310,7 +275,7 @@ const products = [
         "id": 18,
         "name": "Hermes Hakiki Deri Omuz Çantası",
         "price": 2999.9,
-        "oldPrice": null,
+        "oldPrice": 3199.9,
         "category": "canta",
         "images": [
             "https://cdn.dsmcdn.com/ty1786/prod/QC_PREP/20251110/17/74156bbb-f411-3185-9423-fe0590748f47/1_org_zoom.jpg",
@@ -326,7 +291,7 @@ const products = [
         "id": 19,
         "name": "Aristalos Vintage Askılı Telefon Çantası",
         "price": 1499.9,
-        "oldPrice": null,
+        "oldPrice": 1699.9,
         "category": "canta",
         "images": [
             "https://cdn.dsmcdn.com/ty1787/prod/QC_PREP/20251110/17/bf41a081-68a5-3eeb-b61e-cf67575f758a/1_org_zoom.jpg",
@@ -341,7 +306,7 @@ const products = [
         "id": 20,
         "name": "Pandor İphone Hakiki Deri Telefon Kılıfı Iphone 13 Pro Max",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/15/50b04410-9e18-367d-8831-d5303143a534/1_org_zoom.jpg",
@@ -358,7 +323,7 @@ const products = [
         "id": 21,
         "name": "Pandor İphone Hakiki Deri Telefon Kılıfı Iphone 13 Pro Max",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/15/c5713c0a-658b-307a-a3dd-32701cce9a09/1_org_zoom.jpg",
@@ -378,7 +343,7 @@ const products = [
         "id": 22,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 16 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251103/15/413f0c2b-57b0-3913-8ccf-078640f1f4c1/1_org_zoom.jpg",
@@ -393,7 +358,7 @@ const products = [
         "id": 23,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 16",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251103/15/449b9fdd-b72a-340e-a7bf-82cd22553060/1_org_zoom.jpg",
@@ -408,7 +373,7 @@ const products = [
         "id": 24,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 16",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/15/63ee460d-56f1-347f-8bac-39f65526f5b9/1_org_zoom.jpg",
@@ -423,7 +388,7 @@ const products = [
         "id": 25,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 16",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/15/3145e774-4418-3a68-9e50-da4b5a4afd58/1_org_zoom.jpg",
@@ -438,7 +403,7 @@ const products = [
         "id": 26,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 15 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251103/14/7f936175-ecfc-32c7-9105-0a6e1c209665/1_org_zoom.jpg",
@@ -453,7 +418,7 @@ const products = [
         "id": 27,
         "name": "Helen İphone Hakiki Deri Telefon Kılıfı Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251103/14/a69c2e06-375c-3eb4-90f2-40d65a620f73/1_org_zoom.jpg",
@@ -469,7 +434,7 @@ const products = [
         "id": 28,
         "name": "Helen İphone Hakiki Deri Telefon Kılıfı Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/14/6598ba05-bed7-3e26-b924-7b825a3cf871/1_org_zoom.jpg",
@@ -485,7 +450,7 @@ const products = [
         "id": 29,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/13/73ec8638-f2e9-358b-aed2-4c9870b082f3/1_org_zoom.jpg",
@@ -500,7 +465,7 @@ const products = [
         "id": 30,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/13/cbcbb671-1496-362e-adf5-b1ff00c36d1d/1_org_zoom.jpg",
@@ -514,7 +479,7 @@ const products = [
         "id": 31,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/13/51973d72-3e49-3e8a-955b-196c1a7d4ddc/1_org_zoom.jpg",
@@ -528,7 +493,7 @@ const products = [
         "id": 32,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/13/1e9e4d0f-fc49-338b-b7de-7cbf672cf512/1_org_zoom.jpg",
@@ -542,7 +507,7 @@ const products = [
         "id": 33,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1784/prod/QC_PREP/20251103/13/a3b7d055-677f-3a07-b709-5233916477f0/1_org_zoom.jpg",
@@ -556,7 +521,7 @@ const products = [
         "id": 34,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro Max",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/13/3d0c47dc-2217-3cf3-aad2-1805e348bc19/1_org_zoom.jpg"
@@ -569,7 +534,7 @@ const products = [
         "id": 35,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1784/prod/QC_PREP/20251103/13/f8f74e85-2041-37be-bcf1-fa4e4cf67194/1_org_zoom.jpg",
@@ -585,7 +550,7 @@ const products = [
         "id": 36,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251103/12/f2f9fd77-2cd7-3a43-ba7c-2c81bb232c4b/1_org_zoom.jpg",
@@ -600,7 +565,7 @@ const products = [
         "id": 37,
         "name": "İphone Hakiki Deri Dikişli Karlıklı Kılıf Iphone 11",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1784/prod/QC_PREP/20251103/12/c9195f9a-ed62-3c77-9129-9854105b6925/1_org_zoom.jpg",
@@ -614,7 +579,7 @@ const products = [
         "id": 38,
         "name": "İphone Hakiki Deri Dikişli Karlıklı Kılıf Iphone 11",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251103/12/0f25aac8-351d-3dc8-87c3-d02222ebd908/1_org_zoom.jpg",
@@ -628,7 +593,7 @@ const products = [
         "id": 39,
         "name": "İphone Hakiki Deri Dikişli Karlıklı Kılıf Iphone 11",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/12/bd46e318-c4bb-39ad-b514-b7ef9b0f9ffd/1_org_zoom.jpg",
@@ -642,7 +607,7 @@ const products = [
         "id": 40,
         "name": "Poseidon Hakiki Deri El Çantası",
         "price": 2999.9,
-        "oldPrice": null,
+        "oldPrice": 3199.9,
         "category": "canta",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251103/12/675131c1-c956-3b2a-99b0-adb2756d274c/1_org_zoom.jpg",
@@ -660,7 +625,7 @@ const products = [
         "id": 41,
         "name": "Rhode Vintage Hakiki Deri Fermuarlı Kartlık Cüzdan",
         "price": 1499.9,
-        "oldPrice": null,
+        "oldPrice": 1699.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251101/16/23162d70-b994-36fd-bdd2-0a88b90f9701/1_org_zoom.jpg",
@@ -676,7 +641,7 @@ const products = [
         "id": 42,
         "name": "Rhode Vintage Hakiki Deri Fermuarlı Kartlık Cüzdan",
         "price": 1499.9,
-        "oldPrice": null,
+        "oldPrice": 1699.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251101/16/3332af9a-fa4e-352a-b56a-3575e96369b3/1_org_zoom.jpg",
@@ -692,7 +657,7 @@ const products = [
         "id": 43,
         "name": "Rhode Vintage Hakiki Deri Fermuarlı Kartlık Cüzdan",
         "price": 1499.9,
-        "oldPrice": null,
+        "oldPrice": 1699.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251101/16/bfd2e89f-a3b0-3e27-bc85-dc532672729e/1_org_zoom.jpg",
@@ -708,7 +673,7 @@ const products = [
         "id": 44,
         "name": "Rhode Vintage Hakiki Deri Fermuarlı Kartlık Cüzdan",
         "price": 1499.9,
-        "oldPrice": null,
+        "oldPrice": 1699.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251101/16/219a92bd-dbe2-3fa5-951a-536cdf9d846d/1_org_zoom.jpg",
@@ -724,7 +689,7 @@ const products = [
         "id": 45,
         "name": "Thyke Vintage Deri Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251101/16/4a18e299-3355-370d-a80c-1acc288ab7ab/1_org_zoom.jpg",
@@ -742,7 +707,7 @@ const products = [
         "id": 46,
         "name": "Thyke Vintage Deri Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1783/prod/QC_PREP/20251101/16/68d9e9e1-d66d-37c9-9130-8e5b598c4336/1_org_zoom.jpg",
@@ -761,7 +726,7 @@ const products = [
         "id": 47,
         "name": "Thyke Vintage Deri Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251101/16/20ac489f-f1be-34e1-9291-a7b06547eab1/1_org_zoom.jpg",
@@ -779,7 +744,7 @@ const products = [
         "id": 48,
         "name": "Thyke Vintage Deri Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251101/16/61146ccd-7835-39e0-b53d-4765c94f2884/1_org_zoom.jpg",
@@ -795,7 +760,7 @@ const products = [
         "id": 49,
         "name": "Thyke Vintage Deri Cüzdan Kartlık",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "cuzdan",
         "images": [
             "https://cdn.dsmcdn.com/ty1784/prod/QC_PREP/20251101/16/527a2034-150c-3a1c-b917-56a13e150a23/1_org_zoom.jpg",
@@ -813,7 +778,7 @@ const products = [
         "id": 50,
         "name": "Vesta Kanvas Bel Çantası Lacivert",
         "price": 1749.9,
-        "oldPrice": null,
+        "oldPrice": 1949.9,
         "category": "canta",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251101/16/eeffcef1-068c-330f-87d5-75cc25177370/1_org_zoom.jpg",
@@ -829,7 +794,7 @@ const products = [
         "id": 51,
         "name": "Zeus Hakiki Deri & Vintage El Çantası Siyah",
         "price": 1749.9,
-        "oldPrice": null,
+        "oldPrice": 1949.9,
         "category": "canta",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_PREP/20251101/15/c3b66ec5-9151-3297-a4fa-5ee209e4c031/1_org_zoom.jpg",
@@ -847,7 +812,7 @@ const products = [
         "id": 52,
         "name": "İphone Hakiki Deri Dikişli Karlıklı Standlı Kılıf Iphone 11",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1784/prod/QC_ENRICHMENT/20251103/12/6e5cf4a8-e54f-3687-8b58-e6a84de2a968/1_org_zoom.jpg",
@@ -862,7 +827,7 @@ const products = [
         "id": 53,
         "name": "İphone Hakiki Deri Dikişli Karlıklı Standlı Kılıf Iphone 11",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1784/prod/QC_ENRICHMENT/20251103/12/4cf500dc-4e8a-3afd-ad35-c19066aee6f6/1_org_zoom.jpg",
@@ -877,7 +842,7 @@ const products = [
         "id": 54,
         "name": "İphone Hakiki Deri Dikişli Karlıklı Standlı Kılıf Iphone 11",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1782/prod/QC_ENRICHMENT/20251103/12/706639f3-4b82-3246-bbe8-8c2151679f28/1_org_zoom.jpg",
@@ -892,7 +857,7 @@ const products = [
         "id": 55,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1781/prod/QC_PREP/20251027/17/b95b092b-a0c0-3ee7-8f2a-82f637b2a26c/1_org_zoom.jpg",
@@ -908,7 +873,7 @@ const products = [
         "id": 56,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1779/prod/QC_PREP/20251027/17/d14db054-18b3-3559-bf8e-0017157e8e2a/1_org_zoom.jpg",
@@ -924,7 +889,7 @@ const products = [
         "id": 57,
         "name": "Kartlıklı Tutacaklı İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1780/prod/QC_PREP/20251027/17/ccac3331-7efa-3f08-aa09-0e592d62b57c/1_org_zoom.jpg",
@@ -940,7 +905,7 @@ const products = [
         "id": 58,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13/14/15",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1779/prod/QC_PREP/20251027/16/28277974-5d48-31e4-b42b-205b7bffa21a/1_org_zoom.jpg",
@@ -956,7 +921,7 @@ const products = [
         "id": 59,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13/14/15",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1781/prod/QC_PREP/20251027/16/3d0a322f-672a-330a-ad21-10373b332541/1_org_zoom.jpg",
@@ -971,7 +936,7 @@ const products = [
         "id": 60,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 11",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1780/prod/QC_PREP/20251027/15/ca05bc31-ec51-3f65-a0d5-e5661b64d0de/1_org_zoom.jpg",
@@ -987,7 +952,7 @@ const products = [
         "id": 61,
         "name": "Juno Iphone 11 Hakiki Deri Koruyucu Kılıf Koyu Kahverengi",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1780/prod/QC_PREP/20251027/14/d84e57ab-5b4f-3773-8a0b-1448094d845a/1_org_zoom.jpg",
@@ -1001,7 +966,7 @@ const products = [
         "id": 62,
         "name": "Helen İphone Hakiki Deri Telefon Kılıfı Uyumlu Iphone 13 Pro",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1769/prod/QC_PREP/20251003/17/8f1b87b6-699f-3723-bbc2-4f1f92c7c467/1_org_zoom.jpg",
@@ -1017,7 +982,7 @@ const products = [
         "id": 63,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1767/prod/QC_PREP/20251003/17/8c19f9ec-1d3e-3412-8949-ee7fb29c7f55/1_org_zoom.jpg",
@@ -1031,7 +996,7 @@ const products = [
         "id": 64,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1769/prod/QC_PREP/20251003/17/a252624f-ee87-3e0a-94be-ce67f3b8efeb/1_org_zoom.jpg",
@@ -1045,7 +1010,7 @@ const products = [
         "id": 65,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_PREP/20251003/17/1bcafdd2-2ac2-3712-b519-d7eb7e97d00d/1_org_zoom.jpg",
@@ -1059,7 +1024,7 @@ const products = [
         "id": 66,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_PREP/20251003/17/1a4db25e-13f1-3888-adb8-b17f4c6e911d/1_org_zoom.jpg",
@@ -1073,7 +1038,7 @@ const products = [
         "id": 67,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13 Pro",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1767/prod/QC_PREP/20251003/17/e8c2cd00-cb2b-3b29-8320-bba423f5077d/1_org_zoom.jpg",
@@ -1087,7 +1052,7 @@ const products = [
         "id": 68,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 13/14/15",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_PREP/20251003/15/bcba422b-cbb6-3938-91d0-6e9276fab0a3/1_org_zoom.jpg",
@@ -1101,7 +1066,7 @@ const products = [
         "id": 69,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro Koyu Kahverengi Uyumlu",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1767/prod/QC_ENRICHMENT/20251003/15/8076fa36-64af-3145-8a32-1d5f4e37fc3c/1_org_zoom.jpg",
@@ -1115,7 +1080,7 @@ const products = [
         "id": 70,
         "name": "Helen İphone Hakiki Deri Telefon Kılıfı Uyumlu Iphone 13/14/15",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_ENRICHMENT/20251003/15/7aa93c3f-3e16-33ea-bc23-0368ed19582d/1_org_zoom.jpg",
@@ -1131,7 +1096,7 @@ const products = [
         "id": 71,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro Uyumlu",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1769/prod/QC_ENRICHMENT/20251003/16/6e6edb50-4957-31fb-a009-1b4595b870a0/1_org_zoom.jpg",
@@ -1148,7 +1113,7 @@ const products = [
         "id": 72,
         "name": "Helen İphone Hakiki Deri Telefon Kılıfı Iphone 12/12 Pro Uyumlu",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1769/prod/QC_ENRICHMENT/20251003/16/afc36e09-e6e2-370e-9845-6932990a43b8/1_org_zoom.jpg",
@@ -1164,7 +1129,7 @@ const products = [
         "id": 73,
         "name": "Helen İphone Hakiki Deri Telefon Kılıfı Iphone 13 Pro",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_ENRICHMENT/20251003/16/fbcbbedb-d851-34e8-b500-fc4cd171f102/1_org_zoom.jpg",
@@ -1180,7 +1145,7 @@ const products = [
         "id": 74,
         "name": "Helen İphone Hakiki Deri Telefon Kılıfı Uyumlu Iphone 13/14/15",
         "price": 999.9,
-        "oldPrice": null,
+        "oldPrice": 1199.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1767/prod/QC_ENRICHMENT/20251003/15/2660bded-c7df-3bd0-9899-1e44039aff76/1_org_zoom.jpg",
@@ -1196,7 +1161,7 @@ const products = [
         "id": 75,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Uyumlu Iphone 13/14/15",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_ENRICHMENT/20251003/15/64cd20ed-5eea-3efe-b9fc-179feec42506/1_org_zoom.jpg",
@@ -1211,7 +1176,7 @@ const products = [
         "id": 76,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Uyumlu Iphone 13/14/15",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1766/prod/QC_ENRICHMENT/20251002/10/277e2618-7cb3-3443-ba1f-05eee9f6d59e/1_org_zoom.jpg",
@@ -1225,7 +1190,7 @@ const products = [
         "id": 77,
         "name": "İphone Hakiki Deri Koruyucu uyumlu Kılıf Iphone 13/14/15",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1767/prod/QC_ENRICHMENT/20251003/15/aea1d393-ea02-365a-860e-1b8f2ca42afe/1_org_zoom.jpg",
@@ -1239,7 +1204,7 @@ const products = [
         "id": 78,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Uyumlu Iphone 13/14/15",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1790/prod/QC_ENRICHMENT/20251112/10/85f8956e-0e42-3b44-9a3c-e2c33d22cdf2/1_org_zoom.jpg",
@@ -1253,7 +1218,7 @@ const products = [
         "id": 79,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro Uyumlu",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1769/prod/QC_ENRICHMENT/20251003/15/8c372a54-603a-34d3-b4ef-8eee0a4144de/1_org_zoom.jpg",
@@ -1267,7 +1232,7 @@ const products = [
         "id": 80,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro uyumlu",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1769/prod/QC_ENRICHMENT/20251003/15/f2beec3d-806c-35b0-b7a3-daf3c05d8a45/1_org_zoom.jpg",
@@ -1281,7 +1246,7 @@ const products = [
         "id": 81,
         "name": "Juno İphone Hakiki Deri Koruyucu Kılıf Iphone 12/12 Pro Uyumlu",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1767/prod/QC_ENRICHMENT/20251003/15/6b216d02-3e2f-32cb-b326-ee692e339995/1_org_zoom.jpg",
@@ -1295,7 +1260,7 @@ const products = [
         "id": 82,
         "name": "Juno Iphone 11 Hakiki Deri Koruyucu Kılıf",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1769/prod/QC_ENRICHMENT/20251006/17/599f7f25-a8e2-3882-9d5a-8b188eb336de/1_org_zoom.jpg",
@@ -1309,7 +1274,7 @@ const products = [
         "id": 83,
         "name": "Juno Iphone 11 Hakiki Deri Koruyucu Kılıf",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_ENRICHMENT/20251003/15/c9461ee7-6cc0-313e-b247-8e0a9e54586a/1_org_zoom.jpg",
@@ -1323,7 +1288,7 @@ const products = [
         "id": 84,
         "name": "Juno Iphone 11 Hakiki Deri Koruyucu Kılıf",
         "price": 499.9,
-        "oldPrice": null,
+        "oldPrice": 699.9,
         "category": "teknoloji",
         "images": [
             "https://cdn.dsmcdn.com/ty1768/prod/QC_ENRICHMENT/20251003/15/81f162c1-9e4b-3501-b081-d74c59d78427/1_org_zoom.jpg",
@@ -1332,5 +1297,64 @@ const products = [
         "description": "•TSE standartlarında Türkiye’de el işçiliğiyle titizlilikle üretilmiştir.; •Tüm ürünlerimiz birinci sınıf deriden üretilmiş olup yırtılmalara karşı dayanıklıdır.; •Deri yüzeyindeki ton farklılıkları ve gözenek lekeleri, gerçek derinin doğal yapısından kaynaklanmaktadır.; •Modelimiz mıknatıslıdır.; •Ürün isminde yazan model ile uyumludur.; •Telefona uyumlu içerisindeki silikonlu telefon kılıfı sayesinde telefonunuzu darbelere ve çizilmelere karşı korur.; •İç kısmı kadifedir.; •Ürünlerimiz, özel Premium kutusunda veya alternatifli olarak hediye paketi ile gönderilmektedir.",
         "badge": "YENİ",
         "rating": 4
+    },
+    {
+        "id": 85,
+        "name": "Louvre Telefon Bölmeli Mıknatıslı Hakiki Deri El Tutamaçlı Cüzdan",
+        "price": 1749.9,
+        "oldPrice": 1949.9,
+        "category": "cuzdan",
+        "images": [
+            "/assets/urun1/1.jpg",
+            "/assets/urun1/2.jpg",
+            "/assets/urun1/3.jpg"
+        ],
+        "description": "12 Kart bölmesi; 2 Uzun bölme; 1 Fermuarlı bölme; 1 Telefon Bölmesi; Mıknatıslı kapanma sistemi; 1 Tutma sapı; Ürün Ölçüsü 19 x 9,5 cm dir(+-1); Telefon Bölme Ölçüsü 17,5 x 8 cm dir(+-1); Hakiki deri malzemesi ile şık ve dayanıklı bir yapı sunar; Telefon bölmesi sayesinde telefonunuzu güvenle taşımanızı sağlar; Mıknatıslı kapak tasarımı, kolay açılıp kapanma ve güvenli kullanım imkanı verir; El tutamaçlı tasarımı, rahat taşıma ve kullanım kolaylığı sağlar; Cüzdan bölmesi ile kartlarınızı ve nakit paranızı düzenli bir şekilde saklayabilirsiniz.; Boyut: Büyük Boy; Materyal: Hakiki Deri; Tip: Yatay; Renk: Kahverengi; Ortam: Günlük; Desen: Düz.",
+        "badge": "YENİ",
+        "rating": 4.8
+    },
+    {
+        "id": 86,
+        "name": "Çapalı Deri El Örmesi Erkek Bileklik",
+        "price": 267.19,
+        "oldPrice": 467.19,
+        "category": "aksesuar",
+        "images": [
+            "/assets/urun2/1.jpg",
+            "/assets/urun2/2.jpg"
+        ],
+        "description": "El emeği göz nuru, özel tasarım erkek bileklik; Yüksek kaliteli deri malzeme ile üretilmiştir, uzun ömürlü kullanım sunar; Şık ve modern tasarımıyla her kıyafetle uyum sağlar; Çapalı detayları ile dikkat çekici bir görünüm kazandırır; Hem günlük kullanımda hem de özel günlerde tercih edilebilir; Materyal: Deri; Taş Cinsi: Yok; Renk: Haki; Bakım Talimatları (Genel): Nemli bir bezle silin.; Özellik: Oval; Materyal Bileşeni: Hakiki Deri El İşçiliği.",
+        "badge": "YENİ",
+        "rating": 4.9
+    },
+    {
+        "id": 87,
+        "name": "Akılllı Mekanizmalı Mıknatıslı Hakiki Deri El İşçilikli Cüzdan",
+        "price": 999.9,
+        "oldPrice": 1199.9,
+        "category": "cuzdan",
+        "images": [
+            "/assets/urun3/1.jpg",
+            "/assets/urun3/2.jpg",
+            "/assets/urun3/3.jpg"
+        ],
+        "description": "Akıllı mekanizmalı tasarımı sayesinde kartlarınızı kolayca çıkarıp takabilirsiniz; Mıknatıslı yapısı ile cüzdanınızın güvenliğini artırır ve kartlarınızın kaybolmasını önler; Hakiki deri malzemesiyle uzun ömürlü kullanım sunar ve şık bir görünüm sağlar; El işçiliği detaylarıyla her bir cüzdan benzersizdir ve kaliteyi hissettirir; Günlük kullanım için idealdir; hem pratik hem de stil sahibi bir aksesuardır; Boyut: Orta Boy; Materyal: Hakiki Deri; Tip: Dikey; Ortam: Gündüz / Gece; Kumaş Tipi: Belirtilmemiş; Renk: Lacivert.",
+        "badge": "YENİ",
+        "rating": 4.7
+    },
+    {
+        "id": 88,
+        "name": "Louvre Telefon Bölmeli Mıknatıslı Hakiki Deri El Tutamaçlı Cüzdan Siyah",
+        "price": 1749.9,
+        "oldPrice": 1949.9,
+        "category": "cuzdan",
+        "images": [
+            "/assets/urun4/1.jpg",
+            "/assets/urun4/2.jpg",
+            "/assets/urun4/3.jpg"
+        ],
+        "description": "12 Kart bölmesi; 2 Uzun bölme; 1 Fermuarlı bölme; 1 Telefon Bölmesi; Mıknatıslı kapanma sistemi; 1 Tutma sapı; Ürün Ölçüsü 19 x 9,5 cm dir(+-1); Telefon Bölme Ölçüsü 17,5 x 8 cm dir(+-1); Hakiki deri malzemesi ile şık ve dayanıklı bir yapı sunar; Telefon bölmesi sayesinde telefonunuzu güvenle taşımanızı sağlar; Mıknatıslı kapak tasarımı, kolay açılıp kapanma ve güvenli kullanım imkanı verir; El tutamaçlı tasarımı, rahat taşıma ve kullanım kolaylığı sağlar; Cüzdan bölmesi ile kartlarınızı ve nakit paranızı düzenli bir şekilde saklayabilirsiniz.; Boyut: Büyük Boy; Materyal: Hakiki Deri; Tip: Yatay; Renk: Siyah; Ortam: Günlük; Desen: Düz.",
+        "badge": "YENİ",
+        "rating": 4.8
     }
 ];

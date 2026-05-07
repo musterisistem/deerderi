@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DEER DERI | Ürün Detayı</title>
-    <link rel="stylesheet" href="/styles.css?v=203">
-    <link rel="stylesheet" href="/v6-design.css?v=206">
+    <link rel="stylesheet" href="/styles.css?v=205">
+    <link rel="stylesheet" href="/v6-design.css?v=208">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* ============================
@@ -62,184 +62,278 @@
 
         .pd-wrapper {
             width: 100%;
-            max-width: 100%;
+            max-width: 100%; /* Changed to Full Width */
             margin: 0 auto;
-            padding: 40px 40px 80px;
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 50px;
-            align-items: start;
+            padding: 40px 4% 80px; /* 4% padding matches full width design */
+            display: flex;
+            flex-direction: row;
+            gap: 5%;
+            align-items: flex-start;
+            justify-content: center;
         }
 
-        /* ── LEFT: Getto Style Gallery (3 columns effectively) ─────────────────── */
+        /* ── LEFT: Gallery ─────────────────── */
         .pd-gallery-container {
-            display: grid;
-            grid-template-columns: 1fr 90px;
-            gap: 20px;
-            align-items: start;
+            width: 45%; /* Reduced from 55% to make it smaller */
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+            align-items: flex-start;
         }
 
-        .pd-gallery-sticky {
-            position: sticky;
-            top: 100px;
-            height: calc(100vh - 120px);
-            border-radius: 6px;
+        .pd-gallery-main {
+            flex: 1;
+            border-radius: 8px;
             overflow: hidden;
-            background: #f7f5f2;
+            background: #f9f9f9;
+            aspect-ratio: 3 / 4;
+            position: sticky;
+            top: 96px;
         }
 
-        .pd-gallery-sticky img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .pd-gallery-main img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            min-width: 100%;
+            min-height: 100%;
             display: block;
-            /* transition is handled via JS for slide effect */
         }
 
         .pd-gallery-scroll {
+            width: 100px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            max-height: calc(100vh - 120px);
+            gap: 12px;
+            max-height: calc(100vh - 140px);
             overflow-y: auto;
             scrollbar-width: none;
-            padding-right: 5px;
+            padding-right: 4px;
+            position: sticky;
+            top: 96px;
         }
         .pd-gallery-scroll::-webkit-scrollbar { display: none; }
 
         .pd-scroll-img-item {
             width: 100%;
+            height: 130px;
+            flex-shrink: 0;
             border-radius: 6px;
             overflow: hidden;
-            background: #f7f5f2;
+            background: #fcfcfc;
+            border: 2px solid transparent;
             cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.6;
         }
-        .pd-scroll-img-item.active { border: 2px solid #000; opacity: 1; }
-        .pd-scroll-img-item { opacity: 0.6; transition: all 0.2s; border: 2px solid transparent; }
+        .pd-scroll-img-item.active { border-color: #111; opacity: 1; }
         .pd-scroll-img-item:hover { opacity: 1; }
 
         .pd-scroll-img-item img {
-            width: 100%;
+            width: 100% !important;
+            height: 100% !important;
             display: block;
-            object-fit: cover;
-            /* Adjust aspect ratio if needed, using 3:4 for portrait fashion */
-            aspect-ratio: 3 / 4;
+            object-fit: cover !important;
+            min-width: 100%;
+            min-height: 100%;
         }
-
-        /* Info panel becomes sticky too */
-        .pd-info {
-            position: sticky;
-            top: 100px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
-            scrollbar-width: none; /* Firefox */
-            padding-right: 10px;
-        }
-        .pd-info::-webkit-scrollbar { display: none; /* Safari/Chrome */ }
 
         /* ── RIGHT: Product Info ─────────────────── */
         .pd-info {
-            padding-top: 6px;
+            width: 45%; /* Increased to balance the layout */
+            padding-top: 0;
+            position: sticky;
+            top: 96px; /* top-24 */
+            align-self: flex-start;
         }
 
-        .pd-brand {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #999;
-            margin-bottom: 10px;
+        .pd-info-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .pd-brand { font-size: 13px; font-weight: 800; letter-spacing: 3px; color: #000; margin-bottom: 8px; text-transform: uppercase; }
+        .pd-title { font-size: 32px; font-weight: 800; line-height: 1.3; margin: 0 0 6px 0; color: #111; font-family: 'Inter', sans-serif; text-transform: capitalize; }
+        .pd-sku { font-size: 12px; color: #666; font-weight: 500; }
+        .pd-sku strong { color: #000; }
+        
+        .pd-info-actions { display: flex; gap: 12px; }
+        .pd-info-actions button { background: none; border: none; font-size: 20px; color: #666; cursor: pointer; transition: color 0.2s; padding: 4px; }
+        .pd-info-actions button:hover { color: #000; }
+
+        .pd-rating { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #eee; }
+        .pd-stars { color: #f5a623; font-size: 14px; display: flex; gap: 2px; }
+        .pd-review-count { font-size: 13px; color: #666; font-weight: 500; text-decoration: underline; cursor: pointer; transition: color 0.2s; }
+        .pd-review-count:hover { color: #000; }
+
+        .pd-price-wrap-creative { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 24px 20px; background: #fafafa; border: 1px solid #eee; border-radius: 12px; position: relative; transition: all 0.3s; }
+        .pd-price-wrap-creative:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.04); border-color: #e5e5e5; }
+        .pd-price-main-c { display: flex; align-items: baseline; gap: 14px; }
+        .pd-price-old-c { 
+            font-size: 22px; 
+            color: #a1a1aa; 
+            font-weight: 600; 
+            position: relative; 
+            text-decoration: none; 
+            display: inline-block;
+        }
+        .pd-price-old-c::after {
+            content: "";
+            position: absolute;
+            left: -5%;
+            top: 50%;
+            width: 110%;
+            height: 24px;
+            transform: translateY(-50%);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M2,16 C30,-5 60,25 98,4' fill='none' stroke='%23e31e24' stroke-width='2.5' stroke-linecap='round' /%3E%3C/svg%3E") no-repeat center;
+            background-size: 100% 100%;
+            animation: pdDrawScribble 2s infinite ease-in-out;
+            clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+        }
+        @keyframes pdDrawScribble {
+            0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); opacity: 1; }
+            30% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; }
+            70% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; }
+            100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 0; }
+        }
+        .pd-price-now-c { font-size: 38px; font-weight: 800; color: #111; letter-spacing: -1px; font-family: 'Inter', sans-serif; line-height: 1; }
+        .pd-price-meta-c { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .pd-meta-tax-c { font-size: 11px; color: #71717a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #f4f4f5; padding: 4px 8px; border-radius: 4px; }
+        .pd-meta-ship-c { font-size: 12px; color: #16a34a; font-weight: 800; display: flex; align-items: center; gap: 6px; background: #dcfce7; padding: 6px 12px; border-radius: 20px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.15); }
+        .pd-discount-badge-c { position: absolute; top: -12px; left: 24px; background: #e31e24; color: #fff; font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(227, 30, 36, 0.2); }
+
+        .pd-quick-features { display: flex; align-items: center; background: transparent; border: none; border-top: 1px dashed #e2e8f0; border-bottom: 1px dashed #e2e8f0; border-radius: 0; padding: 16px 4px; margin-bottom: 24px; gap: 16px; justify-content: space-between; }
+        .pd-qf-item { display: flex; align-items: center; gap: 12px; font-size: 12px; color: #555; flex: 1; }
+        .pd-qf-item:not(:last-child) { border-right: 1px solid #f1f5f9; padding-right: 16px; }
+        .pd-qf-item i { font-size: 20px; color: #000; opacity: 0.7; }
+        .pd-qf-text { display: flex; flex-direction: column; gap: 2px; }
+        .pd-qf-text strong { color: #111; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .pd-qty-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .pd-qty-label { font-size: 13px; font-weight: 700; color: #000; text-transform: uppercase; letter-spacing: 1px; }
+        .pd-qty-ctrl { display: flex; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; height: 44px; width: 140px; }
+        .pd-qty-btn { flex: 1; background: #fff; border: none; font-size: 18px; cursor: pointer; transition: background 0.2s; color: #555; display:flex; align-items:center; justify-content:center; }
+        .pd-qty-btn:hover { background: #f5f5f5; color: #000; }
+        .pd-qty-val { width: 50px; border: none; border-left: 1px solid #ddd; border-right: 1px solid #ddd; text-align: center; font-size: 15px; font-weight: 700; color: #000; }
+        
+        .pd-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        
+        .pd-btn-premium, .pd-btn-premium-outline {
+            width: 100%; height: 54px; border-radius: 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif;
+            position: relative; overflow: hidden;
+        }
+        
+        .pd-btn-premium { background: #0f172a; color: #fff; border: none; }
+        .pd-btn-premium::after { 
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: left 0.6s ease; 
+        }
+        .pd-btn-premium:hover { box-shadow: 0 10px 25px rgba(15, 23, 42, 0.3); transform: translateY(-4px) scale(1.02); }
+        .pd-btn-premium:hover::after { left: 100%; }
+
+        .pd-btn-premium-outline { background: transparent; color: #0f172a; border: 2px solid #0f172a; }
+        .pd-btn-premium-outline:hover { 
+            background: #0f172a; color: #fff; transform: translateY(-4px) scale(1.02); 
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2); 
         }
 
-        .pd-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.7rem;
-            font-weight: 700;
-            line-height: 1.25;
-            color: #111;
-            margin: 0 0 14px;
+        .pd-trust-badges {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding: 0;
+            border-top: none;
         }
-
-        /* ── Stars ─────────────────── */
-        .pd-rating {
+        .pd-trust-badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #f8fafc;
+            border: none;
+            border-radius: 12px;
+            padding: 20px 16px;
+            transition: all 0.3s ease;
+        }
+        .pd-trust-badge-item:hover {
+            background: #f1f5f9;
+            transform: translateY(-4px);
+        }
+        .pd-trust-icon-wrap {
+            width: 48px;
+            height: 48px;
+            background: #fff;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .pd-stars { color: #F5A623; font-size: 13px; display: flex; gap: 2px; }
-        .pd-review-count { font-size: 12px; color: #aaa; font-weight: 500; }
-
-        /* ── Price ─────────────────── */
-        .pd-price-block {
-            margin-bottom: 28px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .pd-price-now {
-            font-size: 2rem;
-            font-weight: 800;
+            justify-content: center;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             color: #111;
-            font-family: 'Inter', sans-serif;
+            font-size: 18px;
         }
-        .pd-price-old {
-            font-size: 1rem;
-            color: #bbb;
-            text-decoration: line-through;
-            margin-right: 10px;
-            font-weight: 400;
-        }
-        .pd-price-note {
-            font-size: 11px;
-            color: #aaa;
-            margin-top: 4px;
-        }
-
-        /* ── Buttons ─────────────────── */
-        .pd-btn-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 28px;
-        }
-
-        .pd-btn-cart {
-            flex: 2;
-            background: #111;
-            color: #fff;
-            border: none;
-            padding: 16px 24px;
+        .pd-trust-badge-item strong {
+            color: #111;
             font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 3px;
-            font-family: 'Inter', sans-serif;
-            transition: background 0.25s, transform 0.15s;
+            font-weight: 800;
+            margin-bottom: 6px;
+            display: block;
         }
-        .pd-btn-cart:hover { background: #333; transform: translateY(-1px); }
-        .pd-btn-cart:active { transform: translateY(0); }
-
-        .pd-btn-quick {
-            flex: 1;
-            background: transparent;
-            color: #111;
-            border: 1.5px solid #111;
-            padding: 16px 20px;
+        .pd-trust-badge-item span {
+            color: #666;
             font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 3px;
-            font-family: 'Inter', sans-serif;
-            transition: background 0.25s, color 0.25s;
+            line-height: 1.5;
         }
-        .pd-btn-quick:hover { background: #111; color: #fff; }
 
-        /* ── Embossing / İsim Baskısı ─────────────────── */
-        .pd-emboss-section {
-            background: #fafafa;
+        /* ── COMPACT EMBOSS SECTION ─────────────────── */
+        .pd-emboss-compact { margin-bottom: 24px; border: none; padding: 20px; border-radius: 12px; background: #f1f5f9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        .pd-emboss-header-compact { display: flex; justify-content: flex-start; align-items: center; gap: 16px; }
+        .pd-emboss-title-compact { font-size: 13px; font-weight: 800; color: #111; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
+        
+        /* Toggle Switch - Attention Grabber */
+        .pd-toggle-switch { position: relative; display: inline-block; width: 52px; height: 30px; flex-shrink: 0; margin: 0; border-radius: 30px; animation: pdPulseAttention 2s infinite; }
+        .pd-toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .pd-toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 30px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+        .pd-toggle-slider:before { position: absolute; content: ""; height: 24px; width: 24px; left: 3px; bottom: 3px; background-color: white; transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        
+        .pd-toggle-switch input:checked ~ .pd-toggle-slider { background-color: #111; }
+        .pd-toggle-switch input:checked ~ .pd-toggle-slider:before { transform: translateX(22px); }
+        .pd-toggle-switch:has(input:checked) { animation: none; } /* Stop pulsing when toggled on */
+
+        @keyframes pdPulseAttention {
+            0% { box-shadow: 0 0 0 0 rgba(17, 17, 17, 0.2); }
+            70% { box-shadow: 0 0 0 12px rgba(17, 17, 17, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(17, 17, 17, 0); }
+        }
+
+        .pd-emboss-free-badge {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto;
+            letter-spacing: 0.5px;
+            animation: pdBadgeFloat 3s infinite ease-in-out;
+        }
+        .pd-emboss-free-badge span { font-weight: 600; opacity: 0.85; }
+
+        @keyframes pdBadgeFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+
+        .pd-emboss-input-wrap-compact { padding-top: 16px; border-top: 1px dashed #ddd; display: none; margin-top: 16px; }
+        .pd-emboss-input-wrap-compact.active { display: block; animation: pdSlideDown 0.3s ease-out forwards; }
+        @keyframes pdSlideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .pd-emboss-input-compact { width: 100%; border: 1px solid #ccc; padding: 12px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s; border-radius: 4px; }
+        .pd-emboss-input-compact:focus { border-color: #111; box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+        .pd-emboss-hint-compact { font-size: 11px; font-weight: 500; color: #666; margin: 8px 0 0 0; }
             border: 1px solid #eee;
             border-radius: 6px;
             padding: 20px;
@@ -463,6 +557,204 @@
         .breadcrumbs a { color:#888; text-decoration:none; }
         .breadcrumbs .current { color:#000; font-weight:600; }
         .breadcrumbs .separator { margin: 0 12px; color: #ccc; font-size: 8px; opacity: 0.7; }
+        /* ---- TABS SECTION ---- */
+        .pd-tabs-section {
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+        .pd-tabs-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 4%;
+            box-sizing: border-box;
+        }
+        .pd-tabs-nav {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid #e0e0e0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            justify-content: center; /* Center the tabs */
+        }
+        .pd-tabs-nav::-webkit-scrollbar { display: none; }
+        .pd-tab-btn {
+            background: none;
+            border: none;
+            padding: 24px 32px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pd-tab-btn:hover { color: #000; }
+        .pd-tab-btn.active { color: #000; border-bottom-color: #000; }
+        .pd-tab-count {
+            background: #000;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 20px;
+        }
+
+        .pd-tab-content { display: none; padding: 60px 0; }
+        .pd-tab-content.active { display: block; }
+
+        /* Description Tab */
+        .pd-description-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 60px;
+            align-items: start;
+        }
+        .pd-desc-text h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 20px 0;
+        }
+        .pd-desc-text p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .pd-desc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .pd-desc-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        .pd-desc-list li i { color: #28a745; font-size: 14px; }
+
+        /* Reviews Tab */
+        .pd-reviews-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 60px;
+        }
+        .pd-rating-summary { position: sticky; top: 20px; }
+        .pd-rating-big {
+            font-size: 80px;
+            font-weight: 900;
+            line-height: 1;
+            color: #000;
+            margin-bottom: 10px;
+        }
+        .pd-rating-stars-big { color: #f5a623; font-size: 24px; display: flex; gap: 4px; margin-bottom: 12px; }
+        .pd-rating-total { font-size: 15px; color: #888; margin-bottom: 24px; }
+        .pd-rating-bars { display: flex; flex-direction: column; gap: 10px; }
+        .pd-bar-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #555; }
+        .pd-bar { flex: 1; height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+        .pd-bar-fill { height: 100%; background: #f5a623; border-radius: 4px; transition: width 0.6s ease; }
+        .pd-bar-row > span:last-child { min-width: 30px; text-align: right; }
+
+        .pd-reviews-list { display: flex; flex-direction: column; gap: 24px; }
+        .pd-review-card {
+            padding: 32px;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            background: #fafafa;
+            transition: box-shadow 0.2s;
+        }
+        .pd-review-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .pd-review-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .pd-review-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .pd-review-meta { flex: 1; }
+        .pd-review-name { font-size: 15px; font-weight: 700; color: #000; margin-bottom: 4px; }
+        .pd-review-date { font-size: 13px; color: #aaa; }
+        .pd-review-stars { color: #f5a623; font-size: 14px; display: flex; gap: 2px; }
+        .pd-review-text { font-size: 15px; color: #555; line-height: 1.8; }
+        .pd-review-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #28a745;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        /* Add Review */
+        .pd-add-review {
+            border: 1px solid #f0f0f0;
+            border-radius: 16px;
+            padding: 40px;
+            background: #fafafa;
+        }
+        .pd-add-review h4 { font-size: 22px; font-weight: 800; margin: 0 0 12px 0; }
+        .pd-review-stars-input {
+            display: flex;
+            gap: 8px;
+            font-size: 32px;
+            color: #ddd;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+        .pd-review-stars-input .fa-star, .pd-review-stars-input .fa-solid { color: #f5a623; }
+        .pd-review-input, .pd-review-textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 15px;
+            color: #000;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 16px;
+            background: #fff;
+        }
+        .pd-review-input:focus, .pd-review-textarea:focus { border-color: #000; }
+        .pd-review-textarea { resize: vertical; min-height: 120px; }
+        .pd-btn-review-submit {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            width: 100%;
+        }
+        .pd-btn-review-submit:hover { opacity: 0.9; }
     
         #product-content.container { padding: 0 !important; max-width: 100% !important; }
     </style>
@@ -639,6 +931,30 @@
             return Number(price).toLocaleString('tr-TR');
         }
 
+        function switchPdTab(evt, tabId) {
+            document.querySelectorAll('.pd-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.pd-tab-content').forEach(content => content.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function toggleModernEmboss(checkbox) {
+            const wrap = document.getElementById('embossing-input-area-getto');
+            const input = document.getElementById('custom-name-input');
+            
+            if (checkbox.checked) {
+                wrap.classList.add('active');
+                input.focus();
+            } else {
+                wrap.classList.remove('active');
+                wrap.style.display = 'none'; // reset
+                setTimeout(() => {
+                    if (!checkbox.checked) wrap.style.display = ''; // Clear inline block for animation class
+                }, 300);
+                input.value = ''; // Clear value so cart script doesn't read it
+            }
+        }
+
         function pdForceChangeImage(el, src) {
             // Manual click override
             if (window.innerWidth <= 900) return; 
@@ -734,13 +1050,20 @@
 
             const container = document.getElementById('product-content');
 
-            // Price
-            let priceBlock = '';
-            if (product.discountPrice) {
-                priceBlock = '<div class="pd-price-block"><div><span class="pd-price-old">' + formatPrice(product.price) + '₺</span><span class="pd-price-now">' + formatPrice(product.discountPrice) + '₺</span></div><div class="pd-price-note">(KDV Dahil) &nbsp;•&nbsp; Ücretsiz Kargo</div></div>';
+            // Creative Price Box
+            let priceBlock = '<div class="pd-price-wrap-creative">';
+            if (product.discountPrice || product.oldPrice) {
+                const oldP = product.oldPrice || product.price;
+                const newP = product.discountPrice || product.price;
+                priceBlock += '<div class="pd-price-main-c"><span class="pd-price-old-c">' + formatPrice(oldP) + '₺</span><span class="pd-price-now-c">' + formatPrice(newP) + '₺</span></div>';
+                priceBlock += '<div class="pd-discount-badge-c">SEZONUN EN İYİ FİYATI</div>';
             } else {
-                priceBlock = '<div class="pd-price-block"><div class="pd-price-now">' + formatPrice(product.price) + '₺</div><div class="pd-price-note">(KDV Dahil) &nbsp;•&nbsp; Ücretsiz Kargo</div></div>';
+                priceBlock += '<div class="pd-price-main-c"><span class="pd-price-now-c">' + formatPrice(product.price) + '₺</span></div>';
             }
+            priceBlock += '<div class="pd-price-meta-c">';
+            priceBlock += '<div class="pd-meta-tax-c">KDV Dahil</div>';
+            priceBlock += '<div class="pd-meta-ship-c"><i class="fa-solid fa-gift"></i> Ücretsiz Kargo</div>';
+            priceBlock += '</div></div>';
 
             // Stars
             const rating = product.rating || 5;
@@ -769,7 +1092,7 @@
             // Build scrollable images HTML
             const scrollImagesHtml = rawImages.map(function(src, idx){
                 return '<div class="pd-scroll-img-item ' + (idx === 0 ? 'active' : '') + '" onclick="pdForceChangeImage(this, \'' + src.replace(/'/g, "\\'") + '\')">' +
-                    '<img src="' + src + '" alt="' + product.name + '" loading="lazy" class="pd-observe-img">' +
+                    '<img src="' + src + '" alt="' + product.name.replace(/"/g, '&quot;') + '" loading="lazy" class="pd-observe-img">' +
                     '</div>';
             }).join('');
 
@@ -786,8 +1109,8 @@
                 '<div class="pd-wrapper">' +
 
                     '<div class="pd-gallery-container">' +
-                        '<div class="pd-gallery-sticky">' +
-                            '<img src="' + rawImages[0] + '" id="pd-main-image" alt="' + product.name + '">' +
+                        '<div class="pd-gallery-main">' +
+                            '<img src="' + rawImages[0] + '" id="pd-main-image" alt="' + product.name.replace(/"/g, '&quot;') + '">' +
                         '</div>' +
                         '<div class="pd-gallery-scroll">' +
                             scrollImagesHtml +
@@ -795,8 +1118,17 @@
                     '</div>' +
 
                     '<div class="pd-info">' +
-                        '<div class="pd-brand">DEER DERİ</div>' +
-                        '<h1 class="pd-title">' + product.name + '</h1>' +
+                        '<div class="pd-info-header">' +
+                            '<div>' +
+                                '<div class="pd-brand">DEER DERİ</div>' +
+                                '<h1 class="pd-title">' + product.name.toLocaleLowerCase('tr-TR') + '</h1>' +
+                                '<div class="pd-sku">Ürün Kodu: <strong>' + (product.slug ? product.slug.toUpperCase().substring(0,8) : 'DBS-01') + '</strong></div>' +
+                            '</div>' +
+                            '<div class="pd-info-actions">' +
+                                '<button title="Paylaş"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>' +
+                                '<button title="Favoriye Ekle"><i class="fa-regular fa-heart"></i></button>' +
+                            '</div>' +
+                        '</div>' +
 
                         '<div class="pd-rating">' +
                             '<div class="pd-stars">' + starsHtml + '</div>' +
@@ -805,8 +1137,23 @@
 
                         priceBlock +
 
+                        '<div class="pd-quick-features">' +
+                            '<div class="pd-qf-item">' +
+                                '<i class="fa-solid fa-arrows-up-down"></i>' +
+                                '<div class="pd-qf-text"><strong>Yükseklik</strong><span>11 cm</span></div>' +
+                            '</div>' +
+                            '<div class="pd-qf-item">' +
+                                '<i class="fa-solid fa-arrows-left-right"></i>' +
+                                '<div class="pd-qf-text"><strong>Genişlik</strong><span>8 cm</span></div>' +
+                            '</div>' +
+                            '<div class="pd-qf-item">' +
+                                '<i class="fa-solid fa-pen-nib"></i>' +
+                                '<div class="pd-qf-text"><strong>İsim Baskısı</strong><span style="color:#16a34a; font-weight:700;">Uygun</span></div>' +
+                            '</div>' +
+                        '</div>' +
+
                         '<div class="pd-qty-row">' +
-                            '<span class="pd-qty-label">Adet</span>' +
+                            '<span class="pd-qty-label">Adet Seçimi</span>' +
                             '<div class="pd-qty-ctrl">' +
                                 '<button class="pd-qty-btn" onclick="pdQty(-1)">−</button>' +
                                 '<input type="text" value="1" class="pd-qty-val" id="pd-quantity" readonly>' +
@@ -814,44 +1161,124 @@
                             '</div>' +
                         '</div>' +
 
-                        '<div class="pd-btn-row">' +
-                            '<button class="pd-btn-cart" onclick="addProductToCart()">SEPETE EKLE</button>' +
-                            '<button class="pd-btn-quick" onclick="quickBuy()">HIZLI SATIN AL</button>' +
-                        '</div>' +
-
-                        '<div class="pd-emboss-section">' +
-                            '<div class="pd-emboss-header">' +
-                                '<div class="pd-emboss-title"><i class="fa-solid fa-pen-nib"></i> İSİM BASKISI</div>' +
+                        '<div class="pd-emboss-compact">' +
+                            '<div class="pd-emboss-header-compact">' +
+                                '<div class="pd-emboss-title-compact"><i class="fa-solid fa-pen-nib"></i> KİŞİSELLEŞTİRME (İSİM BASKISI)</div>' +
                                 '<label class="pd-toggle-switch">' +
                                     '<input type="checkbox" onchange="toggleModernEmboss(this)">' +
                                     '<span class="pd-toggle-slider"></span>' +
                                 '</label>' +
+                                '<div class="pd-emboss-free-badge">ÜCRETSİZ <span>(Ek ücret ödemezsiniz)</span></div>' +
                             '</div>' +
-                            '<div class="pd-emboss-input-wrap" id="embossing-input-area">' +
-                                '<input type="text" id="custom-name-input" class="pd-emboss-input" placeholder="Baskı için metin giriniz...">' +
-                                '<p class="pd-emboss-hint">Örn: Ali Yılmaz. Kişiselleştirilmiş ürünlerde iade kabul edilmez.</p>' +
+                            '<div class="pd-emboss-input-wrap-compact" id="embossing-input-area-getto">' +
+                                '<input type="text" id="custom-name-input" class="pd-emboss-input-compact" placeholder="Baskı için metin giriniz...">' +
+                                '<p class="pd-emboss-hint-compact">* Lütfen sembol, emoji vs. kullanmayınız. Sadece harf ve rakam.</p>' +
+                                '<p class="pd-emboss-hint-compact" style="color:#e31e24;">* Kişiselleştirilmiş ürünlerde iade/değişim yoktur.</p>' +
                             '</div>' +
                         '</div>' +
 
-                        '<div class="pd-accordions">' +
-                            '<div class="pd-acc-item active">' +
-                                '<div class="pd-acc-head" onclick="toggleAcc(this)">Ürün Açıklaması <i class="fa-solid fa-chevron-down"></i></div>' +
-                                '<div class="pd-acc-body">' + shortDesc + '</div>' +
+                        '<div class="pd-btn-row">' +
+                            '<button class="pd-btn-cart pd-btn-premium" onclick="addProductToCart()">' +
+                                '<i class="fa-solid fa-bag-shopping"></i> SEPETE EKLE' +
+                            '</button>' +
+                            '<button class="pd-btn-quick pd-btn-premium-outline" onclick="quickBuy()">' +
+                                '<i class="fa-solid fa-bolt"></i> HIZLI SATIN AL' +
+                            '</button>' +
+                        '</div>' +
+                        
+                        '<div class="pd-trust-badges">' +
+                            '<div class="pd-trust-badge-item">' +
+                                '<div class="pd-trust-icon-wrap"><i class="fa-solid fa-truck-fast"></i></div>' +
+                                '<strong>Hızlı Teslimat</strong>' +
+                                '<span>Siparişiniz 2-3 iş günü içinde kargoda.</span>' +
                             '</div>' +
-                            '<div class="pd-acc-item">' +
-                                '<div class="pd-acc-head" onclick="toggleAcc(this)">Özellikler <i class="fa-solid fa-chevron-down"></i></div>' +
-                                '<div class="pd-acc-body"><ul><li>%100 Hakiki Deri</li><li>El İşçiliği</li><li>Premium Kalite</li><li>Uzun Ömürlü Kullanım</li></ul></div>' +
+                            '<div class="pd-trust-badge-item">' +
+                                '<div class="pd-trust-icon-wrap"><i class="fa-solid fa-box-open"></i></div>' +
+                                '<strong>Premium Paketleme</strong>' +
+                                '<span>Üst düzey koruma sağlayan şık kutu gönderimi.</span>' +
                             '</div>' +
-                            '<div class="pd-acc-item">' +
-                                '<div class="pd-acc-head" onclick="toggleAcc(this)">Teslimat & Garanti <i class="fa-solid fa-chevron-down"></i></div>' +
-                                '<div class="pd-acc-body">' +
-                                    '<div class="pd-trust-grid">' +
-                                        '<div class="pd-trust-item"><i class="fa-solid fa-truck-fast"></i><strong>Ücretsiz Kargo</strong><span>2000₺ üzeri ücretsiz</span></div>' +
-                                        '<div class="pd-trust-item"><i class="fa-solid fa-rotate-left"></i><strong>14 Gün İade</strong><span>Koşulsuz iade</span></div>' +
-                                        '<div class="pd-trust-item"><i class="fa-solid fa-shield-halved"></i><strong>Güvenli Ödeme</strong><span>256-bit SSL Koruma</span></div>' +
-                                        '<div class="pd-trust-item"><i class="fa-solid fa-certificate"></i><strong>%100 Deri</strong><span>Gerçek kalite</span></div>' +
+                            '<div class="pd-trust-badge-item">' +
+                                '<div class="pd-trust-icon-wrap"><i class="fa-solid fa-headset"></i></div>' +
+                                '<strong>Öncelikli Destek</strong>' +
+                                '<span>Satış sonrası kesintisiz ve ayrıcalıklı hizmet.</span>' +
+                            '</div>' +
+                            '<div class="pd-trust-badge-item">' +
+                                '<div class="pd-trust-icon-wrap"><i class="fa-solid fa-arrow-rotate-left"></i></div>' +
+                                '<strong>İade Garantisi</strong>' +
+                                '<span>Standart ürünlerde sorunsuz iade ve değişim.</span>' +
+                            '</div>' +
+                        '</div>' +
+
+                    '</div>' +
+                '</div>' + 
+                
+                '<div class="pd-tabs-section">' +
+                    '<div class="pd-tabs-inner">' +
+                        '<div class="pd-tabs-nav">' +
+                            '<button class="pd-tab-btn active" onclick="switchPdTab(event, \'tab-desc\')">ÜRÜN AÇIKLAMASI</button>' +
+                            '<button class="pd-tab-btn" onclick="switchPdTab(event, \'tab-reviews\')">DEĞERLENDİRMELER <span class="pd-tab-count">' + (product.reviewCount || 1) + '</span></button>' +
+                            '<button class="pd-tab-btn" onclick="switchPdTab(event, \'tab-add-review\')">YORUM YAP</button>' +
+                        '</div>' +
+                        
+                        '<div class="pd-tab-content active" id="tab-desc">' +
+                            '<div class="pd-description-grid">' +
+                                '<div class="pd-desc-text">' +
+                                    '<h3>' + product.name + '</h3>' +
+                                    '<p>' + fullDesc.replace(/;/g, '.</p><p>') + '</p>' +
+                                '</div>' +
+                                '<div>' +
+                                    '<h3>Öne Çıkan Özellikler</h3>' +
+                                    '<ul class="pd-desc-list">' +
+                                        '<li><i class="fa-solid fa-check"></i> %100 Hakiki Deri</li>' +
+                                        '<li><i class="fa-solid fa-check"></i> El İşçiliği ile Özel Üretim</li>' +
+                                        '<li><i class="fa-solid fa-check"></i> Premium Kalite Standartları</li>' +
+                                        '<li><i class="fa-solid fa-check"></i> Dayanıklı ve Uzun Ömürlü Kullanım</li>' +
+                                    '</ul>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        
+                        '<div class="pd-tab-content" id="tab-reviews">' +
+                            '<div class="pd-reviews-layout">' +
+                                '<div class="pd-rating-summary">' +
+                                    '<div class="pd-rating-big">' + (product.rating || 4.8) + '</div>' +
+                                    '<div class="pd-rating-stars-big">' + starsHtml + '</div>' +
+                                    '<div class="pd-rating-total">' + (product.reviewCount || 1) + ' Değerlendirme</div>' +
+                                    '<div class="pd-rating-bars">' +
+                                        '<div class="pd-bar-row"><span>5 Yıldız</span><div class="pd-bar"><div class="pd-bar-fill" style="width: 80%"></div></div><span>80%</span></div>' +
+                                        '<div class="pd-bar-row"><span>4 Yıldız</span><div class="pd-bar"><div class="pd-bar-fill" style="width: 15%"></div></div><span>15%</span></div>' +
+                                        '<div class="pd-bar-row"><span>3 Yıldız</span><div class="pd-bar"><div class="pd-bar-fill" style="width: 5%"></div></div><span>5%</span></div>' +
+                                        '<div class="pd-bar-row"><span>2 Yıldız</span><div class="pd-bar"><div class="pd-bar-fill" style="width: 0%"></div></div><span>0%</span></div>' +
+                                        '<div class="pd-bar-row"><span>1 Yıldız</span><div class="pd-bar"><div class="pd-bar-fill" style="width: 0%"></div></div><span>0%</span></div>' +
                                     '</div>' +
                                 '</div>' +
+                                '<div class="pd-reviews-list">' +
+                                    '<div class="pd-review-card">' +
+                                        '<div class="pd-review-header">' +
+                                            '<div class="pd-review-avatar">A</div>' +
+                                            '<div class="pd-review-meta">' +
+                                                '<div class="pd-review-name">Ahmet Yılmaz</div>' +
+                                                '<div class="pd-review-date">Birkaç gün önce</div>' +
+                                            '</div>' +
+                                            '<div class="pd-review-stars">' + starsHtml + '</div>' +
+                                        '</div>' +
+                                        '<div class="pd-review-text">Ürünün kalitesi gerçekten çok iyi. Derisi yumuşak ve dokusu harika. Kargo da çok hızlıydı, özenli paketleme için teşekkürler.</div>' +
+                                        '<div class="pd-review-verified"><i class="fa-solid fa-circle-check"></i> Doğrulanmış Alıcı</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        
+                        '<div class="pd-tab-content" id="tab-add-review">' +
+                            '<div class="pd-add-review" style="max-width: 600px; margin: 0 auto; border:none; padding-top:0;">' +
+                                '<h4>Ürünü Değerlendir</h4>' +
+                                '<p style="color:#666; margin-bottom: 20px;">' + product.name + ' hakkındaki düşüncelerinizi bizimle paylaşın.</p>' +
+                                '<div class="pd-review-stars-input">' +
+                                    '<i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>' +
+                                '</div>' +
+                                '<input type="text" class="pd-review-input" placeholder="Adınız Soyadınız">' +
+                                '<textarea class="pd-review-textarea" placeholder="Yorumunuzu buraya yazın..."></textarea>' +
+                                '<button class="pd-btn-review-submit">YORUMU GÖNDER</button>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +

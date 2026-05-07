@@ -348,59 +348,44 @@ document.addEventListener('DOMContentLoaded', function () {
         container.innerHTML = `
             <!-- Stats Cards -->
             <div class="dashboard-stats-grid">
-                <div class="dashboard-stat-card">
-                    <div class="stat-header">
-                        <span class="stat-label">Toplam Sipariş</span>
-                        <div class="stat-icon-wrapper blue">
-                            <i class="fa-solid fa-shopping-cart"></i>
-                        </div>
+                <div class="nexa-stat-card">
+                    <div class="nexa-stat-header">
+                        <div class="nexa-stat-icon"><i class="fa-solid fa-users"></i></div>
+                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
                     </div>
-                    <div class="stat-value">${totalOrders.toLocaleString('tr-TR')}</div>
-                    <div class="stat-change positive">+4.5% son 30 gün</div>
+                    <div class="nexa-stat-label">Toplam Müşteri</div>
+                    <div class="nexa-stat-value">${activeCustomers.toLocaleString('tr-TR')}</div>
+                    <div class="nexa-stat-change positive"><i class="fa-solid fa-arrow-trend-up"></i> 8.5% <span>düne göre arttı</span></div>
                 </div>
 
-                <div class="dashboard-stat-card">
-                    <div class="stat-header">
-                        <span class="stat-label">Aktif Müşteriler</span>
-                        <div class="stat-icon-wrapper purple">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
+                <div class="nexa-stat-card">
+                    <div class="nexa-stat-header">
+                        <div class="nexa-stat-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
                     </div>
-                    <div class="stat-value">${activeCustomers.toLocaleString('tr-TR')}</div>
-                    <div class="stat-change positive">+8.2% son 30 gün</div>
+                    <div class="nexa-stat-label">Toplam Sipariş</div>
+                    <div class="nexa-stat-value">${totalOrders.toLocaleString('tr-TR')}</div>
+                    <div class="nexa-stat-change positive"><i class="fa-solid fa-arrow-trend-up"></i> 2.5% <span>geçen haftaya göre</span></div>
                 </div>
 
-                <div class="dashboard-stat-card">
-                    <div class="stat-header">
-                        <span class="stat-label">Satıcı Performansı</span>
-                        <div class="stat-icon-wrapper orange">
-                            <i class="fa-solid fa-star"></i>
-                        </div>
+                <div class="nexa-stat-card">
+                    <div class="nexa-stat-header">
+                        <div class="nexa-stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
                     </div>
-                    <div class="stat-value">4.3 / 5</div>
-                    <div class="stat-change neutral">~0.2 puan</div>
+                    <div class="nexa-stat-label">Toplam Satış</div>
+                    <div class="nexa-stat-value">${formatPrice(totalRevenue)}₺</div>
+                    <div class="nexa-stat-change negative"><i class="fa-solid fa-arrow-trend-down"></i> 3.5% <span>geçen haftaya göre</span></div>
                 </div>
 
-                <div class="dashboard-stat-card">
-                    <div class="stat-header">
-                        <span class="stat-label">Zamanında Teslimat</span>
-                        <div class="stat-icon-wrapper green">
-                            <i class="fa-solid fa-truck-fast"></i>
-                        </div>
+                <div class="nexa-stat-card">
+                    <div class="nexa-stat-header">
+                        <div class="nexa-stat-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
                     </div>
-                    <div class="stat-value">92%</div>
-                    <div class="stat-change positive">+2.1% son 30 gün</div>
-                </div>
-
-                <div class="dashboard-stat-card">
-                    <div class="stat-header">
-                        <span class="stat-label">Toplam Gelir</span>
-                        <div class="stat-icon-wrapper teal">
-                            <i class="fa-solid fa-turkish-lira-sign"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">${formatPrice(totalRevenue)}₺</div>
-                    <div class="stat-change positive">+12.5% son 30 gün</div>
+                    <div class="nexa-stat-label">Bekleyen Sipariş</div>
+                    <div class="nexa-stat-value">${processingOrders.toLocaleString('tr-TR')}</div>
+                    <div class="nexa-stat-change positive"><i class="fa-solid fa-arrow-trend-up"></i> 1.8% <span>geçen haftaya göre</span></div>
                 </div>
             </div>
 
@@ -3555,6 +3540,38 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // Run
-    init();
+    // Authentication Check & Run
+    const adminLoginWrapper = document.getElementById('admin-login-wrapper');
+    const adminLayout = document.getElementById('admin-layout');
+    const loginForm = document.getElementById('admin-login-form');
+    const loginError = document.getElementById('admin-login-error');
+
+    function checkAuth() {
+        if (sessionStorage.getItem('deerDeriAdminAuth') === 'true') {
+            if (adminLoginWrapper) adminLoginWrapper.style.display = 'none';
+            if (adminLayout) adminLayout.style.display = 'flex';
+            init(); // Start app only if authenticated
+        } else {
+            if (adminLoginWrapper) adminLoginWrapper.style.display = 'flex';
+            if (adminLayout) adminLayout.style.display = 'none';
+        }
+    }
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-username').value;
+            const pass = document.getElementById('admin-password').value;
+            if (user === 'admin' && pass === '3280914') {
+                sessionStorage.setItem('deerDeriAdminAuth', 'true');
+                if (loginError) loginError.style.display = 'none';
+                checkAuth();
+            } else {
+                if (loginError) loginError.style.display = 'block';
+            }
+        });
+    }
+
+    // Run auth check on load
+    checkAuth();
 });

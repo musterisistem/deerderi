@@ -732,9 +732,67 @@ function dbNotReady(response) {
     sendJSON(response, 503, { error: 'Veritabanı bağlantısı yok. MONGODB_URI .env dosyasında tanımlı olmalıdır.' });
 }
 
+// Helper: Get static products from data.js (Fallback)
+async function getStaticProductsFromDataJS() {
+    return new Promise((resolve) => {
+        fs.readFile('./data.js', 'utf-8', (err, data) => {
+            if (err) return resolve([]);
+            const match = data.match(/const\s+products\s*=\s*(\[[\s\S]*?\]);/);
+            let products = [];
+            if (match && match[1]) {
+                try {
+                    products = eval(match[1]);
+                    products = products.map(p => ({
+                        _id: p.id,
+                        name: p.name,
+                        slug: slugify(p.name),
+                        price: p.oldPrice || p.price,
+                        discountPrice: p.oldPrice ? p.price : null,
+                        stock: 100,
+                        mainImage: p.images && p.images[0] ? p.images[0] : '/assets/no-image.png',
+                        images: p.images || [],
+                        category: p.category,
+                        brand: 'DEER DERİ',
+                        isFeatured: true,
+                        rating: p.rating || 5,
+                        reviewCount: Math.floor(Math.random() * 50) + 10,
+                        shortDescription: p.description ? p.description.substring(0, 100) : '',
+                        description: p.description
+                    }));
+                } catch (e) {}
+            }
+            resolve(products);
+        });
+    });
+}
+
 // ---- GET /api/products ----
 async function handleGetProducts(request, response) {
-    if (!dbConnected || !Product) return dbNotReady(response);
+    if (!dbConnected || !Product) {
+        try {
+            const url = new URL('http://localhost' + request.url);
+            let category = url.searchParams.get('category');
+            const limit = parseInt(url.searchParams.get('limit')) || 24;
+            
+            let staticProducts = await getStaticProductsFromDataJS();
+            if (category) {
+                // Map frontend categories to data.js categories
+                if (category.toLowerCase() === 'cüzdan') category = 'cuzdan';
+                if (category.toLowerCase() === 'çanta') category = 'canta';
+                if (category.toLowerCase() === 'kartlık') category = 'kartlik';
+                
+                staticProducts = staticProducts.filter(p => p.category && p.category.toLowerCase() === category.toLowerCase());
+            }
+            
+            return sendJSON(response, 200, {
+                success: true,
+                data: staticProducts.slice(0, limit),
+                pagination: { page: 1, limit, total: staticProducts.length, pages: 1 }
+            });
+        } catch (e) {
+            return dbNotReady(response);
+        }
+    }
     try {
         const url = new URL('http://localhost' + request.url);
         const page = parseInt(url.searchParams.get('page')) || 1;
@@ -780,7 +838,16 @@ async function handleGetProducts(request, response) {
 
 // ---- GET /api/products/:slug ----
 async function handleGetProduct(slug, response) {
-    if (!dbConnected || !Product) return dbNotReady(response);
+    if (!dbConnected || !Product) {
+        try {
+            const staticProducts = await getStaticProductsFromDataJS();
+            const product = staticProducts.find(p => p.slug === slug || slugify(p.name) === slug);
+            if (!product) return sendJSON(response, 404, { error: 'Ürün bulunamadı' });
+            return sendJSON(response, 200, { success: true, data: product });
+        } catch (e) {
+            return dbNotReady(response);
+        }
+    }
     try {
         const product = await Product.findOne({ slug, isActive: true });
         if (!product) return sendJSON(response, 404, { error: 'Ürün bulunamadı' });

@@ -13,7 +13,28 @@
 </head>
 
 <body>
-    <div class="admin-layout">
+    <!-- Login Screen -->
+    <div class="admin-login-wrapper" id="admin-login-wrapper">
+        <div class="admin-login-card">
+            <img src="assets/logo.png" alt="DEER DERİ" class="admin-login-logo">
+            <h2>Yönetim Paneli Girişi</h2>
+            <p>Devam etmek için lütfen giriş yapın.</p>
+            <form id="admin-login-form">
+                <div class="login-input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="admin-username" placeholder="Kullanıcı Adı" required autocomplete="off">
+                </div>
+                <div class="login-input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="admin-password" placeholder="Şifre" required autocomplete="off">
+                </div>
+                <div id="admin-login-error" class="admin-login-error" style="display:none;">Hatalı kullanıcı adı veya şifre!</div>
+                <button type="submit" class="btn-admin-login">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-layout" id="admin-layout" style="display: none;">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -80,16 +101,28 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="top-bar">
-                <div class="page-title">
-                    <h2 id="view-title">Dashboard</h2>
+                <div class="topbar-search">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search">
+                    <span class="topbar-search-kbd">⌘ F</span>
                 </div>
-                <div class="top-bar-actions">
-                    <span id="current-date"></span>
+                <div class="topbar-right">
+                    <a href="#" class="topbar-help"><i class="fa-regular fa-circle-question"></i> Help Center</a>
+                    <div class="topbar-profile">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Profile">
+                        <span>Admin <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i></span>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-title-nexa" style="padding: 30px 40px 0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="view-title" style="font-size: 24px; color: var(--text-dark); margin: 0;">Dashboard</h2>
+                <div>
                     <button class="btn btn-primary" id="add-item-btn" style="display: none;">
                         <i class="fa-solid fa-plus"></i> <span id="add-btn-text">Ekle</span>
                     </button>
                 </div>
-            </header>
+            </div>
 
             <div id="content-area" class="content-area">
                 <!-- Dynamic Content Injected Here -->
