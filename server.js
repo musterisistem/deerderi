@@ -768,6 +768,10 @@ async function getStaticProductsFromDataJS() {
 
 // ---- GET /api/products ----
 async function handleGetProducts(request, response) {
+    const reqUrl = new URL('http://localhost' + request.url);
+    const reqSlug = reqUrl.searchParams.get('slug');
+    if (reqSlug) return handleGetProduct(reqSlug, response);
+
     if (!dbConnected || !Product) {
         try {
             const url = new URL('http://localhost' + request.url);
@@ -860,7 +864,6 @@ async function handleGetProduct(slug, response) {
 
 // ---- POST /api/orders ----
 async function handleCreateOrder(request, response) {
-    if (!dbConnected || !Order || !Product) return dbNotReady(response);
     try {
         const body = await parseBody(request);
 
@@ -868,67 +871,38 @@ async function handleCreateOrder(request, response) {
         if (!body.customer || !body.customer.name || !body.customer.email) {
             return sendJSON(response, 400, { error: 'Müşteri adı ve e-posta zorunludur' });
         }
-        if (!body.shippingAddress || !body.shippingAddress.line1 || !body.shippingAddress.city) {
+        if (!body.shippingAddress) {
             return sendJSON(response, 400, { error: 'Teslimat adresi zorunludur' });
         }
         if (!body.items || body.items.length === 0) {
             return sendJSON(response, 400, { error: 'Sepet boş' });
         }
 
-        // Validate and get fresh prices from DB
         let subtotal = 0;
         const validatedItems = [];
 
+        // Validate items
         for (const item of body.items) {
-            const product = await Product.findById(item.productId).catch(() => null);
-            if (!product) {
-                // Item may not have DB ID if added from data.js, use body price
-                validatedItems.push({
-                    name: item.name,
-                    price: item.price,
-                    quantity: item.quantity || 1,
-                    image: item.image || '',
-                    slug: item.slug || '',
-                });
-                subtotal += item.price * (item.quantity || 1);
-                continue;
-            }
-            if (product.stock < item.quantity) {
-                return sendJSON(response, 400, { error: `"${product.name}" ürünü yeterli stokta yok` });
-            }
-            const price = product.discountPrice || product.price;
-            validatedItems.push({
-                productId: product._id,
-                name: product.name,
-                price,
-                quantity: item.quantity || 1,
-                image: product.mainImage || (product.images && product.images[0] ? product.images[0].url : ''),
-                slug: product.slug,
-            });
-            subtotal += price * (item.quantity || 1);
-        }
-
-        // Coupon discount
-        let discount = 0;
-        let couponCode = null;
-        if (body.couponCode && Coupon) {
-            const coupon = await Coupon.findOne({ code: body.couponCode.toUpperCase(), isActive: true });
-            if (coupon) {
-                if (!coupon.expiresAt || coupon.expiresAt > new Date()) {
-                    if (!coupon.usageLimit || coupon.usedCount < coupon.usageLimit) {
-                        if (subtotal >= coupon.minCartAmount) {
-                            if (coupon.type === 'percent') {
-                                discount = Math.round(subtotal * coupon.value / 100);
-                            } else {
-                                discount = coupon.value;
-                            }
-                            couponCode = coupon.code;
-                            // Increment usage
-                            await Coupon.findByIdAndUpdate(coupon._id, { $inc: { usedCount: 1 } });
-                        }
+            let price = item.price;
+            let product = null;
+            if (dbConnected && Product) {
+                product = await Product.findById(item.productId).catch(() => null);
+                if (product) {
+                    if (product.stock < item.quantity) {
+                        return sendJSON(response, 400, { error: `"${product.name}" ürünü yeterli stokta yok` });
                     }
+                    price = product.discountPrice || product.price;
                 }
             }
+            validatedItems.push({
+                productId: product ? product._id : (item.productId || ''),
+                name: product ? product.name : item.name,
+                price,
+                quantity: item.quantity || 1,
+                image: product ? (product.mainImage || (product.images && product.images[0] ? product.images[0].url : '')) : (item.image || ''),
+                slug: product ? product.slug : (item.slug || ''),
+            });
+            subtotal += price * (item.quantity || 1);
         }
 
         // Shipping cost
@@ -936,56 +910,57 @@ async function handleCreateOrder(request, response) {
         const freeShippingThreshold = 2000;
         if (body.shippingMethod === 'express') {
             shippingCost = 200;
-        } else if (subtotal - discount >= freeShippingThreshold) {
+        } else if (subtotal >= freeShippingThreshold) {
             shippingCost = 0;
         }
 
-        // If settings available, use DB values
-        if (Settings) {
-            const settings = await Settings.findById('main');
-            if (settings) {
-                if (body.shippingMethod === 'express') {
-                    shippingCost = settings.shippingRates.express.price;
-                } else {
-                    shippingCost = subtotal - discount >= settings.freeShippingThreshold ? 0 : settings.shippingRates.standard.price;
-                }
-            }
-        }
+        const total = subtotal + shippingCost;
+        const orderNumber = 'DR' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 1000);
 
-        const total = subtotal - discount + shippingCost;
-
-        // Create order
-        const order = new Order({
+        const orderData = {
+            orderNumber,
             customer: body.customer,
             shippingAddress: body.shippingAddress,
+            billingAddress: body.billingAddress || body.shippingAddress,
             items: validatedItems,
             subtotal,
-            couponCode,
-            discount,
             shippingCost,
             total,
             paymentMethod: body.paymentMethod || 'creditCard',
-            paymentStatus: body.paymentMethod === 'cashOnDelivery' ? 'pending' : 'pending',
+            paymentStatus: 'pending',
             shippingMethod: body.shippingMethod || 'standard',
             notes: body.notes || '',
-        });
+            createdAt: new Date().toISOString()
+        };
 
-        await order.save();
-
-        // Decrease stock for products from DB
-        for (const item of validatedItems) {
-            if (item.productId) {
-                await Product.findByIdAndUpdate(item.productId, { $inc: { stock: -item.quantity } });
+        if (dbConnected && Order) {
+            const order = new Order(orderData);
+            await order.save();
+            
+            // Decrease stock
+            for (const item of validatedItems) {
+                if (item.productId && Product) {
+                    await Product.findByIdAndUpdate(item.productId, { $inc: { stock: -item.quantity } });
+                }
             }
+        } else {
+            // Local fallback
+            let localOrders = [];
+            if (fs.existsSync('./local_orders.json')) {
+                localOrders = JSON.parse(fs.readFileSync('./local_orders.json', 'utf8'));
+            }
+            orderData._id = orderNumber;
+            localOrders.push(orderData);
+            fs.writeFileSync('./local_orders.json', JSON.stringify(localOrders, null, 2));
         }
 
         sendJSON(response, 201, {
             success: true,
             data: {
-                orderNumber: order.orderNumber,
-                _id: order._id,
-                total: order.total,
-                createdAt: order.createdAt,
+                orderNumber: orderNumber,
+                _id: orderData._id || orderNumber,
+                total: total,
+                createdAt: orderData.createdAt,
             }
         });
     } catch (err) {
@@ -996,9 +971,17 @@ async function handleCreateOrder(request, response) {
 
 // ---- GET /api/orders/:orderNumber ----
 async function handleGetOrder(orderNumber, response) {
-    if (!dbConnected || !Order) return dbNotReady(response);
     try {
-        const order = await Order.findOne({ orderNumber });
+        let order = null;
+        if (dbConnected && Order) {
+            order = await Order.findOne({ orderNumber });
+        } else {
+            if (fs.existsSync('./local_orders.json')) {
+                const localOrders = JSON.parse(fs.readFileSync('./local_orders.json', 'utf8'));
+                order = localOrders.find(o => o.orderNumber === orderNumber);
+            }
+        }
+
         if (!order) return sendJSON(response, 404, { error: 'Sipariş bulunamadı' });
         sendJSON(response, 200, { success: true, data: order });
     } catch (err) {

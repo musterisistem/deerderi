@@ -996,70 +996,58 @@ window.currentCheckoutAddress = null;
 // --- NEW ROBUST CHECKOUT SYSTEM ---
 
 window.initCheckout = function () {
-    console.log('🚀 Init Checkout Started');
+    console.log('🚀 Init Single-Page Checkout Started');
     try {
-        // Load Cart
         window.cart = JSON.parse(localStorage.getItem('deerDeriCart')) || [];
-
-        const user = UserManager.getCurrentUser();
-        if (user) {
-            goToStep(2);
-        } else {
-            goToStep(1);
-        }
-
         updateCheckoutSummary();
 
         if (typeof populateCities === 'function') {
             populateCities();
         }
 
-        // Ensure content is visible if something messed up CSS
-        document.body.style.opacity = '1';
-
-    } catch (error) {
-        console.error('❌ Checkout Init Error:', error);
-        // Emergency Fallback
-        const s1 = document.getElementById('step-1-container');
-        if (s1) s1.classList.add('active');
-    }
-};
-
-window.goToStep = function (step) {
-    const s1 = document.getElementById('step-1-container');
-    const s2 = document.getElementById('step-2-container');
-    const s3 = document.getElementById('step-3-container');
-    const navs = [document.getElementById('step-nav-1'), document.getElementById('step-nav-2'), document.getElementById('step-nav-3')];
-
-    [s1, s2, s3].forEach(s => s && s.classList.remove('active'));
-    navs.forEach(n => n && n.classList.remove('active', 'completed'));
-
-    if (step === 1) {
-        if (s1) s1.classList.add('active');
-        if (navs[0]) navs[0].classList.add('active');
-    } else if (step === 2) {
-        if (s2) s2.classList.add('active');
-        if (navs[0]) navs[0].classList.add('completed');
-        if (navs[1]) navs[1].classList.add('active');
-
         const user = UserManager.getCurrentUser();
+        const guestContainer = document.getElementById('guest-form-container');
+        const loggedInContainer = document.getElementById('logged-in-user-container');
+        const authLinks = document.getElementById('checkout-auth-links');
         const savedBox = document.getElementById('checkout-saved-addresses');
         const formBox = document.getElementById('checkout-address-form');
-        if (user && user.addresses && user.addresses.length > 0) {
-            if (savedBox) savedBox.style.display = 'block';
-            if (formBox) formBox.style.display = 'none';
-            renderCheckoutAddresses(user.addresses);
+
+        if (user) {
+            if (guestContainer) guestContainer.style.display = 'none';
+            if (authLinks) authLinks.style.display = 'none';
+            if (loggedInContainer) {
+                loggedInContainer.style.display = 'block';
+                const nameEl = document.getElementById('logged-in-user-name');
+                if (nameEl) nameEl.textContent = user.firstName + (user.lastName ? ' ' + user.lastName : '');
+            }
+            if (user.addresses && user.addresses.length > 0) {
+                if (savedBox) savedBox.style.display = 'block';
+                if (formBox) formBox.style.display = 'none';
+                renderCheckoutAddresses(user.addresses);
+            } else {
+                if (savedBox) savedBox.style.display = 'none';
+                if (formBox) formBox.style.display = 'block';
+            }
         } else {
+            if (guestContainer) guestContainer.style.display = 'block';
+            if (loggedInContainer) loggedInContainer.style.display = 'none';
+            if (authLinks) authLinks.style.display = 'block';
             if (savedBox) savedBox.style.display = 'none';
             if (formBox) formBox.style.display = 'block';
         }
-    } else if (step === 3) {
-        if (s3) s3.classList.add('active');
-        if (navs[0]) navs[0].classList.add('completed');
-        if (navs[1]) navs[1].classList.add('completed');
-        if (navs[2]) navs[2].classList.add('active');
+
+        document.body.style.opacity = '1';
+    } catch (error) {
+        console.error('❌ Checkout Init Error:', error);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.toggleBillingAddress = function () {
+    const isChecked = document.getElementById('use-same-address').checked;
+    const container = document.getElementById('billing-address-container');
+    if (container) {
+        container.style.display = isChecked ? 'none' : 'block';
+    }
 };
 
 window.validateFields = function (list) {
@@ -1076,110 +1064,171 @@ window.validateFields = function (list) {
     return valid;
 };
 
-window.goToStep2 = async function () {
-    const fields = ['guest-name', 'guest-surname', 'guest-email', 'guest-phone', 'guest-password', 'guest-password-confirm'];
-    if (!validateFields(fields)) {
-        showToast('Lütfen tüm zorunlu alanları doldurun.', 'error');
-        return;
-    }
-
-    const pass = document.getElementById('guest-password').value;
-    if (pass !== document.getElementById('guest-password-confirm').value) {
-        showToast('Şifreler eşleşmiyor.', 'error');
-        return;
-    }
-
-    const userData = {
-        firstName: document.getElementById('guest-name').value,
-        lastName: document.getElementById('guest-surname').value,
-        email: document.getElementById('guest-email').value,
-        password: pass,
-        phone: document.getElementById('guest-phone').value,
-        tc: document.getElementById('guest-tc').value
-    };
-
-    if (await registerUser(userData)) {
-        // Send Welcome Email
-        if (typeof window.sendWelcomeEmail === 'function') {
-            console.log('📧 Sending welcome email to new user...');
-            window.sendWelcomeEmail(userData).catch(e => console.error('Welcome email failed', e));
-        }
-
-        goToStep(2);
+window.checkoutMode = 'guest';
+window.setCheckoutMode = function (mode) {
+    window.checkoutMode = mode;
+    const guestBtn = document.getElementById('btn-mode-guest');
+    const regBtn = document.getElementById('btn-mode-register');
+    const regFields = document.getElementById('register-fields');
+    
+    if (mode === 'guest') {
+        guestBtn.classList.add('active');
+        guestBtn.style.background = '#fff';
+        guestBtn.style.borderRight = '1px solid var(--border-color)';
+        
+        regBtn.classList.remove('active');
+        regBtn.style.background = 'transparent';
+        regBtn.style.borderLeft = 'none';
+        
+        if (regFields) regFields.style.display = 'none';
     } else {
-        // Try auto-login if registered (Async check)
-        // Since register failed, likely exists. Try login with same stats? No, password might be wrong.
-        // API returns specific error. 
-        // If registerUser returns false, it already showed a toast.
+        regBtn.classList.add('active');
+        regBtn.style.background = '#fff';
+        regBtn.style.borderLeft = '1px solid var(--border-color)';
+        
+        guestBtn.classList.remove('active');
+        guestBtn.style.background = 'transparent';
+        guestBtn.style.borderRight = 'none';
+        
+        if (regFields) regFields.style.display = 'block';
     }
 };
 
-window.goToStep3 = function () {
-    const user = UserManager.getCurrentUser();
-    const isNew = document.getElementById('checkout-address-form').style.display !== 'none';
-
-    if (isNew) {
-        if (!validateFields(['addr-text-input', 'city-select', 'district-select'])) {
-            showToast('Lütfen teslimat adresini eksiksiz doldurun.', 'error');
-            return;
-        }
-        window.currentCheckoutAddress = {
-            id: 'temp-' + Date.now(),
-            title: document.getElementById('addr-title-input').value || 'Yeni Adres',
-            address: document.getElementById('addr-text-input').value,
-            city: document.getElementById('city-select').value,
-            district: document.getElementById('district-select').value
-        };
-    } else {
-        if (!window.selectedAddressId) {
-            showToast('Lütfen bir teslimat adresi seçin.', 'error');
-            return;
-        }
-        window.currentCheckoutAddress = user.addresses.find(a => a.id === window.selectedAddressId);
-    }
-
-    // Ensure a shipping type is selected (should be by default)
-    if (!window.currentShippingType) {
-        window.selectShipping('standard');
-    }
-
-    goToStep(3);
+window.setAddressTypeCard = function (type, btn) {
+    const parent = btn.parentElement;
+    const cards = parent.querySelectorAll('.addr-type-card');
+    cards.forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    const hiddenInput = document.getElementById('addr-title-input');
+    if (hiddenInput) hiddenInput.value = type;
 };
+
+window.paymentMethod = 'credit_card';
+window.setPaymentMethod = function (method) {
+    window.paymentMethod = method;
+    const ccBtn = document.getElementById('btn-pay-cc');
+    const trBtn = document.getElementById('btn-pay-transfer');
+    const ccForm = document.getElementById('payment-card-form');
+    const trForm = document.getElementById('payment-transfer-form');
+    
+    if (method === 'credit_card') {
+        ccBtn.classList.add('active');
+        trBtn.classList.remove('active');
+        if (ccForm) ccForm.style.display = 'block';
+        if (trForm) trForm.style.display = 'none';
+    } else {
+        trBtn.classList.add('active');
+        ccBtn.classList.remove('active');
+        if (ccForm) ccForm.style.display = 'none';
+        if (trForm) trForm.style.display = 'block';
+    }
+};
+
+// goToStep logic removed for single-page layout
 
 window.processOrder = async function () {
-    if (window.currentShippingType !== 'door') {
-        if (!validateFields(['card-name', 'card-number', 'card-expiry', 'card-cvv'])) {
-            showToast('Ödeme bilgilerini eksiksiz girin.', 'error');
-            return;
+    const user = typeof UserManager !== 'undefined' ? UserManager.getCurrentUser() : null;
+    let valid = true;
+    
+    // 1. Validate User Info
+    let customerName = '', customerEmail = '', customerPhone = '', tc = '';
+    let password = null;
+    if (!user) {
+        if (!validateFields(['guest-name', 'guest-surname', 'guest-email', 'guest-phone'])) {
+            valid = false;
+        } else {
+            customerName = (document.getElementById('guest-name').value + ' ' + document.getElementById('guest-surname').value).trim();
+            customerEmail = document.getElementById('guest-email').value.trim();
+            customerPhone = document.getElementById('guest-phone').value.trim();
+            tc = document.getElementById('guest-tc') ? document.getElementById('guest-tc').value.trim() : '';
+        }
+        
+        if (window.checkoutMode === 'register') {
+            if (!validateFields(['guest-password', 'guest-password-confirm'])) {
+                valid = false;
+            } else {
+                const p1 = document.getElementById('guest-password').value;
+                const p2 = document.getElementById('guest-password-confirm').value;
+                if (p1 !== p2) {
+                    showToast('Şifreler eşleşmiyor.', 'error');
+                    document.getElementById('guest-password-confirm').classList.add('input-error');
+                    valid = false;
+                } else if (p1.length < 6) {
+                    showToast('Şifre en az 6 karakter olmalıdır.', 'error');
+                    valid = false;
+                } else {
+                    password = p1;
+                }
+            }
+        }
+    } else {
+        customerName = user.firstName + (user.lastName ? ' ' + user.lastName : '');
+        customerEmail = user.email;
+        customerPhone = user.phone;
+        tc = '';
+    }
+
+    // 2. Validate Delivery Address
+    let finalShippingAddr = null;
+    const isNewAddr = document.getElementById('checkout-address-form').style.display !== 'none';
+    if (isNewAddr) {
+        if (!validateFields(['addr-text-input', 'city-select', 'district-select'])) {
+            valid = false;
+        } else {
+            finalShippingAddr = {
+                title: document.getElementById('addr-title-input').value || 'Ev',
+                address: document.getElementById('addr-text-input').value,
+                city: document.getElementById('city-select').value,
+                district: document.getElementById('district-select').value
+            };
+        }
+    } else {
+        if (!window.selectedAddressId) {
+            valid = false;
+        } else {
+            finalShippingAddr = user.addresses.find(a => a.id === window.selectedAddressId);
         }
     }
 
-    const finalAddr = window.currentCheckoutAddress;
-    if (!finalAddr) {
-        showToast('Lütfen teslimat adresini giriniz.', 'error');
+    // 3. Validate Billing Address
+    let finalBillingAddr = null;
+    const useSameCb = document.getElementById('use-same-address');
+    const useSameAddress = useSameCb ? useSameCb.checked : true;
+    
+    if (!useSameAddress) {
+        if (!validateFields(['billing-title', 'billing-text-input', 'billing-city', 'billing-district'])) {
+            valid = false;
+        } else {
+            finalBillingAddr = {
+                title: document.getElementById('billing-title').value,
+                address: document.getElementById('billing-text-input').value,
+                city: document.getElementById('billing-city').value,
+                district: document.getElementById('billing-district').value
+            };
+        }
+    } else {
+        finalBillingAddr = finalShippingAddr;
+    }
+
+    // 4. Validate Payment Method
+    const shippingRadio = document.querySelector('input[name="shipping"]:checked');
+    const isDoor = shippingRadio && shippingRadio.value === 'door';
+    
+    if (!isDoor) {
+        if (window.paymentMethod === 'credit_card') {
+            if (!validateFields(['card-name', 'card-number', 'card-expiry', 'card-cvv'])) {
+                valid = false;
+            }
+        }
+    }
+
+    if (!valid) {
+        showToast('Lütfen zorunlu alanları eksiksiz doldurun.', 'error');
         return;
     }
 
     if (!window.cart || window.cart.length === 0) {
         showToast('Sepetiniz boş.', 'error');
-        return;
-    }
-
-    // Gather customer info from form
-    const name = ((document.getElementById('guest-name') || {}).value || '').trim();
-    const surname = ((document.getElementById('guest-surname') || {}).value || '').trim();
-    const email = ((document.getElementById('guest-email') || {}).value || '').trim();
-    const phone = ((document.getElementById('guest-phone') || {}).value || '').trim();
-
-    // Try to get from logged-in user
-    const user = (typeof UserManager !== 'undefined') ? UserManager.getCurrentUser() : null;
-    const customerName = name + (surname ? ' ' + surname : '') || (user ? user.firstName + ' ' + (user.lastName || '') : '');
-    const customerEmail = email || (user ? user.email : '');
-    const customerPhone = phone || (user ? user.phone : '');
-
-    if (!customerName.trim() || !customerEmail.trim()) {
-        showToast('Ad ve e-posta zorunludur.', 'error');
-        goToStep(1);
         return;
     }
 
@@ -1193,28 +1242,35 @@ window.processOrder = async function () {
         slug: item.slug || '',
     }));
 
-    const shippingMethod = window.currentShippingType === 'door' ? 'standard' : (window.currentShippingType || 'standard');
-    const paymentMethod = window.currentShippingType === 'door' ? 'cashOnDelivery' : 'creditCard';
+    const shippingMethod = isDoor ? 'door' : 'standard';
+    let finalPaymentMethod = window.paymentMethod === 'bank_transfer' ? 'bankTransfer' : 'creditCard';
+    if (isDoor) finalPaymentMethod = 'cashOnDelivery';
 
     const orderPayload = {
         customer: {
-            name: customerName.trim(),
-            email: customerEmail.trim(),
+            name: customerName,
+            email: customerEmail,
             phone: customerPhone,
+            tc: tc
         },
         shippingAddress: {
-            title: finalAddr.title || 'Ev',
-            line1: finalAddr.address || finalAddr.line1 || '',
-            city: finalAddr.city || '',
-            district: finalAddr.district || '',
+            title: finalShippingAddr.title || 'Ev',
+            line1: finalShippingAddr.address || finalShippingAddr.line1 || '',
+            city: finalShippingAddr.city || '',
+            district: finalShippingAddr.district || '',
         },
+        billingAddress: finalBillingAddr ? {
+            title: finalBillingAddr.title || 'Fatura',
+            line1: finalBillingAddr.address || finalBillingAddr.line1 || '',
+            city: finalBillingAddr.city || '',
+            district: finalBillingAddr.district || '',
+        } : null,
         items: cartItems,
         shippingMethod,
-        paymentMethod,
+        paymentMethod: finalPaymentMethod,
         couponCode: window.appliedCouponCode || null,
     };
 
-    // Disable button to prevent double submit
     const submitBtn = document.querySelector('[onclick="processOrder()"]');
     if (submitBtn) {
         submitBtn.disabled = true;
@@ -1237,14 +1293,32 @@ window.processOrder = async function () {
         }
 
         const orderNumber = data.data.orderNumber;
+        
+        // Handle User Registration if checked
+        if (!user && window.checkoutMode === 'register' && password) {
+            try {
+                const names = customerName.split(' ');
+                const fName = names[0];
+                const lName = names.slice(1).join(' ');
+                await UserManager.register({
+                    firstName: fName,
+                    lastName: lName,
+                    email: customerEmail,
+                    phone: customerPhone,
+                    password: password
+                });
+                console.log('User auto-registered during checkout.');
+            } catch (regErr) {
+                console.error('Auto-registration failed:', regErr);
+            }
+        }
 
-        // Also save to localStorage as backup
         const localOrder = {
             id: orderNumber,
             orderNumber,
             date: new Date().toLocaleDateString('tr-TR'),
             items: window.cart,
-            address: finalAddr,
+            address: finalShippingAddr,
             shipping: shippingMethod,
             total: data.data.total,
         };
@@ -1252,7 +1326,6 @@ window.processOrder = async function () {
         localOrders.push(localOrder);
         localStorage.setItem('deerDeriOrders', JSON.stringify(localOrders));
 
-        // Clear cart
         window.cart = [];
         localStorage.setItem('deerDeriCart', JSON.stringify([]));
         if (typeof updateCartBadge === 'function') updateCartBadge();
@@ -1347,7 +1420,8 @@ window.toggleNewAddressForm = function () {
         window.selectedAddressId = null;
         document.querySelectorAll('.saved-address-card').forEach(c => {
             c.classList.remove('selected');
-            c.querySelector('i').className = 'fa-regular fa-circle';
+            const icon = c.querySelector('i');
+            if(icon) icon.className = 'fa-regular fa-circle';
         });
 
         // Smooth scroll to form
@@ -1365,7 +1439,7 @@ window.selectShipping = function (type) {
     currentShippingType = type;
     currentShippingCost = (type === 'door' ? 50 : 100);
 
-    document.querySelectorAll('.shipping-card').forEach(opt => {
+    document.querySelectorAll('.shipping-mini-card, .shipping-card').forEach(opt => {
         const radio = opt.querySelector('input[type="radio"]');
         if (radio && radio.value === type) {
             opt.classList.add('selected');
@@ -1377,17 +1451,27 @@ window.selectShipping = function (type) {
     });
 
     const cardForm = document.getElementById('payment-card-form');
+    const transferForm = document.getElementById('payment-transfer-form');
     const codMsg = document.getElementById('payment-cod-msg');
+    
+    const ccBtn = document.getElementById('btn-pay-cc');
 
     if (type === 'door') {
         if (cardForm) cardForm.style.display = 'none';
+        if (transferForm) transferForm.style.display = 'none';
+        if (ccBtn) ccBtn.parentElement.style.display = 'none';
         if (codMsg) codMsg.style.display = 'block';
     } else {
-        if (cardForm) cardForm.style.display = 'block';
+        if (ccBtn) ccBtn.parentElement.style.display = 'flex';
         if (codMsg) codMsg.style.display = 'none';
+        if (typeof window.setPaymentMethod === 'function') {
+            window.setPaymentMethod(window.paymentMethod || 'credit_card');
+        }
     }
 
-    updateCheckoutSummary();
+    if (typeof updateCheckoutSummary === 'function') {
+        updateCheckoutSummary();
+    }
 };
 
 window.setAddressType = function (type, btn) {
@@ -1965,14 +2049,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
 
                 // --- SPECIAL CHECKOUT AUTO-STEP ---
-                if (window.location.pathname.includes('checkout.html') && typeof goToStep === 'function') {
-                    // Close dropdown if mobile
-                    const dropdown = this.closest('.login-dropdown');
-                    if (dropdown) dropdown.classList.remove('show-mobile');
-
-                    // Transition to step 2 automatically
-                    setTimeout(() => goToStep(2), 500);
-                }
+                if (window.location.pathname.includes('checkout.html')) {
+    // Single page checkout now, just reload to apply user state
+    window.location.reload();
+}
             } else {
                 showToast('E-posta veya şifre hatalı!', 'error');
             }
@@ -2039,7 +2119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Transition to Step 2 immediately
-                setTimeout(() => goToStep(2), 600);
+                // goToStep removed
             } else {
                 showToast('E-posta veya şifre hatalı!', 'error');
             }
@@ -2089,9 +2169,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('checkout.html')) {
         const user = UserManager.getCurrentUser();
         if (user) {
-            goToStep(2);
+            // goToStep removed
         } else {
-            goToStep(1);
+            // goToStep removed
         }
     }
 });

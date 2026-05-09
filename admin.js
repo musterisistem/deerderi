@@ -3574,4 +3574,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Run auth check on load
     checkAuth();
+
+    // Logout
+    const logoutBtn = document.getElementById('admin-logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            sessionStorage.removeItem('deerDeriAdminAuth');
+            window.location.reload();
+        });
+    }
 });

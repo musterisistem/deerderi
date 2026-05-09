@@ -6,11 +6,19 @@ const orderSchema = new mongoose.Schema({
         name: { type: String, required: true },
         email: { type: String, required: true },
         phone: { type: String },
+        tc: { type: String },
     },
     shippingAddress: {
         title: { type: String },
         line1: { type: String, required: true },
         city: { type: String, required: true },
+        district: { type: String },
+        postalCode: { type: String },
+    },
+    billingAddress: {
+        title: { type: String },
+        line1: { type: String },
+        city: { type: String },
         district: { type: String },
         postalCode: { type: String },
     },
@@ -44,7 +52,7 @@ const orderSchema = new mongoose.Schema({
     },
     shippingMethod: {
         type: String,
-        enum: ['standard', 'express'],
+        enum: ['standard', 'express', 'door'],
         default: 'standard'
     },
     trackingNumber: { type: String },

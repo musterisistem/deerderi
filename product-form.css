@@ -22,33 +22,33 @@
 .product-form-container {
     display: grid;
     grid-template-columns: 1fr 380px;
-    gap: 25px;
-    padding: 25px;
+    gap: 15px;
+    padding: 15px;
 }
 
 .product-form-main {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
 }
 
 .product-form-sidebar {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
 }
 
 /* Form Cards */
 .form-card {
     background: #fff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    border-radius: 6px;
     overflow: hidden;
 }
 
 .form-card-header {
     background: #f8f9fa;
-    padding: 15px 20px;
+    padding: 8px 10px;
     border-bottom: 1px solid #e5e7eb;
     display: flex;
     align-items: center;
@@ -68,7 +68,7 @@
 }
 
 .form-card-body {
-    padding: 20px;
+    padding: 10px;
 }
 
 /* Form Groups */
@@ -108,18 +108,19 @@
 /* Input Styles */
 .form-control {
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ddd;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
-    font-size: 14px;
-    transition: all 0.2s;
+    font-size: 13px;
     background: #fff;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02) inset;
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(62, 39, 35, 0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .form-control.is-invalid {
@@ -201,7 +202,7 @@ textarea.form-control {
     background-color: white;
     transition: 0.3s;
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .toggle-switch input:checked+.toggle-slider {
@@ -241,7 +242,7 @@ textarea.form-control {
 
 .tag-input-wrapper:focus-within {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(62, 39, 35, 0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .tag-item {
@@ -331,7 +332,7 @@ textarea.form-control {
     background: #f5f5f5;
     border: 1px solid #ddd;
     border-left: none;
-    border-radius: 0 6px 6px 0;
+    border-radius: 6px 6px 6px 0;
     font-size: 13px;
     font-weight: 600;
     color: #666;
@@ -345,7 +346,7 @@ textarea.form-control {
     gap: 8px;
     padding: 12px;
     background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    border-radius: 8px;
+    border-radius: 6px;
     margin-top: 10px;
 }
 
@@ -368,7 +369,7 @@ textarea.form-control {
 /* Image Upload Area */
 .image-upload-area {
     border: 2px dashed #ddd;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 40px 20px;
     text-align: center;
     transition: all 0.3s;
@@ -437,7 +438,7 @@ textarea.form-control {
 .image-item {
     position: relative;
     aspect-ratio: 1;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
     border: 2px solid transparent;
     cursor: grab;
@@ -450,12 +451,12 @@ textarea.form-control {
 
 .image-item.is-main {
     border-color: var(--success-color);
-    box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .image-item.is-featured {
     border-color: var(--info-color);
-    box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .image-item img {
@@ -607,7 +608,7 @@ textarea.form-control {
 
 .rich-text-editor {
     border: 1px solid #ddd;
-    border-radius: 0 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
     min-height: 200px;
     padding: 15px;
     font-size: 14px;
@@ -624,7 +625,7 @@ textarea.form-control {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 25px;
+    padding: 10px 25px;
     background: #f8f9fa;
     border-top: 1px solid #e5e7eb;
 }
@@ -718,7 +719,7 @@ textarea.form-control {
     .modal.product-form-modal .modal-content {
         width: 100%;
         max-height: 100vh;
-        border-radius: 0;
+        border-radius: 6px;
     }
 
     .product-form-container {

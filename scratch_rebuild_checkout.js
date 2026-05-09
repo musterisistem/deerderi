@@ -1,332 +1,292 @@
 const fs = require('fs');
 
-// Read the backup (UTF-16 LE)
-let backup = fs.readFileSync('checkout_backup.html');
-let html = backup.toString('utf16le');
+const content = fs.readFileSync('checkout.html', 'utf8');
+const lines = content.split('\n');
 
-// Remove BOM if present
-html = html.replace(/^\uFEFF/, '');
+// Find second <html> tag
+let secondHtmlIdx = -1;
+let count = 0;
+for (let i = 0; i < lines.length; i++) {
+    if (/^<html/i.test(lines[i].trim())) {
+        count++;
+        if (count === 2) { secondHtmlIdx = i; break; }
+    }
+}
+console.log('Second <html> at line:', secondHtmlIdx + 1);
 
-// 1. Fix the <head> - replace the old style block with a clean one
-const newStyleBlock = `    <style>
-        :root {
-            --primary-black: #000000;
-            --soft-grey: #f8f8f8;
-            --border-color: #e5e5e5;
-            --text-muted: #666666;
-            --success-green: #2e7d32;
-        }
+// Build the clean base from the second HTML onwards
+const cleanLines = lines.slice(secondHtmlIdx);
+let cleanHtml = cleanLines.join('\n');
 
-        body { overflow-x: hidden; }
+// Find the checkout-grid DIV used in the HTML (not CSS)
+// It appears at offset 21449 from start of cleanHtml per our test
+// Let's find it precisely with regex
+const gridDivPattern = /\s*<!--\s*New 3-Step Progress\s*-->[\s\S]*?<div class="checkout-grid">/;
+const gridMatch = gridDivPattern.exec(cleanHtml);
 
-        /* FULL-WIDTH CHECKOUT */
-        .checkout-container {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 30px 60px 0 60px !important;
-            box-sizing: border-box !important;
-        }
-
-        /* Main Layout */
-        .checkout-grid {
-            display: grid;
-            grid-template-columns: 1.7fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-
-        .checkout-section {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            padding: 20px 25px;
-            margin-bottom: 15px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e5e5e5;
-        }
-
-        .section-title {
-            font-family: var(--v6-font, 'Inter', sans-serif);
-            font-size: 14px;
-            font-weight: 800;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        /* Forms */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--primary-black);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 0;
-            font-size: 13px;
-            background: #fafafa;
-            transition: border-color 0.2s;
-            font-family: var(--v6-font, 'Inter', sans-serif);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-black);
-            background: #fff;
-        }
-
-        input.input-error, select.input-error, textarea.input-error {
-            border-color: #e00 !important;
-        }
-
-        /* Sidebar */
-        .checkout-sidebar {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-
-        /* Shipping */
-        .shipping-list { display: flex; flex-direction: column; gap: 10px; }
-
-        .shipping-card {
-            border: 1px solid var(--border-color);
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .shipping-card:hover { border-color: #000; }
-        .shipping-card.selected { border: 2px solid #000; }
-
-        .shipping-card input[type="radio"] {
-            width: 18px; height: 18px; accent-color: #000; cursor: pointer;
-        }
-
-        .shipping-info { flex: 1; }
-        .shipping-title { font-weight: 800; font-size: 14px; display: block; }
-        .shipping-desc { font-size: 12px; color: #666; }
-        .shipping-price { font-weight: 800; font-size: 15px; }
-
-        /* Saved Addresses */
-        .saved-address-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .saved-address-card {
-            border: 1px solid var(--border-color);
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .saved-address-card:hover { border-color: #000; }
-        .saved-address-card.selected { border: 2px solid #000; }
-        .addr-title { font-weight: 700; font-size: 13px; text-transform: uppercase; }
-        .addr-body { font-size: 12px; color: #444; line-height: 1.5; margin-top: 8px; }
-
-        .add-new-addr-link {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: #000; font-weight: 700; font-size: 12px;
-            border-bottom: 1.5px solid #000; padding-bottom: 2px;
-        }
-
-        .btn-addr-type {
-            flex: 1; padding: 10px; border: 1px solid var(--border-color);
-            background: #fff; cursor: pointer; font-size: 11px; font-weight: 700;
-        }
-        .btn-addr-type.active { background: #000; color: #fff; border-color: #000; }
-
-        /* Modals */
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 9999;
-            display: none; justify-content: center; align-items: center;
-        }
-
-        .success-box { background: #fff; padding: 40px; text-align: center; max-width: 500px; width: 90%; }
-
-        #address-confirm-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 11000;
-            justify-content: center; align-items: center;
-        }
-
-        .confirm-content {
-            background: #fff; padding: 40px; text-align: center;
-            max-width: 400px; width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        #checkout-login-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 12000;
-            justify-content: center; align-items: center; backdrop-filter: blur(5px);
-        }
-
-        .login-modal-content {
-            background: #fff; padding: 40px; width: 100%; max-width: 420px;
-            position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        }
-
-        .close-modal {
-            position: absolute; top: 20px; right: 20px;
-            font-size: 24px; cursor: pointer; color: #999;
-        }
-
-        .close-modal:hover { color: #000; }
-        .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 25px; text-align: center; }
-        .confirm-icon { font-size: 50px; color: var(--success-green); margin-bottom: 15px; }
-        .confirm-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
-
-        @keyframes modalPop {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .checkout-container { padding: 20px 24px 0 24px !important; }
-            .checkout-grid { grid-template-columns: 1fr; }
-            .checkout-sidebar { position: static; order: -1; }
-        }
-
-        @media (max-width: 600px) {
-            .checkout-container { padding: 15px 16px 0 16px !important; }
-            .form-row { grid-template-columns: 1fr; }
-        }
-    </style>`;
-
-// Find the <style> block and replace it
-const styleStart = html.indexOf('<style>');
-const styleEnd = html.indexOf('</style>') + '</style>'.length;
-if (styleStart > -1 && styleEnd > -1) {
-    html = html.substring(0, styleStart) + newStyleBlock + html.substring(styleEnd);
-    console.log('✅ Replaced style block');
-} else {
-    console.log('❌ Could not find style block');
+if (!gridMatch) {
+    // Try simpler
+    const gridIdx = cleanHtml.indexOf('<div class="checkout-grid">');
+    // Should find the one after "<!-- New 3-Step Progress -->"
+    console.log('Trying simple search... idx:', gridIdx);
+    
+    // Get all occurrences
+    let idx = 0;
+    const occurrences = [];
+    while (true) {
+        const pos = cleanHtml.indexOf('<div class="checkout-grid">', idx);
+        if (pos === -1) break;
+        occurrences.push(pos);
+        idx = pos + 1;
+    }
+    console.log('All occurrences of checkout-grid div:', occurrences);
 }
 
-// 2. Now update the checkout-container and checkout-grid inline styles in the body
-html = html.replace(
-    /class="checkout-container"[^>]*>/,
-    'class="checkout-container">'
-);
+// Use character-level approach based on our knowledge
+// The grid div is at around char 21449 in cleanHtml
+// Find the closing of checkout-container div that wraps it
+const containerStart = cleanHtml.indexOf('<div class="checkout-container">');
+console.log('checkout-container start:', containerStart);
 
-html = html.replace(
-    /class="checkout-grid" style="[^"]*"/,
-    'class="checkout-grid"'
-);
+// Find </div> that closes checkout-container - count divs
+let depth = 0;
+let containerEnd = -1;
+let i = containerStart;
 
-// 3. Ensure header is injected after <body> (it might already be there)
-// Check for global header
-if (!html.includes('V6 GLOBAL HEADER')) {
-    const headerHTML = `
-    <!-- V6 GLOBAL HEADER (auto-injected) -->
-    <div class="v6-top-bar">
-        <div class="v6-top-bar-container v6-marquee-container">
-            <div class="v6-marquee">
-                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+// Skip to the opening tag first
+while (i < cleanHtml.length && cleanHtml[i] !== '>') i++;
+i++; depth = 1;
+
+while (i < cleanHtml.length && depth > 0) {
+    if (cleanHtml.substring(i, i+4) === '<div') depth++;
+    else if (cleanHtml.substring(i, i+6) === '</div>') {
+        depth--;
+        if (depth === 0) { containerEnd = i; break; }
+    }
+    i++;
+}
+
+console.log('container end at:', containerEnd);
+
+const newContent = `        <div class="checkout-container">
+        <div class="checkout-grid">
+            <!-- Sol: Tek Sayfa Form -->
+            <div class="checkout-main">
+
+                <!-- BÖLÜM 1: KİŞİSEL BİLGİLER -->
+                <div class="checkout-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Kişisel Bilgiler</h2>
+                        <div id="checkout-auth-links">
+                            <span style="font-size:13px; color:#666;">Zaten üye misiniz?</span>
+                            <a href="javascript:void(0)" onclick="openCheckoutLogin()" style="font-size:13px; font-weight:700; color:var(--primary-black); text-decoration:underline; margin-left:5px;">GİRİŞ YAPIN</a>
+                        </div>
+                    </div>
+
+                    <div id="guest-form-container">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ADINIZ *</label>
+                                <input type="text" id="guest-name" class="form-control" placeholder="Örn: Ahmet" required>
+                            </div>
+                            <div class="form-group">
+                                <label>SOYADINIZ *</label>
+                                <input type="text" id="guest-surname" class="form-control" placeholder="Örn: Yılmaz" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>E-POSTA ADRESİNİZ *</label>
+                                <input type="email" id="guest-email" class="form-control" placeholder="ahmet@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>TELEFON NUMARANIZ *</label>
+                                <input type="tel" id="guest-phone" class="form-control" placeholder="05XX XXX XX XX" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 11)" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>T.C. KİMLİK NO (Opsiyonel)</label>
+                            <input type="text" id="guest-tc" class="form-control" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 11)" placeholder="Fatura için gereklidir">
+                        </div>
+                    </div>
+
+                    <div id="logged-in-user-container" style="display:none; padding:15px; background:#f9f9f9; border:1px solid #eee; border-radius:4px;">
+                        <i class="fa-solid fa-user-check" style="color:#2e7d32; margin-right:10px;"></i>
+                        <strong id="logged-in-user-name"></strong> olarak giriş yapıldı.
+                        (<a href="#" onclick="logoutUser(); return false;" style="color:#D32F2F; text-decoration:underline; font-size:12px;">Çıkış Yap</a>)
+                    </div>
+                </div>
+
+                <!-- BÖLÜM 2: TESLİMAT ADRESİ -->
+                <div class="checkout-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Teslimat Adresi</h2>
+                    </div>
+
+                    <div id="checkout-saved-addresses" style="display:none; margin-bottom:20px;">
+                        <div class="saved-address-grid" id="saved-address-list"></div>
+                        <a href="javascript:void(0)" onclick="toggleNewAddressForm()" class="add-new-addr-link">
+                            <i class="fa-solid fa-plus"></i> YENİ ADRES EKLE
+                        </a>
+                    </div>
+
+                    <div id="checkout-address-form">
+                        <div class="form-group">
+                            <label>ADRES BAŞLIĞI *</label>
+                            <div style="display:flex; gap:10px;">
+                                <button type="button" class="btn-addr-type active" onclick="setAddressType('Ev', this)">EV</button>
+                                <button type="button" class="btn-addr-type" onclick="setAddressType('Is', this)">IS</button>
+                                <button type="button" class="btn-addr-type" onclick="setAddressType('Diger', this)">DIGER</button>
+                            </div>
+                            <input type="hidden" id="addr-title-input" value="Ev">
+                        </div>
+                        <div class="form-group">
+                            <label>TAM ADRES *</label>
+                            <textarea id="addr-text-input" class="form-control" rows="3" placeholder="Mahalle, sokak, bina ve daire no..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>SEHIR *</label>
+                                <select id="city-select" class="form-control" onchange="loadDistricts()">
+                                    <option value="">Secинiz</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>ILCE *</label>
+                                <select id="district-select" class="form-control" disabled>
+                                    <option value="">Once Sehir Seciniz</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BÖLÜM 3: FATURA ADRESİ -->
+                <div class="checkout-section" style="margin-top:-15px; border-top:none;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                        <input type="checkbox" id="use-same-address" checked style="width:18px; height:18px; accent-color:#000; cursor:pointer;" onchange="toggleBillingAddress()">
+                        <label for="use-same-address" style="margin:0; font-size:13px; cursor:pointer; font-weight:600;">Teslimat adresimi fatura adresi olarak kullan</label>
+                    </div>
+                    <div id="billing-address-container" style="display:none; padding-top:15px; border-top:1px solid #eee;">
+                        <h3 style="font-size:18px; font-weight:700; margin-bottom:20px;">Fatura Adresi</h3>
+                        <div class="form-group">
+                            <label>FATURA BASLIGI / FIRMA ADI *</label>
+                            <input type="text" id="billing-title" class="form-control" placeholder="Ad Soyad veya Firma Adi">
+                        </div>
+                        <div class="form-group">
+                            <label>TAM ADRES *</label>
+                            <textarea id="billing-text-input" class="form-control" rows="2" placeholder="Fatura adres detaylari..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>SEHIR *</label>
+                                <input type="text" id="billing-city" class="form-control" placeholder="Sehir">
+                            </div>
+                            <div class="form-group">
+                                <label>ILCE *</label>
+                                <input type="text" id="billing-district" class="form-control" placeholder="Ilce">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BÖLÜM 4: KARGO -->
+                <div class="checkout-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Kargo Secimi</h2>
+                    </div>
+                    <div class="shipping-list">
+                        <div class="shipping-card selected" onclick="selectShipping('standard')">
+                            <input type="radio" name="shipping" value="standard" checked>
+                            <div class="shipping-info">
+                                <span class="shipping-title">Standart Kargo</span>
+                                <span class="shipping-desc">Tum Turkiye'ye 2-3 is gunu icinde guvenli teslimat.</span>
+                            </div>
+                            <div class="shipping-price">+100TL</div>
+                        </div>
+                        <div class="shipping-card" onclick="selectShipping('door')">
+                            <input type="radio" name="shipping" value="door">
+                            <div class="shipping-info">
+                                <span class="shipping-title">Kapida Odeme</span>
+                                <span class="shipping-desc">Teslimat aninda nakit veya kredi karti ile odeme kolayligi.</span>
+                            </div>
+                            <div class="shipping-price">+50TL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BÖLÜM 5: ÖDEME -->
+                <div class="checkout-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Odeme Bilgileri</h2>
+                    </div>
+                    <div id="payment-card-form">
+                        <div class="form-group">
+                            <label>KART UZERINDEKI ISIM *</label>
+                            <input type="text" id="card-name" class="form-control" placeholder="AD SOYAD">
+                        </div>
+                        <div class="form-group">
+                            <label>KART NUMARASI *</label>
+                            <input type="text" id="card-number" class="form-control" placeholder="0000 0000 0000 0000">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>SON KULLANMA *</label>
+                                <input type="text" id="card-expiry" class="form-control" placeholder="AA/YY">
+                            </div>
+                            <div class="form-group">
+                                <label>CVV *</label>
+                                <input type="text" id="card-cvv" class="form-control" placeholder="000">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="payment-cod-msg" style="display:none; padding:20px; background:#f9f9f9; border-radius:8px; text-align:center; border:1px dashed #e5e5e5;">
+                        <i class="fa-solid fa-truck-fast" style="font-size:32px; margin-bottom:15px; color:#000;"></i>
+                        <p style="font-weight:700; margin-bottom:5px;">Kapida Odeme Secildi</p>
+                        <p style="font-size:13px; color:#666;">Odemenizi urun teslimatinda nakit veya kartla yapabilirsiniz.</p>
+                    </div>
+                </div>
+
             </div>
-        </div>
-    </div>
-    <header class="v6-main-header">
-        <div class="v6-header-container">
-            <div class="v6-header-left">
-                <i class="fa-solid fa-bars v6-mobile-menu-icon" onclick="document.querySelector('.v6-sidebar').classList.toggle('active'); document.querySelector('.v6-sidebar-overlay').classList.toggle('active');"></i>
-                <div class="v6-search-box">
-                    <i class="fa-solid fa-search" style="color: #999;"></i>
-                    <input type="text" placeholder="Ürünleri ara...">
+
+            <!-- Sag: Siparis Ozeti -->
+            <div class="checkout-sidebar">
+                <div class="summary-box">
+                    <h3 style="font-size:18px; font-weight:700; margin-bottom:20px; border-bottom:1px solid #e5e5e5; padding-bottom:15px;">SIPARIS OZETI</h3>
+                    <div id="checkout-summary-items" style="margin-bottom:20px; max-height:400px; overflow-y:auto;"></div>
+                    <div style="border-top:1px solid #e5e5e5; padding-top:20px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="color:#666;">Ara Toplam</span>
+                            <span id="summary-subtotal" style="font-weight:700;">0TL</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="color:#666;">Kargo Ucreti</span>
+                            <span id="summary-shipping" style="font-weight:700;">0TL</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-top:15px; padding-top:15px; border-top:2px solid #000; font-size:18px; font-weight:900;">
+                            <span>TOPLAM</span>
+                            <span id="summary-total-price">0TL</span>
+                        </div>
+                        <p style="font-size:11px; color:#666; text-align:right; margin-top:5px;">KDV Dahildir</p>
+                    </div>
+                </div>
+                <button type="button" onclick="processOrder()" class="btn btn-black btn-lg" style="width:100%; font-weight:800; padding:18px; font-size:16px; margin-top:15px; letter-spacing:1px; text-transform:uppercase;">
+                    SIPARISI TAMAMLA
+                </button>
+                <div style="margin-top:20px; padding:15px; background:#fff; border:1px solid #e5e5e5; border-radius:8px; display:flex; align-items:center; gap:15px;">
+                    <i class="fa-solid fa-shield-halved" style="font-size:24px; color:#2E7D32;"></i>
+                    <div style="font-size:12px; line-height:1.4;">
+                        <strong>Guvenli Alisveris</strong><br>
+                        Verileriniz 256-bit SSL ile korunmaktadir.
+                    </div>
                 </div>
             </div>
-            <div class="v6-header-center">
-                <a href="index.html" class="v6-logo">
-                    <img src="assets/logo.png" alt="DEER DERI" style="height: 40px; transform: scale(1.2);">
-                </a>
-            </div>
-            <div class="v6-header-right">
-                <div class="v6-header-actions">
-                    <a href="account.html" class="v6-action-item">
-                        <i class="fa-regular fa-user"></i>
-                        <span>HESABIM</span>
-                    </a>
-                    <a href="#" class="v6-action-item">
-                        <i class="fa-regular fa-heart"></i>
-                        <span>FAVORİLERİM</span>
-                    </a>
-                    <a href="cart.html" class="v6-action-item" onclick="event.preventDefault(); toggleCart(true);" style="position:relative;">
-                        <i class="fa-solid fa-gift cart-icon"></i>
-                        <span class="cart-badge" style="display:none; position:absolute; top:-8px; right:-8px; background:#000; color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:900; line-height:18px; text-align:center;">0</span>
-                        <span>SEPET</span>
-                    </a>
-                </div>
-            </div>
         </div>
-    </header>
-    <div class="v6-sidebar-overlay" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></div>
-    <div class="v6-sidebar">
-        <div class="v6-sidebar-header">
-            <i class="fa-solid fa-times v6-sidebar-close" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></i>
-        </div>
-        <nav class="v6-sidebar-nav">
-            <a href="index.html">ANA SAYFA</a>
-            <a href="#">CÜZDANLAR <i class="fa-solid fa-chevron-right"></i></a>
-            <a href="#">ÇANTALAR <i class="fa-solid fa-chevron-right"></i></a>
-            <a href="#">KEMERLER</a>
-            <a href="#">AKSESUAR</a>
-            <a href="#" style="color: red;">İNDİRİM FIRSATI! 🔥</a>
-            <a href="contact.html">İLETİŞİM</a>
-        </nav>
     </div>`;
-    html = html.replace('<body>', '<body>' + headerHTML);
-}
 
-fs.writeFileSync('checkout.html', html, 'utf8');
-console.log('✅ checkout.html fixed and saved as UTF-8');
-console.log('First 10 lines:');
-html.split('\n').slice(0,10).forEach((l,i)=>console.log(i+1, l.substring(0,80)));
+const before = cleanHtml.substring(0, containerStart);
+const after = cleanHtml.substring(containerEnd + 6); // 6 = length of </div>
+
+const result = before + newContent + after;
+fs.writeFileSync('checkout.html', result, 'utf8');
+console.log('Done! Total lines:', result.split('\n').length);
