@@ -1037,7 +1037,9 @@ async function handleCreateOrder(request, response) {
                 paytr_token: token,
                 non3d_test_failed: '0',
                 installment_count: installment_count,
-                card_type: ''
+                card_type: '',
+                no_installment: '1',
+                max_installment: '0'
             };
         }
 
