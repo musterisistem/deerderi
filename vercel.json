@@ -9,6 +9,18 @@
       "destination": "/api/products"
     },
     {
+      "source": "/api/orders",
+      "destination": "/api/orders"
+    },
+    {
+      "source": "/api/orders/:path*",
+      "destination": "/api/orders"
+    },
+    {
+      "source": "/api/paytr/callback",
+      "destination": "/api/paytr/callback"
+    },
+    {
       "source": "/api/send-email",
       "destination": "/api/send-email"
     },
