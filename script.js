@@ -1320,43 +1320,37 @@ window.processOrder = async function () {
         }
 
         if (data.data.iframe_token) {
-            // PayTR iFrame API - Token geldi, iFrame'i göster
+            // PayTR iFrame API — 3D modal aç
             const token = data.data.iframe_token;
-
-            // Placeholder'ı gizle, loading göster
-            const placeholder = document.getElementById('paytr-placeholder');
-            const loading = document.getElementById('paytr-loading');
-            const iframeContainer = document.getElementById('paytr-iframe-container');
+            const modal = document.getElementById('paytr-3d-modal');
+            const loading = document.getElementById('paytr-modal-loading');
+            const iframeWrap = document.getElementById('paytr-modal-iframe-wrap');
             const iframe = document.getElementById('paytriframe');
 
-            if (placeholder) placeholder.style.display = 'none';
-            if (loading) loading.style.display = 'block';
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
 
-            // iFrame src'yi set et
             if (iframe) {
                 iframe.src = `https://www.paytr.com/odeme/guvenli/${token}`;
                 iframe.onload = function () {
                     if (loading) loading.style.display = 'none';
-                    if (iframeContainer) iframeContainer.style.display = 'block';
-                    // iFrameResize'ı çağır
+                    if (iframeWrap) iframeWrap.style.display = 'block';
                     if (typeof iFrameResize === 'function') {
-                        iFrameResize({}, '#paytriframe');
+                        try { iFrameResize({}, '#paytriframe'); } catch(e){}
                     }
                 };
             }
-            if (iframeContainer) iframeContainer.style.display = 'block';
-            if (loading) loading.style.display = 'none';
 
-            // Siparişi karttan temizle
             CartManager.clearCart();
-            showToast('PayTR güvenli ödeme formu açıldı. Lütfen kart bilgilerinizi girin.', 'success');
 
-            // Butonu geri al
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'SİPARİŞİ TAMAMLA';
             }
             return;
+
 
         }
 
@@ -2560,3 +2554,47 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ---- PayTR Modal Helpers ----
+function closePaytrModal() {
+    const modal = document.getElementById('paytr-3d-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    // iFrame src temizle
+    const iframe = document.getElementById('paytriframe');
+    if (iframe) iframe.src = '';
+    // Loading göster tekrar
+    const loading = document.getElementById('paytr-modal-loading');
+    const wrap = document.getElementById('paytr-modal-iframe-wrap');
+    if (loading) loading.style.display = 'block';
+    if (wrap) wrap.style.display = 'none';
+}
+
+// Kart numarası formatla: 0000 0000 0000 0000
+function formatCardNumber(input) {
+    let val = input.value.replace(/\D/g, '').substring(0, 16);
+    let formatted = val.match(/.{1,4}/g);
+    input.value = formatted ? formatted.join(' ') : val;
+    // Önizleme güncelle
+    const preview = document.getElementById('card-preview-number');
+    if (preview) {
+        let display = val.padEnd(16, '•');
+        preview.textContent = display.match(/.{1,4}/g).join(' ');
+    }
+}
+
+// Son kullanma tarihi formatla: MM/YY
+function formatExpiry(input) {
+    let val = input.value.replace(/\D/g, '').substring(0, 4);
+    if (val.length >= 3) {
+        val = val.substring(0, 2) + '/' + val.substring(2);
+    }
+    input.value = val;
+    // Önizleme güncelle
+    const preview = document.getElementById('card-preview-expiry');
+    if (preview) {
+        preview.textContent = val || 'MM/YY';
+    }
+}
