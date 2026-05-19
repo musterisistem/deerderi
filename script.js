@@ -1319,45 +1319,45 @@ window.processOrder = async function () {
             }
         }
 
-        if (data.data.paytr) {
-            const paytr = data.data.paytr;
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://www.paytr.com/odeme';
-            form.style.display = 'none';
-            
-            for (const key in paytr) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = paytr[key];
-                form.appendChild(input);
+        if (data.data.iframe_token) {
+            // PayTR iFrame API - Token geldi, iFrame'i göster
+            const token = data.data.iframe_token;
+
+            // Placeholder'ı gizle, loading göster
+            const placeholder = document.getElementById('paytr-placeholder');
+            const loading = document.getElementById('paytr-loading');
+            const iframeContainer = document.getElementById('paytr-iframe-container');
+            const iframe = document.getElementById('paytriframe');
+
+            if (placeholder) placeholder.style.display = 'none';
+            if (loading) loading.style.display = 'block';
+
+            // iFrame src'yi set et
+            if (iframe) {
+                iframe.src = `https://www.paytr.com/odeme/guvenli/${token}`;
+                iframe.onload = function () {
+                    if (loading) loading.style.display = 'none';
+                    if (iframeContainer) iframeContainer.style.display = 'block';
+                    // iFrameResize'ı çağır
+                    if (typeof iFrameResize === 'function') {
+                        iFrameResize({}, '#paytriframe');
+                    }
+                };
             }
-            
-            const expiry = document.getElementById('card-expiry').value.split('/');
-            const expMonth = expiry[0] ? expiry[0].trim() : '';
-            const expYear = expiry[1] ? expiry[1].trim() : '';
-            
-            const ccFields = {
-                cc_owner: document.getElementById('card-name').value,
-                card_number: document.getElementById('card-number').value.replace(/\s+/g, ''),
-                expiry_month: expMonth,
-                expiry_year: expYear,
-                cvv: document.getElementById('card-cvv').value
-            };
-            
-            for (const key in ccFields) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = ccFields[key];
-                form.appendChild(input);
+            if (iframeContainer) iframeContainer.style.display = 'block';
+            if (loading) loading.style.display = 'none';
+
+            // Siparişi karttan temizle
+            CartManager.clearCart();
+            showToast('PayTR güvenli ödeme formu açıldı. Lütfen kart bilgilerinizi girin.', 'success');
+
+            // Butonu geri al
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'SİPARİŞİ TAMAMLA';
             }
-            
-            document.body.appendChild(form);
-            showToast('PayTR Ödeme sayfasına yönlendiriliyorsunuz...', 'info');
-            form.submit();
             return;
+
         }
 
         const localOrder = {

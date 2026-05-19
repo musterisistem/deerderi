@@ -1001,6 +1001,7 @@
                     </div>
                 </div>
                 <!-- END NEW SHIPPING SECTION -->
+
 <div class="summary-box" style="margin-top:20px; padding:20px; background:#fafafa; border:1px solid #ebebeb; border-radius:6px; box-shadow:0 4px 15px rgba(0,0,0,0.03);">
                     <h3 style="font-size:16px; font-weight:700; margin-bottom:15px; border-bottom:1px solid #e5e5e5; padding-bottom:10px;">ÖDEME YÖNTEMİ</h3>
                     
@@ -1009,27 +1010,25 @@
                         <button type="button" id="btn-pay-transfer" onclick="setPaymentMethod('bank_transfer')" class="btn-addr-type" style="flex:1; padding:10px; font-size:11px;">HAVALE / EFT</button>
                     </div>
 
+                    <!-- PayTR iFrame Ödeme Alanı -->
                     <div id="payment-card-form">
-                        <div class="form-group">
-                            <label style="font-size:10px;">KART ÜZERİNDEKİ İSİM *</label>
-                            <input type="text" id="card-name" class="form-control" placeholder="AD SOYAD" style="padding:8px; font-size:12px;">
+                        <div id="paytr-iframe-container" style="display:none; margin-top:10px;">
+                            <script src="https://www.paytr.com/js/iframeResizer.min.js"></script>
+                            <iframe id="paytriframe" src="" frameborder="0" scrolling="no" style="width:100%; border-radius:8px; border:1px solid #e5e5e5;"></iframe>
+                            <script>iFrameResize({},'#paytriframe');</script>
                         </div>
-                        <div class="form-group">
-                            <label style="font-size:10px;">KART NUMARASI *</label>
-                            <input type="text" id="card-number" class="form-control" placeholder="0000 0000 0000 0000" style="padding:8px; font-size:12px;">
+                        <div id="paytr-loading" style="text-align:center; padding:30px; color:#666; display:none;">
+                            <i class="fa-solid fa-spinner fa-spin" style="font-size:28px; color:#000; margin-bottom:10px; display:block;"></i>
+                            <p style="font-size:13px;">PayTR güvenli ödeme formu yükleniyor...</p>
                         </div>
-                        <div class="form-row" style="gap:10px;">
-                            <div class="form-group">
-                                <label style="font-size:10px;">AY/YIL *</label>
-                                <input type="text" id="card-expiry" class="form-control" placeholder="AA/YY" style="padding:8px; font-size:12px;">
+                        <div id="paytr-placeholder" style="text-align:center; padding:30px; background:#f8f8f8; border-radius:8px; border:2px dashed #e0e0e0;">
+                            <i class="fa-solid fa-credit-card" style="font-size:36px; color:#bbb; margin-bottom:12px; display:block;"></i>
+                            <p style="font-size:13px; color:#777; font-weight:600; margin-bottom:4px;">Güvenli Kredi Kartı Ödemesi</p>
+                            <p style="font-size:11px; color:#aaa;">"Siparişi Tamamla" butonuna tıklayarak<br>PayTR güvenli ödeme formunu açın.</p>
+                            <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-top:12px; opacity:0.6;">
+                                <img src="https://www.paytr.com/img/paytr-logo.svg" alt="PayTR" style="height:20px;" onerror="this.style.display='none'">
+                                <span style="font-size:10px; color:#999;">256-bit SSL Korumalı</span>
                             </div>
-                            <div class="form-group">
-                                <label style="font-size:10px;">CVV *</label>
-                                <input type="text" id="card-cvv" class="form-control" placeholder="000" style="padding:8px; font-size:12px;">
-                            </div>
-                        </div>
-                        <div style="text-align:right;">
-                            <img src="/assets/logo.png" style="height:20px; filter:grayscale(1); opacity:0.5;">
                         </div>
                     </div>
 
@@ -1050,6 +1049,7 @@
                         <p style="font-size:11px; color:#666;">Ödemenizi teslimatta yapabilirsiniz.</p>
                     </div>
                 </div>
+
                 <button type="button" onclick="processOrder()" class="btn btn-black btn-lg" style="width:100%; font-weight:800; padding:18px; font-size:16px; margin-top:15px; letter-spacing:1px; text-transform:uppercase;">
                     SIPARISI TAMAMLA
                 </button>

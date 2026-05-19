@@ -1003,44 +1003,74 @@ async function handleCreateOrder(request, response) {
             if (userIp === '::1') userIp = '127.0.0.1';
 
             const email = orderData.customer.email;
-            const payment_amount = total.toFixed(2);
-            const payment_type = 'card';
-            const installment_count = '0';
+            // iFrame API: payment_amount kuruş cinsinden (100 TL = 10000)
+            const payment_amount = Math.round(total * 100).toString();
+            const no_installment = '0';
+            const max_installment = '0';
             const currency = 'TL';
-            const test_mode = '0';
-            const non_3d = '0';
+            const test_mode = '1'; // Test modda dene, canlıya geçince 0 yap
 
-            const user_basket = validatedItems.map(item => [item.name, item.price.toFixed(2), item.quantity]);
-            
-            const hashSTR = `${PAYTR_MERCHANT_ID}${userIp}${orderNumber}${email}${payment_amount}${payment_type}${installment_count}${currency}${test_mode}${non_3d}`;
-            const paytr_token_str = hashSTR + PAYTR_MERCHANT_SALT;
-            const token = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(paytr_token_str).digest('base64');
+            const user_basket_arr = validatedItems.map(item => [item.name, item.price.toFixed(2), item.quantity]);
+            const user_basket = Buffer.from(JSON.stringify(user_basket_arr)).toString('base64');
 
-            responseData.paytr = {
+            // iFrame API hash sırası: merchant_id + user_ip + merchant_oid + email + payment_amount + user_basket + no_installment + max_installment + currency + test_mode
+            const hashSTR = `${PAYTR_MERCHANT_ID}${userIp}${orderNumber}${email}${payment_amount}${user_basket}${no_installment}${max_installment}${currency}${test_mode}`;
+            const paytr_token = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(hashSTR + PAYTR_MERCHANT_SALT).digest('base64');
+
+            const protocol = request.headers['x-forwarded-proto'] || 'https';
+            const host = request.headers.host;
+
+            const postData = new URLSearchParams({
                 merchant_id: PAYTR_MERCHANT_ID,
                 user_ip: userIp,
                 merchant_oid: orderNumber,
                 email: email,
-                payment_type: payment_type,
                 payment_amount: payment_amount,
-                currency: currency,
-                test_mode: test_mode,
-                non_3d: non_3d,
-                merchant_ok_url: `http://${request.headers.host}/siparis-tamamlandi?order=${orderNumber}`,
-                merchant_fail_url: `http://${request.headers.host}/odeme?error=paytr_failed`,
+                paytr_token: paytr_token,
+                user_basket: user_basket,
+                debug_on: '1',
+                no_installment: no_installment,
+                max_installment: max_installment,
                 user_name: orderData.customer.name,
                 user_address: orderData.shippingAddress.address,
-                user_phone: orderData.customer.phone || '00000000000',
-                user_basket: Buffer.from(JSON.stringify(user_basket)).toString('base64'),
-                debug_on: '1',
-                client_lang: 'tr',
-                paytr_token: token,
-                non3d_test_failed: '0',
-                installment_count: installment_count,
-                card_type: '',
-                no_installment: '1',
-                max_installment: '0'
-            };
+                user_phone: orderData.customer.phone || '05000000000',
+                merchant_ok_url: `${protocol}://${host}/siparis-tamamlandi?order=${orderNumber}`,
+                merchant_fail_url: `${protocol}://${host}/odeme?error=paytr_failed`,
+                timeout_limit: '30',
+                currency: currency,
+                test_mode: test_mode,
+                lang: 'tr'
+            }).toString();
+
+            // PayTR'ye server-side token isteği yap
+            const iframeToken = await new Promise((resolve, reject) => {
+                const https = require('https');
+                const options = {
+                    hostname: 'www.paytr.com',
+                    path: '/odeme/api/get-token',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Length': Buffer.byteLength(postData)
+                    }
+                };
+                const req = https.request(options, (res) => {
+                    let data = '';
+                    res.on('data', chunk => data += chunk);
+                    res.on('end', () => {
+                        try {
+                            const json = JSON.parse(data);
+                            if (json.status === 'success') resolve(json.token);
+                            else reject(new Error('PayTR token hatası: ' + json.reason));
+                        } catch (e) { reject(e); }
+                    });
+                });
+                req.on('error', reject);
+                req.write(postData);
+                req.end();
+            });
+
+            responseData.iframe_token = iframeToken;
         }
 
         sendJSON(response, 201, {
@@ -1468,4 +1498,70 @@ function handleAdminUpdateMenu(request, response) {
             sendJSON(response, 500, { success: false, error: error.message });
         }
     });
+}
+
+// ---- POST /api/paytr/callback ----
+async function handlePaytrCallback(request, response) {
+    try {
+        const https = require('https');
+        let body = '';
+        request.on('data', chunk => body += chunk);
+        request.on('end', async () => {
+            try {
+                const params = new URLSearchParams(body);
+                const merchant_oid = params.get('merchant_oid');
+                const status = params.get('status');
+                const total_amount = params.get('total_amount');
+                const hash = params.get('hash');
+
+                // Hash doğrulama
+                const hashSTR = merchant_oid + PAYTR_MERCHANT_SALT + status + total_amount;
+                const expectedHash = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(hashSTR).digest('base64');
+
+                if (expectedHash !== hash) {
+                    console.error('PayTR callback: geçersiz hash!');
+                    return response.end('PAYTR_INVALID');
+                }
+
+                console.log(`PayTR Callback - Sipariş: ${merchant_oid}, Durum: ${status}`);
+
+                if (status === 'success') {
+                    // Siparişi onayla
+                    if (dbConnected && Order) {
+                        await Order.findOneAndUpdate(
+                            { orderNumber: merchant_oid },
+                            { paymentStatus: 'paid', orderStatus: 'processing' }
+                        );
+                    } else {
+                        // local JSON fallback
+                        if (fs.existsSync('./local_orders.json')) {
+                            const orders = JSON.parse(fs.readFileSync('./local_orders.json', 'utf8'));
+                            const idx = orders.findIndex(o => o.orderNumber === merchant_oid);
+                            if (idx !== -1) {
+                                orders[idx].paymentStatus = 'paid';
+                                orders[idx].orderStatus = 'processing';
+                                fs.writeFileSync('./local_orders.json', JSON.stringify(orders, null, 2));
+                            }
+                        }
+                    }
+                } else {
+                    // Ödeme başarısız
+                    if (dbConnected && Order) {
+                        await Order.findOneAndUpdate(
+                            { orderNumber: merchant_oid },
+                            { paymentStatus: 'failed' }
+                        );
+                    }
+                }
+
+                response.end('OK');
+            } catch (e) {
+                console.error('PayTR callback error:', e);
+                response.end('OK');
+            }
+        });
+    } catch (err) {
+        console.error('handlePaytrCallback error:', err);
+        response.end('OK');
+    }
 }
