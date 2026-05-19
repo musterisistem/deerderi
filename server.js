@@ -1031,7 +1031,7 @@ async function handleCreateOrder(request, response) {
                 user_name: orderData.customer.name,
                 user_address: orderData.shippingAddress.address,
                 user_phone: orderData.customer.phone || '00000000000',
-                user_basket: JSON.stringify(user_basket),
+                user_basket: Buffer.from(JSON.stringify(user_basket)).toString('base64'),
                 debug_on: '1',
                 client_lang: 'tr',
                 paytr_token: token,
