@@ -200,7 +200,10 @@ document.addEventListener('DOMContentLoaded', function () {
             'settings-menu': 'Menü Yönetimi',
             'settings-email': 'Mail Ayarları',
             'settings-footer': 'Footer Yönetimi',
-            'order-detail': 'Sipariş Detayı'
+            'order-detail': 'Sipariş Detayı',
+            'campaigns': 'Kayan Kampanyalar',
+            'logo-settings': 'Site Logosu',
+            'menu-settings': 'Site Menüsü'
         };
         viewTitle.textContent = titles[viewName] || viewName.charAt(0).toUpperCase() + viewName.slice(1);
 
@@ -255,6 +258,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             case 'settings-footer':
                 renderFooterManagement(contentArea);
+                break;
+            case 'menu-settings':
+                renderMenuConfigSettings(contentArea);
+                break;
+            case 'logo-settings':
+                renderLogoSettings(contentArea);
+                break;
+            case 'campaigns':
+                renderCampaignSettings(contentArea);
                 break;
         }
     }
@@ -3585,3 +3597,534 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+
+// ==========================================
+// ICON SELECTOR MODAL
+// ==========================================
+let meteorIconsList = [];
+let currentIconInputTarget = null;
+
+async function loadMeteorIcons() {
+    if (meteorIconsList.length > 0) return;
+    try {
+        const res = await fetch('/assets/meteor-icons.json');
+        meteorIconsList = await res.json();
+    } catch (e) {
+        console.error('İkonlar yüklenemedi', e);
+    }
+}
+
+window.openIconModal = async function(inputElement) {
+    currentIconInputTarget = inputElement;
+    const modal = document.getElementById('icon-modal');
+    modal.style.display = 'block';
+    
+    await loadMeteorIcons();
+    renderIconGrid(meteorIconsList);
+    
+    document.getElementById('icon-search').value = '';
+    document.getElementById('icon-search').focus();
+};
+
+document.getElementById('icon-search')?.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+    const filtered = meteorIconsList.filter(icon => icon.includes(val));
+    renderIconGrid(filtered);
+});
+
+document.querySelector('.close-icon-modal')?.addEventListener('click', () => {
+    document.getElementById('icon-modal').style.display = 'none';
+});
+
+function renderIconGrid(icons) {
+    const grid = document.getElementById('icon-grid');
+    if (!grid) return;
+    if (icons.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px;">İkon bulunamadı.</div>';
+        return;
+    }
+    
+    grid.innerHTML = icons.map(icon => `
+        <div class="icon-item" onclick="selectIcon('${icon}')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px; border:1px solid transparent; border-radius:5px; transition:0.2s;" onmouseover="this.style.background='#eee'; this.style.borderColor='#ccc'" onmouseout="this.style.background='transparent'; this.style.borderColor='transparent'" title="${icon}">
+            <svg class="i i-${icon}" style="--i-size: 24px; color: #333;"><use href="/assets/svg-sprite.svg#${icon}"/></svg>
+        </div>
+    `).join('');
+}
+
+window.selectIcon = function(iconName) {
+    if (currentIconInputTarget) {
+        currentIconInputTarget.value = iconName;
+        // Update the preview
+        const previewWrap = currentIconInputTarget.parentElement.querySelector('.icon-preview');
+        if (previewWrap) {
+            previewWrap.innerHTML = `<svg class="i i-${iconName}" style="--i-size: 20px; color: #333;"><use href="/assets/svg-sprite.svg#${iconName}"/></svg>`;
+        }
+    }
+    document.getElementById('icon-modal').style.display = 'none';
+};
+
+// ==========================================
+// CAMPAIGN MANAGEMENT
+// ==========================================
+window.adminSaveCampaigns = async function() {
+    const btn = document.getElementById('btn-save-campaigns');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Kaydediliyor...';
+    btn.disabled = true;
+
+    try {
+        const rows = document.querySelectorAll('#campaigns-tbody tr');
+        let campaigns = [];
+        
+        rows.forEach((row, index) => {
+            const text = row.querySelector('.camp-text').value;
+            const icon = row.querySelector('.camp-icon').value;
+            const color = row.querySelector('.camp-color').value;
+            const link = row.querySelector('.camp-link').value || '#';
+            
+            if(text) {
+                campaigns.push({
+                    id: index + 1,
+                    text: text,
+                    icon: icon,
+                    color: color,
+                    link: link
+                });
+            }
+        });
+
+        if(campaigns.length > 6) {
+            alert('En fazla 6 adet kampanya ekleyebilirsiniz.');
+            btn.innerHTML = '<i class="fa-solid fa-save"></i> Değişiklikleri Kaydet';
+            btn.disabled = false;
+            return;
+        }
+
+        const res = await fetch('/api/admin/campaigns', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ campaigns })
+        });
+        
+        const data = await res.json();
+        if(data.success) {
+            alert('Kayan kampanyalar başarıyla kaydedildi! Web sitesinde anlık olarak güncellenecektir.');
+        } else {
+            alert('Hata: ' + data.error);
+        }
+    } catch(e) {
+        console.error(e);
+        alert('Kaydedilirken bir hata oluştu.');
+    }
+    
+    btn.innerHTML = '<i class="fa-solid fa-save"></i> Değişiklikleri Kaydet';
+    btn.disabled = false;
+};
+
+window.addCampaignRow = function() {
+    const tbody = document.getElementById('campaigns-tbody');
+    const rowCount = tbody.querySelectorAll('tr').length;
+    if(rowCount >= 6) {
+        alert('En fazla 6 kampanya ekleyebilirsiniz.');
+        return;
+    }
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><input type="text" class="form-control camp-text" placeholder="Kampanya metni" required></td>
+        <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="icon-preview" style="width: 24px; text-align:center;">
+                    <svg class="i i-gift" style="--i-size: 20px; color: #333;"><use href="/assets/svg-sprite.svg#gift"/></svg>
+                </div>
+                <input type="text" class="form-control camp-icon" placeholder="gift" value="gift" readonly onclick="window.openIconModal(this)" style="cursor:pointer; background:#fff;">
+            </div>
+        </td>
+        <td><input type="color" class="form-control camp-color" value="#000000" style="padding: 2px; height: 35px; cursor:pointer;"></td>
+        <td><input type="text" class="form-control camp-link" placeholder="https://..." value="#"></td>
+        <td>
+            <button type="button" class="btn btn-sm btn-icon btn-delete" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+};
+
+async function renderCampaignSettings(container) {
+    container.innerHTML = '<div class="loader-spinner-creative" style="margin:50px auto;"></div>';
+    
+    try {
+        const res = await fetch('/api/campaigns');
+        const data = await res.json();
+        let campaigns = [];
+        if(data.success && data.data) {
+            campaigns = data.data;
+        }
+        
+        container.innerHTML = `
+            <div class="card">
+                <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3>Kayan Kampanyalar (Marquee)</h3>
+                    <button class="btn btn-primary btn-sm" onclick="window.addCampaignRow()">
+                        <i class="fa-solid fa-plus"></i> Yeni Ekle
+                    </button>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted" style="margin-bottom: 20px;">Sitenin en üstünde kayan kampanya yazılarını buradan yönetebilirsiniz. En fazla 6 adet ekleyebilirsiniz. İkon seçmek için ikon ismine tıklayın. Değişiklikler anında web sitesine yansır.</p>
+                    <div class="admin-table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Kampanya Metni</th>
+                                    <th>İkon Seçimi</th>
+                                    <th>Renk</th>
+                                    <th>Bağlantı (Link)</th>
+                                    <th width="80">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="campaigns-tbody">
+                                ${campaigns.map(camp => {
+                                    // Remove fa-solid if it was saved before this update
+                                    let iconName = camp.icon.replace('fa-', '').replace('solid ', '').replace('fa ', '').trim();
+                                    return `
+                                    <tr>
+                                        <td><input type="text" class="form-control camp-text" value="${camp.text.replace(/"/g, '&quot;')}" required></td>
+                                        <td>
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                <div class="icon-preview" style="width: 24px; text-align:center;">
+                                                    <svg class="i i-${iconName}" style="--i-size: 20px; color: #333;"><use href="/assets/svg-sprite.svg#${iconName}"/></svg>
+                                                </div>
+                                                <input type="text" class="form-control camp-icon" value="${iconName}" readonly onclick="window.openIconModal(this)" style="cursor:pointer; background:#fff;" placeholder="İkon seç...">
+                                            </div>
+                                        </td>
+                                        <td><input type="color" class="form-control camp-color" value="${camp.color}" style="padding: 2px; height: 35px; cursor:pointer;"></td>
+                                        <td><input type="text" class="form-control camp-link" value="${camp.link.replace(/"/g, '&quot;')}"></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-icon btn-delete" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                `}).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top:20px; text-align:right;">
+                        <button id="btn-save-campaigns" class="btn btn-primary" onclick="window.adminSaveCampaigns()">
+                            <i class="fa-solid fa-save"></i> Değişiklikleri Kaydet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch(e) {
+        container.innerHTML = '<div class="alert alert-danger">Kampanyalar yüklenirken hata oluştu.</div>';
+    }
+}
+
+
+// ==========================================
+// LOGO MANAGEMENT
+// ==========================================
+function renderLogoSettings(container) {
+    container.innerHTML = `
+        <div class="card">
+            <div class="card-header">
+                <h3>Site Logosu Yönetimi</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted" style="margin-bottom: 20px;">Sitenin sol üst köşesinde yer alan mevcut logoyu değiştirebilirsiniz. Yeni logo yüklediğinizde anında siteye yansıyacaktır.</p>
+                
+                <div style="display:flex; gap: 30px; align-items:flex-start; flex-wrap:wrap;">
+                    <!-- Mevcut Logo -->
+                    <div style="flex:1; min-width:300px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; text-align:center; background:#f9f9f9;">
+                        <h4 style="margin-bottom:15px; font-size:14px; color:#555;">Mevcut Logo</h4>
+                        <div style="background:#fff; padding:20px; border-radius:5px; border:1px dashed #ccc; display:inline-block; margin-bottom: 15px; width: 100%; box-sizing:border-box;">
+                            <img id="current-site-logo" src="/assets/logo.png?v=${Date.now()}" style="max-height: 80px; max-width: 100%; object-fit:contain;" alt="Site Logosu">
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline btn-delete" onclick="document.getElementById('current-site-logo').src=''" style="color:var(--danger-color); border-color:var(--danger-color);">
+                                <i class="fa-solid fa-trash"></i> Logoyu Kaldır
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Yeni Logo Yükle -->
+                    <div style="flex:1; min-width:300px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; text-align:center; border-style: dashed; border-width: 2px;" id="logo-dropzone">
+                        <h4 style="margin-bottom:15px; font-size:14px; color:#555;">Yeni Logo Yükle (Sürükle & Bırak)</h4>
+                        
+                        <div style="padding: 40px 20px; cursor:pointer;" onclick="document.getElementById('logo-upload-input').click()">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 40px; color: #ccc; margin-bottom:15px;"></i>
+                            <p style="color: #666; font-size: 14px;">Görseli buraya sürükleyin veya <strong>dosya seçmek için tıklayın</strong></p>
+                            <p style="color: #999; font-size: 12px; margin-top:5px;">Önerilen format: PNG (Şeffaf arkaplan)</p>
+                            <input type="file" id="logo-upload-input" accept="image/png, image/jpeg, image/svg+xml" style="display:none;" onchange="handleLogoSelect(this)">
+                        </div>
+                        
+                        <div id="logo-preview-area" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+                            <p style="font-size:12px; color:#666; margin-bottom:10px;">Önizleme:</p>
+                            <img id="logo-preview-img" src="" style="max-height: 60px; max-width:100%; margin-bottom:15px;">
+                            <div>
+                                <button class="btn btn-primary" id="btn-save-logo" onclick="uploadNewLogo()">
+                                    <i class="fa-solid fa-save"></i> Logoyu Kaydet ve Uygula
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Sürükle bırak olayları
+    setTimeout(() => {
+        const dropzone = document.getElementById('logo-dropzone');
+        if(!dropzone) return;
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.style.borderColor = 'var(--primary-color)';
+                dropzone.style.backgroundColor = 'rgba(0,0,0,0.02)';
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.style.borderColor = '#ddd';
+                dropzone.style.backgroundColor = 'transparent';
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files && files.length > 0) {
+                document.getElementById('logo-upload-input').files = files;
+                handleLogoSelect(document.getElementById('logo-upload-input'));
+            }
+        }, false);
+    }, 100);
+}
+
+let selectedLogoBase64 = null;
+
+window.handleLogoSelect = function(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            selectedLogoBase64 = e.target.result;
+            document.getElementById('logo-preview-img').src = selectedLogoBase64;
+            document.getElementById('logo-preview-area').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+};
+
+window.uploadNewLogo = async function() {
+    if (!selectedLogoBase64) return;
+    
+    const btn = document.getElementById('btn-save-logo');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Yükleniyor...';
+    btn.disabled = true;
+
+    try {
+        const res = await fetch('/api/admin/logo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: selectedLogoBase64 })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            // Update the preview
+            document.getElementById('current-site-logo').src = data.url;
+            document.getElementById('logo-preview-area').style.display = 'none';
+            selectedLogoBase64 = null;
+            document.getElementById('logo-upload-input').value = '';
+            
+            // Show alert
+            alert('Logo başarıyla güncellendi! Siteye yansıdı.');
+        } else {
+            alert('Logo yüklenirken bir hata oluştu: ' + (data.error || 'Bilinmeyen hata'));
+        }
+    } catch(err) {
+        console.error(err);
+        alert('Sunucuya bağlanılamadı.');
+    }
+    
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+};
+
+
+// ==========================================
+// SITE MENU MANAGEMENT
+// ==========================================
+window.adminSaveMenu = async function() {
+    const btn = document.getElementById('btn-save-menu');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Kaydediliyor...';
+    btn.disabled = true;
+
+    try {
+        const rows = document.querySelectorAll('#menu-tbody tr');
+        let menuItems = [];
+        
+        rows.forEach((row, index) => {
+            const text = row.querySelector('.menu-text').value;
+            const url = row.querySelector('.menu-url').value || '#';
+            const icon = row.querySelector('.menu-icon').value;
+            const color = row.querySelector('.menu-color').value;
+            const animated = row.querySelector('.menu-animated').checked;
+            
+            if(text) {
+                menuItems.push({
+                    id: index + 1,
+                    text: text,
+                    url: url,
+                    icon: icon,
+                    color: color === '#000000' ? '' : color,
+                    animated: icon ? animated : false
+                });
+            }
+        });
+
+        const res = await fetch('/api/admin/menu', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ menu: menuItems })
+        });
+        
+        const data = await res.json();
+        if(data.success) {
+            alert('Menü başarıyla kaydedildi! Web sitesinde anlık olarak güncellenecektir.');
+        } else {
+            alert('Hata: ' + data.error);
+        }
+    } catch(e) {
+        console.error(e);
+        alert('Kaydedilirken bir hata oluştu.');
+    }
+    
+    btn.innerHTML = '<i class="fa-solid fa-save"></i> Değişiklikleri Kaydet';
+    btn.disabled = false;
+};
+
+window.addMenuRow = function() {
+    const tbody = document.getElementById('menu-tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = buildMenuRow({ text: '', url: '#', icon: '', color: '#000000', animated: false });
+    tbody.appendChild(tr);
+};
+
+window.clearMenuIcon = function(btn) {
+    const td = btn.closest('td');
+    td.querySelector('.menu-icon').value = '';
+    td.querySelector('.icon-preview').innerHTML = '';
+    td.querySelector('.menu-icon').placeholder = 'İkon seç (Opsiyonel)';
+};
+
+function buildMenuRow(item) {
+    const color = item.color || '#000000';
+    const animated = item.animated ? 'checked' : '';
+    const iconPreview = item.icon
+        ? `<svg class="i i-${item.icon}" style="--i-size: 20px; color: #333;"><use href="/assets/svg-sprite.svg#${item.icon}"/></svg>`
+        : '';
+    
+    return `
+        <tr>
+            <td><input type="text" class="form-control menu-text" value="${(item.text || '').replace(/"/g, '&quot;')}" required placeholder="Menü Adı"></td>
+            <td><input type="text" class="form-control menu-url" value="${(item.url || '#').replace(/"/g, '&quot;')}" placeholder="/kategori/..."></td>
+            <td>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="icon-preview" style="width:24px; text-align:center;">${iconPreview}</div>
+                    <input type="text" class="form-control menu-icon" value="${item.icon || ''}" readonly onclick="window.openIconModal(this)" style="cursor:pointer; background:#fff; flex:1;" placeholder="Seçmek için tıkla">
+                    <button type="button" class="btn btn-sm btn-outline" onclick="window.clearMenuIcon(this)" title="İkonu temizle" style="padding: 4px 8px;"><i class="fa-solid fa-times"></i></button>
+                </div>
+            </td>
+            <td>
+                <label class="anim-toggle-wrap" title="İkon yanıp sönme animasyonu (icon seçiliyken aktif)">
+                    <input type="checkbox" class="menu-animated" ${animated} onchange="updateAnimPreview(this)">
+                    <span class="anim-toggle-label">Animasyon</span>
+                    <span class="anim-demo ${item.animated && item.icon ? 'is-animated' : ''}" id="anim-demo-">
+                        ${item.icon ? `<svg class="i i-${item.icon}" style="--i-size:14px; color: ${item.color || '#555'};"><use href="/assets/svg-sprite.svg#${item.icon}"/></svg>` : '<i class="fa-solid fa-bolt" style="font-size:12px; color:#ccc;"></i>'}
+                    </span>
+                </label>
+            </td>
+            <td><input type="color" class="form-control menu-color" value="${color}" style="padding: 2px; height: 35px; cursor:pointer;" title="Siyah = varsayılan tema rengi"></td>
+            <td>
+                <button type="button" class="btn btn-sm btn-icon btn-delete" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button>
+            </td>
+        </tr>
+    `;
+}
+
+window.updateAnimPreview = function(checkbox) {
+    const tr = checkbox.closest('tr');
+    const demo = tr.querySelector('.anim-demo');
+    if(checkbox.checked) {
+        demo.classList.add('is-animated');
+    } else {
+        demo.classList.remove('is-animated');
+    }
+};
+
+async function renderMenuConfigSettings(container) {
+    container.innerHTML = '<div class="loader-spinner-creative" style="margin:50px auto;"></div>';
+    
+    try {
+        const res = await fetch('/api/menu');
+        const data = await res.json();
+        let menuItems = [];
+        if(data.success && data.data) {
+            menuItems = data.data;
+        }
+        
+        container.innerHTML = `
+            <div class="card">
+                <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3>Site Menüsü Yönetimi</h3>
+                    <button class="btn btn-primary btn-sm" onclick="window.addMenuRow()">
+                        <i class="fa-solid fa-plus"></i> Yeni Menü Ekle
+                    </button>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted" style="margin-bottom: 20px;">Sol taraftan açılan site menüsündeki bağlantıları yönetin. İkon seçmek için ilgili alana tıklayın. <strong>Animasyon</strong> aktif ise ikon menüde yavaşça yanıp söner. Siyah renk = tema varsayılan rengi.</p>
+                    <div class="admin-table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Menü Adı</th>
+                                    <th>URL</th>
+                                    <th>İkon</th>
+                                    <th>Animasyon</th>
+                                    <th>Renk</th>
+                                    <th width="60">Sil</th>
+                                </tr>
+                            </thead>
+                            <tbody id="menu-tbody">
+                                ${menuItems.map(item => buildMenuRow(item)).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top:20px; text-align:right;">
+                        <button id="btn-save-menu" class="btn btn-primary" onclick="window.adminSaveMenu()">
+                            <i class="fa-solid fa-save"></i> Değişiklikleri Kaydet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch(e) {
+        container.innerHTML = '<div class="alert alert-danger">Menüler yüklenirken hata oluştu.</div>';
+    }
+}

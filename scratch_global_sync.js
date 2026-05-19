@@ -137,7 +137,7 @@ const footerHTML = `
 // =====================================================================
 // Pages to update
 // =====================================================================
-const pages = ['cart.html', 'checkout.html', 'success.html', 'product.html', 'account.html', 'register.html', 'contact.html', 'category.html'];
+const pages = ['cart.html', 'checkout.html', 'success.html', 'product.html', 'account.html', 'kayit.html', 'contact.html', 'category.html'];
 
 pages.forEach(page => {
     if (!fs.existsSync(page)) return;

@@ -149,7 +149,7 @@ body {
     transition: color 0.3s;
 }
 .v6-action-item:hover {
-    color: #b8865d;
+    color: #000;
 }
 .v6-action-item i {
     font-size: 20px;
@@ -1269,4 +1269,410 @@ body {
         object-fit: contain !important;
         transform: none !important;
     }
+}
+
+/* ============================================
+   AUTH DROPDOWN & LOGIN MODAL
+   ============================================ */
+
+.v6-action-item.v6-auth-item {
+    position: relative;
+}
+
+/* Hover Bridge: Invisible block between icon and dropdown to prevent closing */
+.v6-action-item.v6-auth-item::after,
+.v6-action-item.v6-cart-item::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: -20px;
+    width: 400px;
+    height: 20px; /* Covers the 14px gap */
+    background: transparent;
+    z-index: 9998;
+}
+
+.v6-auth-dropdown,
+.v6-cart-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    background: #fff;
+    color: #000;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    min-width: 200px;
+    padding: 12px;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    /* Spring animation start state */
+    transform: translateY(15px) scale(0.95);
+    transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0s linear 0.3s;
+    transform-origin: top right;
+    pointer-events: none;
+}
+
+.v6-auth-dropdown::before,
+.v6-cart-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 18px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-left: 1px solid #e8e8e8;
+    border-top: 1px solid #e8e8e8;
+    transform: rotate(45deg);
+}
+
+.v6-action-item.v6-auth-item:hover .v6-auth-dropdown,
+.v6-action-item.v6-auth-item.open .v6-auth-dropdown,
+.v6-action-item.v6-cart-item:hover .v6-cart-dropdown,
+.v6-action-item.v6-cart-item.open .v6-cart-dropdown {
+    opacity: 1;
+    visibility: visible;
+    /* Spring animation end state */
+    transform: translateY(0) scale(1);
+    transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0s linear 0s;
+    pointer-events: all;
+}
+
+.v6-cart-dropdown {
+    min-width: 340px !important;
+    padding: 20px !important;
+}
+
+.v6-auth-dropdown a,
+.v6-auth-dropdown button.v6-dd-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+    border: none;
+    background: transparent;
+    color: #222;
+    font-family: var(--v6-font);
+    box-sizing: border-box;
+    letter-spacing: 0.3px;
+}
+
+.v6-auth-dropdown a:hover,
+.v6-auth-dropdown button.v6-dd-btn:hover {
+    background: #f5f5f5;
+    color: #222;
+}
+
+.v6-auth-dropdown .v6-dd-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 6px 0;
+}
+
+.v6-dd-btn-register {
+    background: #111 !important;
+    color: #fff !important;
+    margin-top: 4px;
+}
+
+.v6-dd-btn-register:hover {
+    background: #333 !important;
+    color: #fff !important;
+}
+
+.v6-dd-logout {
+    color: #c0392b !important;
+}
+
+#v6-login-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
+
+#v6-login-modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+#v6-login-modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 36px 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    position: relative;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    box-sizing: border-box;
+    margin: 20px;
+}
+
+#v6-login-modal-overlay.open #v6-login-modal {
+    transform: translateY(0) scale(1);
+}
+
+.v6-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+    line-height: 1;
+    background: none;
+    border: none;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.v6-modal-close:hover { color: #111; }
+
+.v6-modal-logo { text-align: center; margin-bottom: 6px; }
+.v6-modal-logo img { height: 36px; }
+
+.v6-modal-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 4px;
+    letter-spacing: -0.5px;
+}
+
+.v6-modal-subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    margin: 0 0 28px;
+}
+
+.v6-modal-input-group { margin-bottom: 14px; }
+
+.v6-modal-input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.v6-modal-input-group input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: var(--v6-font);
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.v6-modal-input-group input:focus { border-color: #111; }
+
+.v6-modal-btn-login {
+    width: 100%;
+    padding: 14px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+    margin-top: 6px;
+    font-family: var(--v6-font);
+}
+
+.v6-modal-btn-login:hover { background: #333; }
+
+#v6-login-error {
+    color: #c0392b;
+    font-size: 13px;
+    text-align: center;
+    margin: 8px 0 0;
+    display: none;
+}
+
+.v6-modal-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #777;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 18px;
+}
+
+.v6-modal-footer a {
+    color: #111;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 4px;
+}
+
+.v6-modal-footer a:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+    #v6-login-modal { padding: 30px 20px 24px; border-radius: 12px; }
+}
+
+
+/* Meteor Icons */
+.i {
+  stroke-width: var(--i-stroke, 2);
+  width: var(--i-size, 24px);
+  height: var(--i-size, 24px);
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+
+/* Search Popup Styles */
+.search-popup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 350px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.search-popup.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.search-popup-content {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f5f5f5;
+    text-decoration: none;
+    color: var(--v6-text);
+    transition: background-color 0.2s;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: #f9f9f9;
+}
+
+.search-result-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 12px;
+}
+
+.search-result-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.search-result-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-price {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--v6-primary);
+}
+.search-no-result {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+}
+
+
+/* Icon Pulse Animation */
+@keyframes icon-pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.anim-pulse {
+    animation: icon-pulse 2s infinite ease-in-out;
+}
+
+
+
+
+/* ===== Dynamic Sidebar Menu Icons ===== */
+.v6-sidebar-nav a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+}
+.menu-icon-svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-right: 6px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+/* Pulse/glow animation for animated menu icons */
+@keyframes menuIconPulse {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { opacity: 0.3; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.menu-icon-svg.is-animated {
+    animation: menuIconPulse 2s ease-in-out infinite;
 }

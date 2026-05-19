@@ -42,53 +42,23 @@
                 <h3>YÖNETİM</h3>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-link active" data-view="dashboard">
-                    <i class="fa-solid fa-gauge"></i> Dashboard
-                </a>
-                <a href="#" class="nav-link" data-view="products">
-                    <i class="fa-solid fa-boxes-stacked"></i> Ürünler
-                </a>
-                <a href="#" class="nav-link" data-view="orders">
-                    <i class="fa-solid fa-cart-shopping"></i> Siparişler
-                </a>
-                <a href="#" class="nav-link" data-view="categories">
-                    <i class="fa-solid fa-list"></i> Kategoriler
-                </a>
                 <div class="nav-group">
                     <a href="#" class="nav-link nav-parent" onclick="toggleSubmenu(event, 'settings-submenu')">
-                        <i class="fa-solid fa-gear"></i> Site Ayarları
+                        <i class="fa-solid fa-gear"></i> Ayarlar
                         <i class="fa-solid fa-chevron-down submenu-arrow"></i>
                     </a>
                     <div class="nav-submenu" id="settings-submenu">
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-usp">
-                            <i class="fa-solid fa-star"></i> Site Özellikleri (USP)
+                        <a href="#" class="nav-link nav-sublink" data-view="campaigns">
+                            <i class="fa-solid fa-bullhorn"></i> Kayan Kampanyalar
                         </a>
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-faq">
-                            <i class="fa-solid fa-circle-question"></i> Sıkça Sorulan Sorular
+                        <a href="#" class="nav-link nav-sublink" data-view="logo-settings">
+                            <i class="fa-solid fa-image"></i> Site Logosu
                         </a>
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-infoboxes">
-                            <i class="fa-solid fa-box-open"></i> Ürün Bilgi Kutuları
-                        </a>
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-delivery">
-                            <i class="fa-solid fa-truck"></i> Teslimat Bilgileri
-                        </a>
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-banners">
-                            <i class="fa-solid fa-images"></i> Vitrin Yönetimi
-                        </a>
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-menu">
-                            <i class="fa-solid fa-bars"></i> Menü Yönetimi
-                        </a>
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-email">
-                            <i class="fa-solid fa-envelope"></i> Mail Ayarları
-                        </a>
-                        <a href="#" class="nav-link nav-sublink" data-view="settings-footer">
-                            <i class="fa-solid fa-table-cells-large"></i> Footer Yönetimi
+                        <a href="#" class="nav-link nav-sublink" data-view="menu-settings">
+                            <i class="fa-solid fa-list"></i> Site Menüsü
                         </a>
                     </div>
                 </div>
-                <a href="index.html" class="nav-link">
-                    <i class="fa-solid fa-arrow-left"></i> Siteye Dön
-                </a>
             </nav>
             <div class="sidebar-footer">
                 <div class="user-info">
@@ -140,6 +110,23 @@
             </div>
             <div class="modal-body" id="modal-form-area">
                 <!-- Dynamic Form Injected Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Icon Select Modal -->
+    <div id="icon-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>İkon Seç</h3>
+                <span class="close-icon-modal close-modal" style="cursor:pointer; font-size:20px;">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="icon-search" class="form-control" placeholder="İkon ara..." style="margin-bottom: 15px;">
+                <div id="icon-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 10px; max-height: 400px; overflow-y: auto; padding: 10px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ddd;">
+                    <!-- Icons will be loaded here -->
+                    <div style="grid-column: 1/-1; text-align: center; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> İkonlar yükleniyor...</div>
+                </div>
             </div>
         </div>
     </div>

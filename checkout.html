@@ -1096,7 +1096,7 @@
                 <button type="submit" class="btn btn-black btn-lg" style="width:100%; margin-top:20px;">GİRİŞ
                     YAP</button>
                 <div style="text-align:center; margin-top:20px; font-size:13px;">
-                    Hesabınız yok mu? <a href="register.html" style="font-weight:700; text-decoration:underline;">Üye
+                    Hesabınız yok mu? <a href="kayit.html" style="font-weight:700; text-decoration:underline;">Üye
                         Olun</a>
     </div>
 
@@ -1132,7 +1132,7 @@
                 <button type="submit" class="btn btn-black btn-lg" style="width:100%; margin-top:20px;">GİRİŞ
                     YAP</button>
                 <div style="text-align:center; margin-top:20px; font-size:13px;">
-                    Hesabınız yok mu? <a href="register.html" style="font-weight:700; text-decoration:underline;">Üye
+                    Hesabınız yok mu? <a href="kayit.html" style="font-weight:700; text-decoration:underline;">Üye
                         Olun</a>
                 </div>
             </form>
@@ -1162,6 +1162,14 @@
             </div>
         </div>
     </footer>
+    <script>
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('error') === 'paytr_failed') {
+                alert('Ödemeniz reddedildi veya bir hata oluştu. Lütfen tekrar deneyin.');
+            }
+        });
+    </script>
 </body>
 
 </html>

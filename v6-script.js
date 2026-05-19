@@ -90,9 +90,42 @@ setInterval(() => {
     moveSlide(1);
 }, 6000);
 
+// Fetch dynamic campaigns marquee
+async function loadCampaignMarquee() {
+    try {
+        const res = await fetch('/api/campaigns');
+        const data = await res.json();
+        if (data.success && data.data && data.data.length > 0) {
+            const marquee = document.getElementById('dynamic-marquee');
+            if(!marquee) return;
+            
+            let html = '';
+            // Render original items
+            data.data.forEach(camp => {
+                let linkStart = camp.link && camp.link !== '#' ? `<a href="${camp.link}" style="color:inherit; text-decoration:none;">` : '';
+                let linkEnd = camp.link && camp.link !== '#' ? `</a>` : '';
+                html += `<span class="v6-marquee-item">${linkStart}<svg class="i i-${camp.icon}" style="color: ${camp.color}; --i-size: 16px; margin-right: 5px; vertical-align: text-top;"><use href="/assets/svg-sprite.svg#${camp.icon}"/></svg> ${camp.text}${linkEnd}</span><span class="v6-marquee-dot">•</span>`;
+            });
+            // Duplicate for seamless scrolling
+            data.data.forEach(camp => {
+                let linkStart = camp.link && camp.link !== '#' ? `<a href="${camp.link}" style="color:inherit; text-decoration:none;">` : '';
+                let linkEnd = camp.link && camp.link !== '#' ? `</a>` : '';
+                html += `<span class="v6-marquee-item">${linkStart}<svg class="i i-${camp.icon}" style="color: ${camp.color}; --i-size: 16px; margin-right: 5px; vertical-align: text-top;"><use href="/assets/svg-sprite.svg#${camp.icon}"/></svg> ${camp.text}${linkEnd}</span><span class="v6-marquee-dot">•</span>`;
+            });
+            marquee.innerHTML = html;
+        }
+    } catch (error) {
+        console.error('Kayan kampanya yüklenemedi:', error);
+    }
+}
+
 // Initialize scripts
+
 document.addEventListener('DOMContentLoaded', () => {
     startCountdown();
+    loadCampaignMarquee();
+    loadSidebarMenu();
+    initLiveSearch();
 
     // Lazy Loading Scroll Animations
     const fadeElements = document.querySelectorAll('.v6-fade-in');
@@ -340,3 +373,322 @@ function onPlayerStateChange(event) {
         setup();
     }
 })();
+
+// ============================================
+// AUTH DROPDOWN + LOGIN MODAL (Global)
+// ============================================
+(function initAuthSystem() {
+    function buildHTML(user) {
+        if (user) {
+            // Giriş yapılmış → Hesabım menüsü
+            const isAdmin = user.email === 'admin@deerderi.com';
+            return `
+                <a href="/account.html"><i class="fa-regular fa-user"></i> Hesabım</a>
+                <a href="/account.html#orders"><i class="fa-solid fa-box"></i> Siparişlerim</a>
+                ${isAdmin ? `<a href="/yonetim" style="color:#e67e22"><i class="fa-solid fa-gear"></i> Yönetim Paneli</a>` : ''}
+                <div class="v6-dd-divider"></div>
+                <button class="v6-dd-btn v6-dd-logout" onclick="window.logoutUser && window.logoutUser()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+                </button>`;
+        } else {
+            // Giriş yapılmamış
+            return `
+                <button class="v6-dd-btn v6-dd-btn-login" onclick="openLoginModal()">
+                    <i class="fa-regular fa-user"></i> Giriş Yap
+                </button>
+                <button class="v6-dd-btn v6-dd-btn-register" onclick="window.location.href='/kayit.html'">
+                    <i class="fa-solid fa-user-plus"></i> Üye Ol
+                </button>`;
+        }
+    }
+
+    function updateAuthUI() {
+        const user = window.UserManager ? window.UserManager.getCurrentUser() : null;
+        const authItems = document.querySelectorAll('.v6-auth-item');
+
+        authItems.forEach(item => {
+            let dd = item.querySelector('.v6-auth-dropdown');
+            if (!dd) {
+                dd = document.createElement('div');
+                dd.className = 'v6-auth-dropdown';
+                item.appendChild(dd);
+            }
+            dd.innerHTML = buildHTML(user);
+
+            // Update label
+            const span = item.querySelector('span');
+            if (span) {
+                span.textContent = user ? (user.firstName || 'Hesabım').toUpperCase() : 'HESABIM';
+            }
+        });
+    }
+
+    // Inject Login Modal HTML once into body
+    function injectLoginModal() {
+        if (document.getElementById('v6-login-modal-overlay')) return;
+        const modal = document.createElement('div');
+        modal.id = 'v6-login-modal-overlay';
+        modal.innerHTML = `
+            <div id="v6-login-modal">
+                <button class="v6-modal-close" onclick="closeLoginModal()" aria-label="Kapat">&times;</button>
+                <div class="v6-modal-logo">
+                    <img src="/assets/logo.png" alt="DEER DERİ">
+                </div>
+                <h2 class="v6-modal-title">Giriş Yap</h2>
+                <p class="v6-modal-subtitle">Hesabınıza giriş yapın</p>
+
+                <form id="v6-login-form" autocomplete="on">
+                    <div class="v6-modal-input-group">
+                        <label for="v6-login-email">E-Posta</label>
+                        <input type="email" id="v6-login-email" placeholder="ornek@mail.com" required autocomplete="email">
+                    </div>
+                    <div class="v6-modal-input-group">
+                        <label for="v6-login-pass">Şifre</label>
+                        <input type="password" id="v6-login-pass" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+                    <div id="v6-login-error">E-posta veya şifre hatalı. Lütfen tekrar deneyin.</div>
+                    <button type="submit" class="v6-modal-btn-login">GİRİŞ YAP</button>
+                </form>
+
+                <div class="v6-modal-footer">
+                    Hesabınız yok mu?
+                    <a href="/kayit.html">Üye Ol</a>
+                </div>
+            </div>`;
+        document.body.appendChild(modal);
+
+        // Close on overlay click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeLoginModal();
+        });
+
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLoginModal();
+        });
+
+        // Login form submit
+        document.getElementById('v6-login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('v6-login-email').value.trim();
+            const pass  = document.getElementById('v6-login-pass').value;
+            const errEl = document.getElementById('v6-login-error');
+            const btn   = this.querySelector('.v6-modal-btn-login');
+            errEl.style.display = 'none';
+            btn.textContent = 'Giriş yapılıyor...';
+            btn.disabled = true;
+
+            try {
+                const success = await window.loginUser(email, pass, false);
+                if (success) {
+                    closeLoginModal();
+                    updateAuthUI();
+                    const current = window.location.pathname;
+                    if (current === '/' || current.endsWith('index.html') || current.endsWith('kayit.html')) {
+                        window.location.href = '/account.html';
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    errEl.style.display = 'block';
+                    btn.textContent = 'GİRİŞ YAP';
+                    btn.disabled = false;
+                }
+            } catch(err) {
+                errEl.textContent = 'Bağlantı hatası. Lütfen tekrar deneyin.';
+                errEl.style.display = 'block';
+                btn.textContent = 'GİRİŞ YAP';
+                btn.disabled = false;
+            }
+        });
+    }
+
+    window.openLoginModal = function() {
+        const overlay = document.getElementById('v6-login-modal-overlay');
+        if (overlay) {
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('v6-login-email')?.focus(), 100);
+        }
+    };
+
+    window.closeLoginModal = function() {
+        const overlay = document.getElementById('v6-login-modal-overlay');
+        if (overlay) {
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    };
+
+    function setup() {
+        // Add v6-auth-item class to HESABIM icon
+        const actionItems = document.querySelectorAll('.v6-action-item');
+        actionItems.forEach(item => {
+            const iconUser = item.querySelector('.fa-user, .fa-regular.fa-user');
+            if (iconUser) {
+                item.classList.add('v6-auth-item');
+            }
+            
+            // Activate SEPET icon
+            const span = item.querySelector('span');
+            if (span && span.textContent.trim().toUpperCase() === 'SEPET') {
+                item.classList.add('v6-cart-item');
+                let dd = item.querySelector('.v6-cart-dropdown');
+                if (!dd) {
+                    dd = document.createElement('div');
+                    dd.className = 'v6-cart-dropdown';
+                    dd.id = 'header-cart-preview';
+                    item.appendChild(dd);
+                }
+
+                item.addEventListener('click', function(e) {
+                    if (e.target.closest('.v6-cart-dropdown')) return; // ignore clicks inside popup
+                    e.preventDefault();
+                    if (typeof window.toggleCart === 'function') {
+                        window.toggleCart(true);
+                    } else {
+                        window.location.href = '/cart.html';
+                    }
+                });
+            }
+        });
+
+        injectLoginModal();
+
+        // INSTANT INJECT: Do not wait for UserManager to build the dropdown HTML.
+        // This ensures the hover works at millisecond 0 on page load.
+        updateAuthUI();
+        if (typeof window.updateCartBadge === 'function') window.updateCartBadge();
+
+        // Wait for UserManager (script.js might load async) to swap to logged-in state
+        if (window.UserManager) {
+            updateAuthUI();
+        } else {
+            // Poll briefly
+            let tries = 0;
+            const poll = setInterval(() => {
+                tries++;
+                if (window.UserManager || tries > 20) {
+                    clearInterval(poll);
+                    updateAuthUI();
+                }
+            }, 150);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setup);
+    } else {
+        setup();
+    }
+})();
+
+
+// ==========================================
+// LIVE SEARCH LOGIC
+// ==========================================
+let allProductsCache = [];
+let searchTimeout = null;
+
+async function fetchProductsForSearch() {
+    if (allProductsCache.length > 0) return allProductsCache;
+    try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        if (data.success && data.data) {
+            allProductsCache = data.data;
+        }
+        return allProductsCache;
+    } catch(e) {
+        console.error('Error fetching products for search:', e);
+        return [];
+    }
+}
+
+function formatPrice(price) {
+    if (!price) return '0,00';
+    return price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function initLiveSearch() {
+    const searchInput = document.getElementById('main-search-input');
+    const searchPopup = document.getElementById('search-popup');
+    const resultsContainer = document.getElementById('search-results-container');
+    
+    if (!searchInput || !searchPopup || !resultsContainer) return;
+
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        
+        clearTimeout(searchTimeout);
+        
+        if (query.length >= 3) {
+            searchTimeout = setTimeout(async () => {
+                const products = await fetchProductsForSearch();
+                const filtered = products.filter(p => p.name && p.name.toLowerCase().includes(query));
+                
+                if (filtered.length > 0) {
+                    resultsContainer.innerHTML = filtered.map(p => `
+                        <a href="/urun-${p.slug || p.id}" class="search-result-item">
+                            <img src="${p.images && p.images[0] ? p.images[0] : '/assets/placeholder.jpg'}" class="search-result-img" alt="${p.name}">
+                            <div class="search-result-info">
+                                <div class="search-result-name">${p.name}</div>
+                                <div class="search-result-price">${formatPrice(p.price)} ₺</div>
+                            </div>
+                        </a>
+                    `).join('');
+                } else {
+                    resultsContainer.innerHTML = '<div class="search-no-result">Sonuç bulunamadı.</div>';
+                }
+                
+                searchPopup.classList.add('active');
+            }, 300); // 300ms debounce
+        } else {
+            searchPopup.classList.remove('active');
+        }
+    });
+
+    // Close popup on outside click
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchPopup.contains(e.target)) {
+            searchPopup.classList.remove('active');
+        }
+    });
+    
+    // Open popup again if input is clicked and has >= 3 chars
+    searchInput.addEventListener('click', () => {
+        if (searchInput.value.trim().length >= 3) {
+            searchPopup.classList.add('active');
+        }
+    });
+}
+
+
+// ==========================================
+// DYNAMIC SIDEBAR MENU
+// ==========================================
+async function loadSidebarMenu() {
+    try {
+        const res = await fetch('/api/menu');
+        const data = await res.json();
+        if (data.success && data.data) {
+            const menuContainer = document.getElementById('dynamic-sidebar-menu');
+            if(!menuContainer) return;
+            
+            menuContainer.innerHTML = data.data.map(item => {
+                let colorStyle = item.color ? `color: ${item.color};` : '';
+                
+                let iconHtml = '';
+                if (item.icon) {
+                    const animClass = item.animated ? ' is-animated' : '';
+                    // No gap: icon sits flush left, text next to it
+                    iconHtml = `<svg class="menu-icon-svg${animClass}" viewBox="0 0 24 24"><use href="/assets/svg-sprite.svg#${item.icon}"/></svg>`;
+                }
+                
+                return `<a href="${item.url}" style="${colorStyle}">${iconHtml}${item.text}</a>`;
+            }).join('');
+        }
+    } catch (error) {
+        console.error('Sidebar menü yüklenemedi:', error);
+    }
+}

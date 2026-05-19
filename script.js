@@ -520,6 +520,11 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // --- CART LOGIC ---
+    const cartExpiry = localStorage.getItem('deerDeriCartExpiry');
+    if (cartExpiry && Date.now() > parseInt(cartExpiry, 10)) {
+        localStorage.removeItem('deerDeriCart');
+        localStorage.removeItem('deerDeriCartExpiry');
+    }
     window.cart = JSON.parse(localStorage.getItem('deerDeriCart')) || [];
 
     // Inject Mini Cart HTML if not present
@@ -788,23 +793,25 @@ window.renderMiniCart = function () {
 window.addToCart = function (product, quantity = 1, color = 'Standart', embossingName = null) {
     if (!window.cart) window.cart = [];
 
+    const productId = product.id || product._id || Date.now();
+
     // Determine correct image source
-    let mainImage = product.image;
+    let mainImage = product.image || product.mainImage;
     if (!mainImage && product.images && product.images.length > 0) {
-        mainImage = product.images[0];
+        mainImage = typeof product.images[0] === 'string' ? product.images[0] : product.images[0].url;
     }
     // Fallback if still empty
-    if (!mainImage) mainImage = 'assets/logo.png';
+    if (!mainImage) mainImage = '/assets/logo.png';
 
     // A product is unique in the cart if it has the same ID, color AND same embossing
-    const existingItem = window.cart.find(item => item.id === product.id && item.color === color && item.embossing === embossingName);
+    const existingItem = window.cart.find(item => item.id === productId && item.color === color && item.embossing === embossingName);
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
         window.cart.push({
-            id: product.id,
+            id: productId,
             name: product.name,
-            price: product.price,
+            price: Number(product.price) || 0,
             image: mainImage,
             quantity: quantity,
             color: color,
@@ -838,6 +845,7 @@ window.updateCartQuantity = function (index, change) {
 
 window.saveCart = function () {
     localStorage.setItem('deerDeriCart', JSON.stringify(window.cart));
+    localStorage.setItem('deerDeriCartExpiry', (Date.now() + 24 * 60 * 60 * 1000).toString());
     updateCartBadge();
 };
 
@@ -895,10 +903,10 @@ window.renderHeaderCart = function () {
             `;
         }
 
-        html += '<div style="max-height: 250px; overflow-y: auto;">';
+        html += '<div style="max-height: 350px; overflow-y: auto; padding-right: 5px;">';
 
-        // Show max 3 items
-        window.cart.slice(0, 3).forEach((item, index) => {
+        // Show all items
+        window.cart.forEach((item, index) => {
             html += `
                 <div class="preview-item" data-image="${item.image}" data-name="${item.name}" onclick="window.location.href='product.html?id=${item.id}'" style="cursor: pointer;">
                     <img src="${item.image}" alt="">
@@ -916,10 +924,6 @@ window.renderHeaderCart = function () {
         });
 
         html += '</div>';
-
-        if (window.cart.length > 3) {
-            html += `<p style="text-align:center; font-size:11px; color:#999; margin-top:10px;">+ ${window.cart.length - 3} diğer ürün</p>`;
-        }
 
         html += `
             <div class="preview-total" style="border-top:1px solid #eee; margin-top:15px; padding-top:15px;">
@@ -1292,7 +1296,9 @@ window.processOrder = async function () {
             throw new Error(data.error || 'Sipariş oluşturulamadı');
         }
 
+        
         const orderNumber = data.data.orderNumber;
+        
         
         // Handle User Registration if checked
         if (!user && window.checkoutMode === 'register' && password) {
@@ -1311,6 +1317,47 @@ window.processOrder = async function () {
             } catch (regErr) {
                 console.error('Auto-registration failed:', regErr);
             }
+        }
+
+        if (data.data.paytr) {
+            const paytr = data.data.paytr;
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://www.paytr.com/odeme';
+            form.style.display = 'none';
+            
+            for (const key in paytr) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = paytr[key];
+                form.appendChild(input);
+            }
+            
+            const expiry = document.getElementById('card-expiry').value.split('/');
+            const expMonth = expiry[0] ? expiry[0].trim() : '';
+            const expYear = expiry[1] ? expiry[1].trim() : '';
+            
+            const ccFields = {
+                cc_owner: document.getElementById('card-name').value,
+                card_number: document.getElementById('card-number').value.replace(/\s+/g, ''),
+                expiry_month: expMonth,
+                expiry_year: expYear,
+                cvv: document.getElementById('card-cvv').value
+            };
+            
+            for (const key in ccFields) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = ccFields[key];
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            showToast('PayTR Ödeme sayfasına yönlendiriliyorsunuz...', 'info');
+            form.submit();
+            return;
         }
 
         const localOrder = {
@@ -1579,7 +1626,13 @@ function calculateTotal() {
 
 function formatPriceGlobal(price) {
     if (price === undefined || price === null) return "0";
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    
+    const numPrice = Number(price);
+    if (isNaN(numPrice)) return "0";
+    
+    const parts = numPrice.toFixed(2).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return parts[1] === "00" ? parts[0] : parts.join(',');
 }
 
 // --- YouTube Video Background Logic ---
@@ -2167,6 +2220,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CHECKOUT INIT SKIP ---
     if (window.location.pathname.includes('checkout.html')) {
+        if (!window.cart || window.cart.length === 0) {
+            alert("Ödeme adımına geçmek için lütfen sepetinize en az bir ürün ekleyin.");
+            window.location.href = '/index.html';
+            return;
+        }
         const user = UserManager.getCurrentUser();
         if (user) {
             // goToStep removed
@@ -2462,3 +2520,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Make function globally available
 window.renderFooter = renderFooter;
+
+
+// Credit Card Input Masks
+window.addEventListener('DOMContentLoaded', () => {
+    const ccNum = document.getElementById('card-number');
+    const ccExp = document.getElementById('card-expiry');
+    const ccCvv = document.getElementById('card-cvv');
+    const ccName = document.getElementById('card-name');
+
+    if (ccNum) {
+        ccNum.addEventListener('input', function (e) {
+            let val = e.target.value.replace(/\D/g, '');
+            val = val.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = val.substring(0, 19);
+        });
+    }
+    
+    if (ccExp) {
+        ccExp.addEventListener('input', function (e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length >= 2) {
+                val = val.substring(0, 2) + '/' + val.substring(2, 4);
+            }
+            e.target.value = val.substring(0, 5);
+        });
+    }
+    
+    if (ccCvv) {
+        ccCvv.addEventListener('input', function (e) {
+            let val = e.target.value.replace(/\D/g, '');
+            e.target.value = val.substring(0, 4);
+        });
+    }
+
+    if (ccName) {
+        ccName.addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ\s]/g, '').toUpperCase();
+        });
+    }
+});

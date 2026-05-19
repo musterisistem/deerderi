@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DEER DERI | Kadim Miras</title>
     <link rel="stylesheet" href="styles.css?v=205">
-    <link rel="stylesheet" href="v6-design.css?v=208">
+    <link rel="stylesheet" href="v6-design.css?v=210">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -21,27 +21,8 @@
     <!-- 1. Top Bar (Campaign Marquee) -->
     <div class="v6-top-bar">
         <div class="v6-top-bar-container v6-marquee-container">
-            <div class="v6-marquee">
-                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
-                <span class="v6-marquee-dot">•</span>
-                <!-- Duplicate for seamless scrolling -->
-                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
-                <span class="v6-marquee-dot">•</span>
-                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+            <div class="v6-marquee" id="dynamic-marquee">
+                <span class="v6-marquee-item"><i class="fa-solid fa-spinner fa-spin"></i> Yükleniyor...</span>
             </div>
         </div>
     </div>
@@ -53,9 +34,15 @@
                 <!-- Mobile Menu Icon (Now visible on desktop too) -->
                 <i class="fa-solid fa-bars v6-mobile-menu-icon" onclick="document.querySelector('.v6-sidebar').classList.toggle('active'); document.querySelector('.v6-sidebar-overlay').classList.toggle('active');"></i>
                 <!-- Desktop Search -->
-                <div class="v6-search-box">
+                <div class="v6-search-box" style="position: relative;">
                     <i class="fa-solid fa-search" style="color: #999;"></i>
-                    <input type="text" placeholder="Ürünleri ara...">
+                    <input type="text" id="main-search-input" placeholder="Ürünleri ara..." autocomplete="off">
+                    <!-- Search Results Popup -->
+                    <div id="search-popup" class="search-popup">
+                        <div class="search-popup-content" id="search-results-container">
+                            <!-- Results injected here -->
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="v6-header-center">
@@ -88,17 +75,8 @@
         <div class="v6-sidebar-header">
             <i class="fa-solid fa-times v6-sidebar-close" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></i>
         </div>
-        <nav class="v6-sidebar-nav">
-            <a href="#">ANA SAYFA</a>
-            <a href="#">CÜZDANLAR <i class="fa-solid fa-chevron-right"></i></a>
-            <a href="#">ÇANTALAR <i class="fa-solid fa-chevron-right"></i></a>
-            <a href="#">GÖZLÜKLER <i class="fa-solid fa-chevron-right"></i></a>
-            <a href="#">ŞAPKALAR <i class="fa-solid fa-chevron-right"></i></a>
-            <a href="#">AKSESUAR <i class="fa-solid fa-chevron-right"></i></a>
-            <a href="#">KEMER</a>
-            <a href="#">OFİS GEREÇLERİ</a>
-            <a href="#" style="color: red;">İNDİRİM FIRSATI! 🔥</a>
-            <a href="contact.html">İLETİŞİM</a>
+        <nav class="v6-sidebar-nav" id="dynamic-sidebar-menu">
+            <div style="text-align: center; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> Yükleniyor...</div>
         </nav>
     </div>
 
@@ -396,6 +374,6 @@
 
     <script src="data.js"></script>
     <script src="script.js?v=207"></script>
-    <script src="v6-script.js"></script>
+    <script src="v6-script.js?v=210"></script>
 </body>
 </html>

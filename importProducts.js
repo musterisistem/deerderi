@@ -37,7 +37,9 @@ async function importProducts() {
 
     try {
         await mongoose.connect(process.env.MONGODB_URI);
-        console.log('✅ MongoDB bağlandı. Ürün aktarımı başlıyor...');
+        console.log('✅ MongoDB bağlandı. Eski ürünler siliniyor...');
+        await Product.deleteMany({});
+        console.log('✅ Eski ürünler silindi. Ürün aktarımı başlıyor...');
 
         const csvPath = path.join(__dirname, 'DeerDeri.csv');
         const content = fs.readFileSync(csvPath, 'utf8');

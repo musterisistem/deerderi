@@ -1,6 +1,11 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+
+const PAYTR_MERCHANT_ID = '630378';
+const PAYTR_MERCHANT_KEY = 'dUyJLqbxBzdy6KF9';
+const PAYTR_MERCHANT_SALT = 'JG1dH3PSwKdLJ5nY';
 
 // MongoDB / Mongoose
 let mongoose = null;
@@ -116,7 +121,7 @@ const staticPages = {
     'sepet': 'cart.html',
     'odeme': 'checkout.html',
     'hesabim': 'account.html',
-    'kayit-ol': 'register.html',
+    'kayit-ol': 'kayit.html',
     'siparis-tamamlandi': 'success.html',
     'order-complete': 'success.html',
 };
@@ -249,9 +254,40 @@ http.createServer(function (request, response) {
         return handleAdminGetCoupons(response);
     }
 
+
+
+    // GET /api/menu
+    if (requestUrl === '/api/menu' && request.method === 'GET') {
+        return handleGetMenu(response);
+    }
+    // POST /api/admin/menu
+    if (requestUrl === '/api/admin/menu' && request.method === 'POST') {
+        return handleAdminUpdateMenu(request, response);
+    }
+
+    // GET /api/campaigns
+    if (requestUrl === '/api/campaigns' && request.method === 'GET') {
+        return handleGetCampaigns(response);
+    }
+
+    // POST /api/admin/logo
+    if (requestUrl === '/api/admin/logo' && request.method === 'POST') {
+        return handleAdminUploadLogo(request, response);
+    }
+
+    // POST /api/admin/campaigns
+    if (requestUrl === '/api/admin/campaigns' && request.method === 'POST') {
+        return handleAdminSaveCampaigns(request, response);
+    }
+
     // 5.2 API: Send Email
     if (requestUrl === '/api/send-email' && request.method === 'POST') {
         return handleSendEmail(request, response);
+    }
+
+    // POST /api/paytr/callback
+    if (requestUrl === '/api/paytr/callback' && request.method === 'POST') {
+        return handlePaytrCallback(request, response);
     }
 
     // 5.5 API: Google Shopping Feed
@@ -954,14 +990,60 @@ async function handleCreateOrder(request, response) {
             fs.writeFileSync('./local_orders.json', JSON.stringify(localOrders, null, 2));
         }
 
+        const responseData = {
+            orderNumber: orderNumber,
+            _id: orderData._id || orderNumber,
+            total: total,
+            createdAt: orderData.createdAt,
+        };
+
+        if (orderData.paymentMethod === 'creditCard') {
+            let userIp = request.headers['x-forwarded-for'] || request.socket.remoteAddress || '127.0.0.1';
+            if (userIp.includes(',')) userIp = userIp.split(',')[0].trim();
+            if (userIp === '::1') userIp = '127.0.0.1';
+
+            const email = orderData.customer.email;
+            const payment_amount = total.toFixed(2);
+            const payment_type = 'card';
+            const installment_count = '0';
+            const currency = 'TL';
+            const test_mode = '0';
+            const non_3d = '0';
+
+            const user_basket = validatedItems.map(item => [item.name, item.price.toFixed(2), item.quantity]);
+            
+            const hashSTR = `${PAYTR_MERCHANT_ID}${userIp}${orderNumber}${email}${payment_amount}${payment_type}${installment_count}${currency}${test_mode}${non_3d}`;
+            const paytr_token_str = hashSTR + PAYTR_MERCHANT_SALT;
+            const token = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(paytr_token_str).digest('base64');
+
+            responseData.paytr = {
+                merchant_id: PAYTR_MERCHANT_ID,
+                user_ip: userIp,
+                merchant_oid: orderNumber,
+                email: email,
+                payment_type: payment_type,
+                payment_amount: payment_amount,
+                currency: currency,
+                test_mode: test_mode,
+                non_3d: non_3d,
+                merchant_ok_url: `http://${request.headers.host}/siparis-tamamlandi?order=${orderNumber}`,
+                merchant_fail_url: `http://${request.headers.host}/odeme?error=paytr_failed`,
+                user_name: orderData.customer.name,
+                user_address: orderData.shippingAddress.address,
+                user_phone: orderData.customer.phone || '00000000000',
+                user_basket: JSON.stringify(user_basket),
+                debug_on: '1',
+                client_lang: 'tr',
+                paytr_token: token,
+                non3d_test_failed: '0',
+                installment_count: installment_count,
+                card_type: ''
+            };
+        }
+
         sendJSON(response, 201, {
             success: true,
-            data: {
-                orderNumber: orderNumber,
-                _id: orderData._id || orderNumber,
-                total: total,
-                createdAt: orderData.createdAt,
-            }
+            data: responseData
         });
     } catch (err) {
         console.error('POST /api/orders error:', err);
@@ -1032,6 +1114,61 @@ async function handleValidateCoupon(request, response) {
         console.error('POST /api/coupons/validate error:', err);
         sendJSON(response, 500, { error: err.message });
     }
+}
+
+
+
+// ---- POST /api/paytr/callback ----
+function handlePaytrCallback(request, response) {
+    let bodyStr = '';
+    request.on('data', chunk => { bodyStr += chunk; });
+    request.on('end', async () => {
+        try {
+            const params = new URLSearchParams(bodyStr);
+            const merchant_oid = params.get('merchant_oid');
+            const status = params.get('status');
+            const total_amount = params.get('total_amount');
+            const hash = params.get('hash');
+            const failed_reason_msg = params.get('failed_reason_msg');
+
+            if (!merchant_oid || !status || !hash) {
+                response.writeHead(400);
+                return response.end('Bad Request');
+            }
+
+            const hashStr = merchant_oid + PAYTR_MERCHANT_SALT + status + total_amount;
+            const expectedHash = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(hashStr).digest('base64');
+
+            if (hash !== expectedHash) {
+                response.writeHead(400);
+                return response.end('Bad Hash');
+            }
+
+            const isSuccess = (status === 'success');
+            const updateData = {
+                paymentStatus: isSuccess ? 'paid' : 'failed',
+                notes: isSuccess ? 'Ödeme PayTR ile tamamlandı.' : `Ödeme başarısız: ${failed_reason_msg || 'Bilinmeyen hata'}`
+            };
+
+            if (dbConnected && Order) {
+                await Order.findOneAndUpdate({ orderNumber: merchant_oid }, updateData);
+            } else if (fs.existsSync('./local_orders.json')) {
+                let localOrders = JSON.parse(fs.readFileSync('./local_orders.json', 'utf8'));
+                const orderIndex = localOrders.findIndex(o => o.orderNumber === merchant_oid);
+                if (orderIndex !== -1) {
+                    localOrders[orderIndex].paymentStatus = updateData.paymentStatus;
+                    localOrders[orderIndex].notes = (localOrders[orderIndex].notes || '') + '\n' + updateData.notes;
+                    fs.writeFileSync('./local_orders.json', JSON.stringify(localOrders, null, 2));
+                }
+            }
+
+            response.writeHead(200);
+            response.end('OK');
+        } catch (e) {
+            response.writeHead(500);
+            response.end('Internal Server Error');
+        }
+    });
 }
 
 // ---- GET /api/settings ----
@@ -1204,3 +1341,129 @@ async function handleAdminGetCoupons(response) {
     }
 }
 
+
+
+// CAMPAIGNS API
+function handleGetCampaigns(response) {
+    const fs = require('fs');
+    fs.readFile('./campaigns.json', 'utf8', (err, data) => {
+        let campaigns = [];
+        if (!err) {
+            try { campaigns = JSON.parse(data); } catch(e){}
+        } else {
+            // Default campaigns if file doesn't exist
+            campaigns = [
+                { id: 1, text: 'ANNELER GÜNÜ KOLEKSİYONU YAYINDA!', icon: 'gift', color: '#e83e8c', link: '#' },
+                { id: 2, text: 'SEZON SONU İNDİRİM FIRSATLARI!', icon: 'tag', color: '#fd7e14', link: '#' },
+                { id: 3, text: '2. GÖZLÜKTE NET %50 İNDİRİM!', icon: 'eye', color: '#17a2b8', link: '#' },
+                { id: 4, text: '2000₺ VE ÜZERİ ÜCRETSİZ KARGO!', icon: 'truck', color: '#28a745', link: '#' },
+                { id: 5, text: 'YENİ SEZON ÜRÜNLERİ KEŞFEDİN!', icon: 'star', color: '#ffc107', link: '#' }
+            ];
+        }
+        sendJSON(response, 200, { success: true, data: campaigns });
+    });
+}
+
+async function handleAdminSaveCampaigns(request, response) {
+    const fs = require('fs');
+    try {
+        const data = await parseBody(request);
+        if (data.campaigns && Array.isArray(data.campaigns)) {
+            if(data.campaigns.length > 6) {
+                return sendJSON(response, 400, { success: false, error: 'En fazla 6 kampanya eklenebilir.' });
+            }
+            fs.writeFile('./campaigns.json', JSON.stringify(data.campaigns, null, 2), (err) => {
+                if(err) return sendJSON(response, 500, { success: false, error: 'Kaydedilemedi' });
+                sendJSON(response, 200, { success: true });
+            });
+        } else {
+            sendJSON(response, 400, { success: false, error: 'Geçersiz veri' });
+        }
+    } catch(e) {
+        sendJSON(response, 500, { success: false, error: e.message });
+    }
+}
+
+
+// UPLOAD LOGO API
+function handleAdminUploadLogo(request, response) {
+    let body = '';
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB limit
+
+    request.on('data', chunk => {
+        body += chunk;
+        if (body.length > MAX_SIZE) {
+            sendJSON(response, 413, { success: false, error: 'File too large' });
+            request.destroy();
+        }
+    });
+
+    request.on('end', () => {
+        try {
+            const data = JSON.parse(body);
+            if (!data.image || !data.image.includes('base64')) {
+                throw new Error('Invalid image data');
+            }
+
+            const base64Data = data.image.split(',')[1];
+            const imageBuffer = Buffer.from(base64Data, 'base64');
+            
+            const fs = require('fs');
+            fs.writeFileSync('./assets/logo.png', imageBuffer);
+
+            sendJSON(response, 200, { success: true, url: '/assets/logo.png?v=' + Date.now() });
+        } catch (error) {
+            console.error('Logo upload error:', error);
+            sendJSON(response, 500, { success: false, error: error.message });
+        }
+    });
+}
+
+
+// MENU API
+function handleGetMenu(response) {
+    try {
+        let menuItems = [];
+        const fs = require('fs');
+        if (fs.existsSync('./menu.json')) {
+            menuItems = JSON.parse(fs.readFileSync('./menu.json', 'utf8'));
+        } else {
+            // Defaults
+            menuItems = [
+                { id: 1, text: 'ANA SAYFA', url: '/', icon: '', color: '' },
+                { id: 2, text: 'CÜZDANLAR', url: '/kategori/cuzdan', icon: '', color: '' },
+                { id: 3, text: 'ÇANTALAR', url: '/kategori/canta', icon: '', color: '' },
+                { id: 4, text: 'GÖZLÜKLER', url: '/kategori/gozluk', icon: '', color: '' },
+                { id: 5, text: 'ŞAPKALAR', url: '/kategori/sapka', icon: '', color: '' },
+                { id: 6, text: 'AKSESUAR', url: '/kategori/aksesuar', icon: '', color: '' },
+                { id: 7, text: 'KEMER', url: '/kategori/kemer', icon: '', color: '' },
+                { id: 8, text: 'İNDİRİM FIRSATI! 🔥', url: '/indirim', icon: 'fire', color: '#ff0000' },
+                { id: 9, text: 'İLETİŞİM', url: '/iletisim', icon: '', color: '' }
+            ];
+            fs.writeFileSync('./menu.json', JSON.stringify(menuItems, null, 2));
+        }
+        sendJSON(response, 200, { success: true, data: menuItems });
+    } catch (e) {
+        sendJSON(response, 500, { success: false, error: e.message });
+    }
+}
+
+function handleAdminUpdateMenu(request, response) {
+    let body = '';
+    request.on('data', chunk => {
+        body += chunk;
+    });
+    request.on('end', () => {
+        try {
+            const data = JSON.parse(body);
+            if (!data.menu || !Array.isArray(data.menu)) {
+                return sendJSON(response, 400, { success: false, error: 'Invalid menu data' });
+            }
+            const fs = require('fs');
+            fs.writeFileSync('./menu.json', JSON.stringify(data.menu, null, 2));
+            sendJSON(response, 200, { success: true });
+        } catch (error) {
+            sendJSON(response, 500, { success: false, error: error.message });
+        }
+    });
+}

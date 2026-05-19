@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEER DERI | Kayıt Ol</title>
+    <link rel="stylesheet" href="/styles.css?v=203">
+    <link rel="stylesheet" href="/v6-design.css?v=206">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Modern Split-Screen Registration Layout */
+        body {
+            background-color: #fff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .split-layout {
+            display: flex;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Left Side: Creative Ambient Background */
+        .split-left {
+            flex: 1;
+            background: #0f172a; /* Deep premium slate */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Image Background with 20% Opacity */
+        .split-left-bg-image {
+            position: absolute;
+            inset: 0;
+            background-image: url('/lib/images/kartlik.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        /* Ambient Glowing Orbs */
+        .split-left::before {
+            content: '';
+            position: absolute;
+            top: -10%; left: -10%; width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+            animation: floatOrb 20s infinite alternate ease-in-out;
+        }
+        
+        .split-left::after {
+            content: '';
+            position: absolute;
+            bottom: -15%; right: -15%; width: 70%; height: 70%;
+            background: radial-gradient(circle, rgba(232, 121, 249, 0.12) 0%, transparent 60%);
+            animation: floatOrb 25s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(15%, 15%) scale(1.2); }
+        }
+
+        /* Glassmorphism Card Container */
+        .split-left-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 480px;
+            height: 360px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Text Slider Animations */
+        .benefit-slide {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            animation: slideFade 12s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 3 Slides, 4 seconds each (12s total) */
+        .benefit-slide:nth-child(1) { animation-delay: 0s; }
+        .benefit-slide:nth-child(2) { animation-delay: 4s; }
+        .benefit-slide:nth-child(3) { animation-delay: 8s; }
+
+        @keyframes slideFade {
+            0%, 5% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            10%, 25% { opacity: 1; transform: translateY(0) scale(1); }
+            30%, 100% { opacity: 0; transform: translateY(-20px) scale(0.95); }
+        }
+
+        .benefit-icon {
+            font-size: 50px;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        .benefit-slide h2 {
+            font-size: 32px !important;
+            font-weight: 800 !important;
+            color: #ffffff !important; /* Forced white to fix inheritance */
+            margin: 0 0 16px !important;
+            letter-spacing: 0.5px !important;
+            font-family: var(--v6-font) !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .benefit-slide p {
+            font-size: 15px !important;
+            color: #cbd5e1 !important; /* Soft slate/gray for readability */
+            line-height: 1.6 !important;
+            margin: 0 auto !important;
+            max-width: 360px !important;
+            font-family: var(--v6-font) !important;
+        }
+
+        /* Right Side: Registration Form */
+        .split-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: #faf9f6;
+            margin-bottom: -1px; /* Remove any 1px gap */
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            padding: 50px 45px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .auth-title {
+            font-family: var(--v6-font);
+            font-size: 26px;
+            font-weight: 800;
+            color: #111;
+            margin: 0 0 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Input Styling */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-row > div {
+            flex: 1;
+        }
+
+        .form-floating {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .form-floating input {
+            width: 100%;
+            padding: 16px 15px 12px;
+            border: 1.5px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: var(--v6-font);
+            transition: all 0.2s;
+            outline: none;
+            background: #fff;
+            box-sizing: border-box;
+            color: #111;
+        }
+
+        .form-floating input:focus {
+            border-color: #111;
+            box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.05);
+        }
+
+        .form-floating label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            background: #fff;
+            padding: 0 4px;
+        }
+
+        .form-floating input:focus + label,
+        .form-floating input:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* Gender Selection */
+        .gender-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            margin-top: 5px;
+        }
+
+        .gender-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .gender-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .gender-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            border: 1.5px solid #e5e5e5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .gender-option input:checked + label {
+            border-color: #111;
+            background: #f8f8f8;
+            color: #111;
+            font-weight: 700;
+        }
+
+        /* Checkboxes */
+        .custom-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .custom-check input {
+            margin-top: 3px;
+            accent-color: #111;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .custom-check a {
+            color: #111;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        .custom-check a:hover {
+            color: #555;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 15px;
+            font-family: var(--v6-font);
+        }
+
+        .btn-submit:hover {
+            background: #333;
+        }
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 25px;
+        }
+
+        .auth-footer a {
+            color: #111;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .split-left {
+                display: none;
+            }
+            .split-right {
+                padding: 40px 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 25px;
+                box-shadow: none;
+                background: transparent;
+            }
+            .split-right {
+                background: #fff;
+                padding: 20px 10px;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        /* Fix gap before footer specifically for this page */
+        footer {
+            margin-top: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Global Page Loader -->
+    <div id="global-loader">
+        <div class="loader-inner">
+            <img src="/assets/logo.png" alt="DEER DERİ" class="loader-logo-img">
+            <div class="loader-tagline">Yükleniyor...</div>
+            <div class="loader-spinner-creative"></div>
+        </div>
+    </div>
+
+    <!-- 1. Top Bar (Campaign Marquee) -->
+    <div class="v6-top-bar">
+        <div class="v6-top-bar-container v6-marquee-container">
+            <div class="v6-marquee">
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+                <span class="v6-marquee-dot">•</span>
+                <!-- Duplicate for seamless scrolling -->
+                <span class="v6-marquee-item"><i class="fa-solid fa-gift" style="color: #e83e8c;"></i> ANNELER GÜNÜ KOLEKSİYONU YAYINDA!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-tags" style="color: #fd7e14;"></i> SEZON SONU İNDİRİM FIRSATLARI!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-glasses" style="color: #17a2b8;"></i> 2. GÖZLÜKTE NET %50 İNDİRİM!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-truck-fast" style="color: #28a745;"></i> 2000₺ VE ÜZERİ ÜCRETSİZ KARGO!</span>
+                <span class="v6-marquee-dot">•</span>
+                <span class="v6-marquee-item"><i class="fa-solid fa-star" style="color: #ffc107;"></i> YENİ SEZON ÜRÜNLERİ KEŞFEDİN!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Main Header -->
+    <header class="v6-main-header">
+        <div class="v6-header-container">
+            <div class="v6-header-left">
+                <!-- Mobile Menu Icon (Now visible on desktop too) -->
+                <i class="fa-solid fa-bars v6-mobile-menu-icon" onclick="document.querySelector('.v6-sidebar').classList.toggle('active'); document.querySelector('.v6-sidebar-overlay').classList.toggle('active');"></i>
+                <!-- Desktop Search -->
+                <div class="v6-search-box">
+                    <i class="fa-solid fa-search" style="color: #999;"></i>
+                    <input type="text" placeholder="Ürünleri ara...">
+                </div>
+            </div>
+            <div class="v6-header-center">
+                <a href="/" class="v6-logo">
+                    <img src="/assets/logo.png" alt="DEER DERI" style="height: 40px; transform: scale(1.2);">
+                </a>
+            </div>
+            <div class="v6-header-right">
+                <div class="v6-header-actions">
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span>HESABIM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-regular fa-heart"></i>
+                        <span>FAVORİLERİM</span>
+                    </a>
+                    <a href="#" class="v6-action-item">
+                        <i class="fa-solid fa-gift"></i>
+                        <span>SEPET</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div class="v6-sidebar-overlay" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></div>
+    <div class="v6-sidebar">
+        <div class="v6-sidebar-header">
+            <i class="fa-solid fa-times v6-sidebar-close" onclick="document.querySelector('.v6-sidebar').classList.remove('active'); document.querySelector('.v6-sidebar-overlay').classList.remove('active');"></i>
+        </div>
+        <nav class="v6-sidebar-nav">
+            <a href="/">ANA SAYFA</a>
+            <a href="#">CÜZDANLAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ÇANTALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">GÖZLÜKLER <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">ŞAPKALAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">AKSESUAR <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="#">KEMER</a>
+            <a href="#">OFİS GEREÇLERİ</a>
+            <a href="#" style="color: red;">İNDİRİM FIRSATI! 🔥</a>
+            <a href="/contact.html">İLETİŞİM</a>
+        </nav>
+    </div>
+
+    <!-- MAIN REGISTRATION SECTION -->
+    <main class="split-layout">
+        <!-- Left Side: Benefits Slider -->
+        <div class="split-left">
+            <div class="split-left-bg-image"></div>
+            <div class="split-left-content">
+                <div class="benefit-slide">
+                    <i class="fa-solid fa-box-open benefit-icon"></i>
+                    <h2>Kolay Sipariş Takibi</h2>
+                    <p>Tüm sipariş geçmişinizi tek ekranda görün, kargo süreçlerini anlık olarak kolayca takip edin.</p>
+                </div>
+                <div class="benefit-slide">
+                    <i class="fa-solid fa-star benefit-icon"></i>
+                    <h2>Size Özel Fırsatlar</h2>
+                    <p>Sadece üyelerimize özel gizli indirimlerden, yeni sezon koleksiyonlarından ilk siz haberdar olun.</p>
+                </div>
+                <div class="benefit-slide">
+                    <i class="fa-solid fa-bolt benefit-icon"></i>
+                    <h2>Hızlı Alışveriş</h2>
+                    <p>Teslimat adreslerinizi ve tercihlerinizi kaydederek sonraki siparişlerinizi saniyeler içinde tamamlayın.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side Form -->
+        <div class="split-right">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1 class="auth-title">Hesap Oluştur</h1>
+                    <p class="auth-subtitle">Bilgilerinizi girerek saniyeler içinde üye olabilirsiniz.</p>
+                </div>
+
+                <form id="register-form">
+                    <div class="form-row">
+                        <div class="form-floating">
+                            <input type="text" name="firstName" id="firstName" placeholder=" " required>
+                            <label for="firstName">Adınız</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" name="lastName" id="lastName" placeholder=" " required>
+                            <label for="lastName">Soyadınız</label>
+                        </div>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="email" name="email" id="email" placeholder=" " required>
+                        <label for="email">E-Posta Adresi</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="tel" name="phone" id="phone" placeholder=" " required maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 11)">
+                        <label for="phone">Telefon (05XXXXXXXXX)</label>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-floating">
+                            <input type="password" name="password" id="password" placeholder=" " required minlength="6">
+                            <label for="password">Şifre</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder=" " required minlength="6">
+                            <label for="passwordConfirm">Şifre Tekrar</label>
+                        </div>
+                    </div>
+
+                    <div class="gender-options">
+                        <div class="gender-option">
+                            <input type="radio" name="gender" id="gender-f" value="kadın">
+                            <label for="gender-f"><i class="fa-solid fa-venus"></i> Kadın</label>
+                        </div>
+                        <div class="gender-option">
+                            <input type="radio" name="gender" id="gender-m" value="erkek">
+                            <label for="gender-m"><i class="fa-solid fa-mars"></i> Erkek</label>
+                        </div>
+                    </div>
+
+                    <label class="custom-check">
+                        <input type="checkbox" id="agreement">
+                        <span><a href="#">Üyelik Sözleşmesi</a>'ni ve <a href="#">Aydınlatma Metni</a>'ni okudum, kabul ediyorum.</span>
+                    </label>
+
+                    <label class="custom-check">
+                        <input type="checkbox" name="newsletter">
+                        <span>Kampanyalardan ve fırsatlardan e-posta ile haberdar olmak istiyorum.</span>
+                    </label>
+
+                    <button type="submit" class="btn-submit">ÜYELİĞİ TAMAMLA</button>
+                </form>
+
+                <div class="auth-footer">
+                    Zaten hesabınız var mı? 
+                    <a href="#" onclick="window.openLoginModal && window.openLoginModal(); return false;">Giriş Yap</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Dynamic Footer -->
+    <footer id="dynamic-footer">
+        <div class="container" style="padding: 60px 20px; text-align: center;">
+            <div style="color: #999; font-size: 14px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Footer yükleniyor...
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Validate Agreement
+            const agreement = document.getElementById('agreement');
+            if (!agreement.checked) {
+                if (window.showToast) window.showToast('Lütfen üyelik sözleşmesini onaylayınız.', 'error');
+                else alert('Lütfen üyelik sözleşmesini onaylayınız.');
+                return;
+            }
+
+            // Validate Passwords
+            const p1 = this.password.value;
+            const p2 = this.passwordConfirm.value;
+
+            if (p1 !== p2) {
+                if (window.showToast) window.showToast('Şifreler uyuşmuyor!', 'error');
+                else alert('Şifreler uyuşmuyor!');
+                return;
+            }
+
+            // Get Gender
+            let genderValue = '';
+            if (this.gender.value) genderValue = this.gender.value;
+
+            const userData = {
+                firstName: this.firstName.value,
+                lastName: this.lastName.value,
+                email: this.email.value,
+                phone: this.phone.value,
+                password: this.password.value,
+                gender: genderValue,
+                registrationDate: new Date().toISOString()
+            };
+
+            // Call window.registerUser (from script.js)
+            if (typeof window.registerUser === 'function') {
+                const btn = this.querySelector('.btn-submit');
+                btn.textContent = 'KAYIT OLUŞTURULUYOR...';
+                btn.disabled = true;
+
+                const success = window.registerUser(userData);
+                if (success) {
+                    if (window.showToast) window.showToast('Kayıt Başarılı! Yönlendiriliyorsunuz...', 'success');
+                    else alert('Kayıt Başarılı! Yönlendiriliyorsunuz...');
+
+                    // Hoşgeldin maili
+                    if (typeof window.sendWelcomeEmail === 'function') {
+                        try {
+                            await window.sendWelcomeEmail(userData);
+                        } catch (err) {
+                            console.error('Mail gönderim hatası:', err);
+                        }
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = '/account.html'; // Direct to account after registration
+                    }, 1000);
+                } else {
+                    if (window.showToast) window.showToast('Bu e-posta adresi zaten kayıtlı!', 'error');
+                    else alert('Bu e-posta adresi zaten kayıtlı!');
+                    btn.textContent = 'ÜYELİĞİ TAMAMLA';
+                    btn.disabled = false;
+                }
+            } else {
+                console.error('registerUser function not found!');
+            }
+        });
+    </script>
+    <script src="/order_email_helper.js"></script>
+    <script src="/data.js"></script>
+    <script src="/script.js?v=207"></script>
+    <script src="/v6-script.js"></script>
+</body>
+</html>

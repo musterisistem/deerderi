@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "text": "ANNELER GÜNÜ KOLEKSİYONU YAYINDA!",
+    "icon": "gift",
+    "color": "#e83e8c",
+    "link": "/urun/london-vintage-deri-kartlik"
+  },
+  {
+    "id": 2,
+    "text": "SEZON SONU İNDİRİM FIRSATLARI!",
+    "icon": "cart-shopping",
+    "color": "#fd7e14",
+    "link": "#"
+  },
+  {
+    "id": 3,
+    "text": "2. GÖZLÜKTE NET %50 İNDİRİM!",
+    "icon": "eye",
+    "color": "#17a2b8",
+    "link": "#"
+  },
+  {
+    "id": 4,
+    "text": "2000₺ VE ÜZERİ ÜCRETSİZ KARGO!",
+    "icon": "tag",
+    "color": "#28a745",
+    "link": "#"
+  },
+  {
+    "id": 5,
+    "text": "YENİ SEZON ÜRÜNLERİ KEŞFEDİN!",
+    "icon": "star",
+    "color": "#ffc107",
+    "link": "#"
+  }
+]
