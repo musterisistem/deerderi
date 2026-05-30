@@ -1114,17 +1114,198 @@ window.setPaymentMethod = function (method) {
     const trBtn = document.getElementById('btn-pay-transfer');
     const ccForm = document.getElementById('payment-card-form');
     const trForm = document.getElementById('payment-transfer-form');
+    const iframeContainer = document.getElementById('paytr-iframe-container');
+    const submitBtn = document.querySelector('[onclick="processOrder()"]');
     
     if (method === 'credit_card') {
-        ccBtn.classList.add('active');
-        trBtn.classList.remove('active');
+        if (ccBtn) ccBtn.classList.add('active');
+        if (trBtn) trBtn.classList.remove('active');
         if (ccForm) ccForm.style.display = 'block';
         if (trForm) trForm.style.display = 'none';
     } else {
-        trBtn.classList.add('active');
-        ccBtn.classList.remove('active');
+        if (trBtn) trBtn.classList.add('active');
+        if (ccBtn) ccBtn.classList.remove('active');
         if (ccForm) ccForm.style.display = 'none';
         if (trForm) trForm.style.display = 'block';
+    }
+
+    if (iframeContainer) iframeContainer.style.display = 'none';
+    if (submitBtn) {
+        submitBtn.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'SİPARİŞİ TAMAMLA';
+    }
+
+    window.tryLoadPayTRIframe();
+};
+
+let paytrLoading = false;
+window.tryLoadPayTRIframe = async function () {
+    if (paytrLoading) return;
+    
+    const ccForm = document.getElementById('payment-card-form');
+    const transferForm = document.getElementById('payment-transfer-form');
+    const iframeContainer = document.getElementById('paytr-iframe-container');
+    const iframe = document.getElementById('paytriframe');
+    const loading = document.getElementById('paytr-iframe-loading');
+    
+    if (window.paymentMethod !== 'credit_card' && window.paymentMethod !== 'bank_transfer') {
+        if (iframeContainer) iframeContainer.style.display = 'none';
+        return;
+    }
+    
+    const user = typeof UserManager !== 'undefined' ? UserManager.getCurrentUser() : null;
+    let customerName = '', customerEmail = '', customerPhone = '', tc = '';
+    
+    if (!user) {
+        const nameEl = document.getElementById('guest-name');
+        const surnameEl = document.getElementById('guest-surname');
+        const emailEl = document.getElementById('guest-email');
+        const phoneEl = document.getElementById('guest-phone');
+        
+        if (!nameEl || !nameEl.value.trim() ||
+            !surnameEl || !surnameEl.value.trim() ||
+            !emailEl || !emailEl.value.trim() ||
+            !phoneEl || !phoneEl.value.trim()) {
+            return;
+        }
+        customerName = (nameEl.value + ' ' + surnameEl.value).trim();
+        customerEmail = emailEl.value.trim();
+        customerPhone = phoneEl.value.trim();
+        tc = document.getElementById('guest-tc') ? document.getElementById('guest-tc').value.trim() : '';
+    } else {
+        customerName = user.firstName + (user.lastName ? ' ' + user.lastName : '');
+        customerEmail = user.email;
+        customerPhone = user.phone;
+    }
+    
+    let finalShippingAddr = null;
+    const isNewAddr = document.getElementById('checkout-address-form').style.display !== 'none';
+    if (isNewAddr) {
+        const addrEl = document.getElementById('addr-text-input');
+        const cityEl = document.getElementById('city-select');
+        const districtEl = document.getElementById('district-select');
+        
+        if (!addrEl || !addrEl.value.trim() ||
+            !cityEl || !cityEl.value ||
+            !districtEl || !districtEl.value) {
+            return;
+        }
+        finalShippingAddr = {
+            title: document.getElementById('addr-title-input')?.value || 'Ev',
+            address: addrEl.value,
+            city: cityEl.value,
+            district: districtEl.value
+        };
+    } else {
+        if (!window.selectedAddressId) {
+            return;
+        }
+        finalShippingAddr = user.addresses.find(a => a.id === window.selectedAddressId);
+    }
+    
+    if (!finalShippingAddr) return;
+    if (!window.cart || window.cart.length === 0) return;
+    
+    const cartItems = window.cart.map(item => ({
+        productId: item._id || item.mongoId || null,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image || '',
+        slug: item.slug || '',
+    }));
+    
+    const shippingRadio = document.querySelector('input[name="shipping"]:checked');
+    const isDoor = shippingRadio && shippingRadio.value === 'door';
+    const shippingMethod = isDoor ? 'door' : 'standard';
+    
+    let finalPaymentMethod = window.paymentMethod === 'bank_transfer' ? 'bankTransfer' : 'creditCard';
+    if (isDoor) finalPaymentMethod = 'cashOnDelivery';
+    
+    if (finalPaymentMethod === 'cashOnDelivery') return;
+    
+    const useSameCb = document.getElementById('use-same-address');
+    const useSameAddress = useSameCb ? useSameCb.checked : true;
+    let finalBillingAddr = finalShippingAddr;
+    if (!useSameAddress) {
+        const bTitle = document.getElementById('billing-title')?.value || 'Fatura';
+        const bAddr = document.getElementById('billing-text-input')?.value;
+        const bCity = document.getElementById('billing-city')?.value;
+        const bDistrict = document.getElementById('billing-district')?.value;
+        if (bAddr && bCity && bDistrict) {
+            finalBillingAddr = { title: bTitle, address: bAddr, city: bCity, district: bDistrict };
+        }
+    }
+    
+    const orderPayload = {
+        customer: { name: customerName, email: customerEmail, phone: customerPhone, tc: tc },
+        shippingAddress: finalShippingAddr,
+        billingAddress: finalBillingAddr,
+        items: cartItems,
+        shippingMethod,
+        paymentMethod: finalPaymentMethod,
+        couponCode: window.appliedCouponCode || null,
+    };
+    
+    const payloadStr = JSON.stringify(orderPayload);
+    if (window.lastPayloadStr === payloadStr) {
+        if (iframeContainer) iframeContainer.style.display = 'block';
+        if (ccForm) ccForm.style.display = 'none';
+        if (transferForm) transferForm.style.display = 'none';
+        const submitBtn = document.querySelector('[onclick="processOrder()"]');
+        if (submitBtn) submitBtn.style.display = 'none';
+        return;
+    }
+    
+    paytrLoading = true;
+    if (loading) loading.style.display = 'block';
+    if (iframe) iframe.style.display = 'none';
+    if (iframeContainer) iframeContainer.style.display = 'block';
+    if (ccForm) ccForm.style.display = 'none';
+    if (transferForm) transferForm.style.display = 'none';
+    
+    try {
+        const res = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderPayload),
+        });
+        
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Sipariş oluşturulamadı');
+        
+        if (data.data.iframe_token) {
+            const token = data.data.iframe_token;
+            window.lastPayloadStr = payloadStr;
+            
+            const submitBtn = document.querySelector('[onclick="processOrder()"]');
+            if (submitBtn) submitBtn.style.display = 'none';
+            
+            if (iframe) {
+                iframe.src = `https://www.paytr.com/odeme/guvenli/${token}`;
+                iframe.onload = function () {
+                    if (loading) loading.style.display = 'none';
+                    iframe.style.display = 'block';
+                    if (typeof iFrameResize === 'function') {
+                        try { iFrameResize({}, '#paytriframe'); } catch(e){}
+                    }
+                };
+            }
+        }
+    } catch (err) {
+        console.error('tryLoadPayTRIframe error:', err);
+        if (loading) loading.style.display = 'none';
+        if (iframeContainer) iframeContainer.style.display = 'none';
+        if (window.paymentMethod === 'credit_card') {
+            if (ccForm) ccForm.style.display = 'block';
+        } else {
+            if (transferForm) transferForm.style.display = 'block';
+        }
+        const submitBtn = document.querySelector('[onclick="processOrder()"]');
+        if (submitBtn) submitBtn.style.display = 'block';
+    } finally {
+        paytrLoading = false;
     }
 };
 
@@ -1218,13 +1399,7 @@ window.processOrder = async function () {
     const shippingRadio = document.querySelector('input[name="shipping"]:checked');
     const isDoor = shippingRadio && shippingRadio.value === 'door';
     
-    if (!isDoor) {
-        if (window.paymentMethod === 'credit_card') {
-            if (!validateFields(['card-name', 'card-number', 'card-expiry', 'card-cvv'])) {
-                valid = false;
-            }
-        }
-    }
+    // No card fields validation since they pay via secure PayTR iframe
 
     if (!valid) {
         showToast('Lütfen zorunlu alanları eksiksiz doldurun.', 'error');
@@ -1320,38 +1495,35 @@ window.processOrder = async function () {
         }
 
         if (data.data.iframe_token) {
-            // PayTR iFrame API — 3D modal aç
+            // PayTR iFrame API — Inline iFrame yükle
             const token = data.data.iframe_token;
-            const modal = document.getElementById('paytr-3d-modal');
-            const loading = document.getElementById('paytr-modal-loading');
-            const iframeWrap = document.getElementById('paytr-modal-iframe-wrap');
+            const iframeContainer = document.getElementById('paytr-iframe-container');
             const iframe = document.getElementById('paytriframe');
+            const loading = document.getElementById('paytr-iframe-loading');
 
-            if (modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+            const cardForm = document.getElementById('payment-card-form');
+            if (cardForm) cardForm.style.display = 'none';
+            const transferForm = document.getElementById('payment-transfer-form');
+            if (transferForm) transferForm.style.display = 'none';
 
+            if (submitBtn) submitBtn.style.display = 'none';
+
+            if (iframeContainer) iframeContainer.style.display = 'block';
             if (iframe) {
                 iframe.src = `https://www.paytr.com/odeme/guvenli/${token}`;
+                iframe.style.display = 'none';
+                if (loading) loading.style.display = 'block';
+
                 iframe.onload = function () {
                     if (loading) loading.style.display = 'none';
-                    if (iframeWrap) iframeWrap.style.display = 'block';
+                    iframe.style.display = 'block';
                     if (typeof iFrameResize === 'function') {
                         try { iFrameResize({}, '#paytriframe'); } catch(e){}
                     }
                 };
             }
 
-            CartManager.clearCart();
-
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'SİPARİŞİ TAMAMLA';
-            }
             return;
-
-
         }
 
         const localOrder = {
@@ -1452,6 +1624,7 @@ window.selectAddress = function (id, el) {
     el.classList.add('selected');
     el.querySelector('i').className = 'fa-solid fa-check-circle';
     document.getElementById('checkout-address-form').style.display = 'none';
+    window.tryLoadPayTRIframe();
 };
 
 window.toggleNewAddressForm = function () {
@@ -1502,6 +1675,15 @@ window.selectShipping = function (type) {
         if (transferForm) transferForm.style.display = 'none';
         if (ccBtn) ccBtn.parentElement.style.display = 'none';
         if (codMsg) codMsg.style.display = 'block';
+        
+        const iframeContainer = document.getElementById('paytr-iframe-container');
+        if (iframeContainer) iframeContainer.style.display = 'none';
+        const submitBtn = document.querySelector('[onclick="processOrder()"]');
+        if (submitBtn) {
+            submitBtn.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'SİPARİŞİ TAMAMLA';
+        }
     } else {
         if (ccBtn) ccBtn.parentElement.style.display = 'flex';
         if (codMsg) codMsg.style.display = 'none';
@@ -2553,6 +2735,34 @@ window.addEventListener('DOMContentLoaded', () => {
             e.target.value = e.target.value.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ\s]/g, '').toUpperCase();
         });
     }
+});
+
+// Dynamic PayTR Iframe Auto-Loader Watchers
+document.addEventListener('DOMContentLoaded', () => {
+    const watchIds = [
+        'guest-name', 'guest-surname', 'guest-email', 'guest-phone',
+        'addr-text-input', 'city-select', 'district-select', 'guest-tc',
+        'use-same-address', 'billing-title', 'billing-text-input', 'billing-city', 'billing-district'
+    ];
+    watchIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const events = ['change', 'blur'];
+            if (el.tagName === 'SELECT') {
+                events.push('input');
+            }
+            events.forEach(evt => {
+                el.addEventListener(evt, () => {
+                    window.tryLoadPayTRIframe();
+                });
+            });
+        }
+    });
+
+    // Automatically trigger on load (for logged in users with saved/selected address)
+    setTimeout(() => {
+        window.tryLoadPayTRIframe();
+    }, 1000);
 });
 
 // ---- PayTR Modal Helpers ----

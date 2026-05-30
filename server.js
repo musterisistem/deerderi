@@ -997,52 +997,126 @@ async function handleCreateOrder(request, response) {
             createdAt: orderData.createdAt,
         };
 
-        if (orderData.paymentMethod === 'creditCard') {
+        if (orderData.paymentMethod === 'creditCard' || orderData.paymentMethod === 'bankTransfer') {
             let userIp = request.headers['x-forwarded-for'] || request.socket.remoteAddress || '127.0.0.1';
             if (userIp.includes(',')) userIp = userIp.split(',')[0].trim();
-            if (userIp === '::1') userIp = '127.0.0.1';
+            userIp = userIp.replace(/^::ffff:/, '');
 
-            const email = orderData.customer.email;
-            // iFrame API: payment_amount kuruş cinsinden (100 TL = 10000)
+            const ipv4Regex = /^(?!(10\.|127\.|169\.254\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.))([0-9]{1,3}\.){3}[0-9]{1,3}$/;
+            if (!ipv4Regex.test(userIp)) {
+                userIp = '95.70.196.100'; // fallback test IP
+            }
+
+            let email = (orderData.customer.email || '').trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                if (!email) {
+                    email = 'test@example.com';
+                } else if (!email.includes('@')) {
+                    email = email + '@example.com';
+                } else {
+                    const parts = email.split('@');
+                    const localPart = parts[0] || 'customer';
+                    const domainPart = parts[1] || 'example.com';
+                    email = `${localPart}@${domainPart.includes('.') ? domainPart : domainPart + '.com'}`;
+                }
+            }
+
+            let user_phone = (orderData.customer.phone || '05000000000').replace(/\D/g, '');
+            if (!user_phone || user_phone.length < 10) {
+                user_phone = '05000000000';
+            }
+
             const payment_amount = Math.round(total * 100).toString();
-            const no_installment = '0';
-            const max_installment = '0';
             const currency = 'TL';
             const test_mode = '1'; // Test modda dene, canlıya geçince 0 yap
 
-            const user_basket_arr = validatedItems.map(item => [item.name, item.price.toFixed(2), item.quantity]);
-            const user_basket = Buffer.from(JSON.stringify(user_basket_arr)).toString('base64');
+            const host = request.headers.host || '';
+            const protocol = (host.includes('localhost') || host.includes('127.0.0.1')) ? 'http' : (request.headers['x-forwarded-proto'] || 'https');
 
-            // iFrame API hash sırası: merchant_id + user_ip + merchant_oid + email + payment_amount + user_basket + no_installment + max_installment + currency + test_mode
-            const hashSTR = `${PAYTR_MERCHANT_ID}${userIp}${orderNumber}${email}${payment_amount}${user_basket}${no_installment}${max_installment}${currency}${test_mode}`;
-            const paytr_token = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(hashSTR + PAYTR_MERCHANT_SALT).digest('base64');
+            const shippingAddr = orderData.shippingAddress || {};
+            const addressParts = [
+                shippingAddr.line1 || shippingAddr.address || '',
+                shippingAddr.district || '',
+                shippingAddr.city || ''
+            ].filter(Boolean);
+            const user_address = addressParts.join(' ') || 'İstanbul';
 
-            const protocol = request.headers['x-forwarded-proto'] || 'https';
-            const host = request.headers.host;
+            let hashSTR = '';
+            let postParams = {};
 
-            const postData = new URLSearchParams({
-                merchant_id: PAYTR_MERCHANT_ID,
-                user_ip: userIp,
-                merchant_oid: orderNumber,
-                email: email,
-                payment_amount: payment_amount,
-                paytr_token: paytr_token,
-                user_basket: user_basket,
-                debug_on: '1',
-                no_installment: no_installment,
-                max_installment: max_installment,
-                user_name: orderData.customer.name,
-                user_address: orderData.shippingAddress.address,
-                user_phone: orderData.customer.phone || '05000000000',
-                merchant_ok_url: `${protocol}://${host}/siparis-tamamlandi?order=${orderNumber}`,
-                merchant_fail_url: `${protocol}://${host}/odeme?error=paytr_failed`,
-                timeout_limit: '30',
-                currency: currency,
-                test_mode: test_mode,
-                lang: 'tr'
-            }).toString();
+            if (orderData.paymentMethod === 'creditCard') {
+                const no_installment = '0';
+                const max_installment = '0';
+                const user_basket_arr = validatedItems.map(item => [item.name, item.price.toFixed(2), item.quantity]);
+                const user_basket = Buffer.from(JSON.stringify(user_basket_arr)).toString('base64');
+
+                // iFrame API hash sırası: merchant_id + user_ip + merchant_oid + email + payment_amount + user_basket + no_installment + max_installment + currency + test_mode
+                hashSTR = `${PAYTR_MERCHANT_ID}${userIp}${orderNumber}${email}${payment_amount}${user_basket}${no_installment}${max_installment}${currency}${test_mode}`;
+                const paytr_token = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(hashSTR + PAYTR_MERCHANT_SALT).digest('base64');
+
+                postParams = {
+                    merchant_id: PAYTR_MERCHANT_ID,
+                    user_ip: userIp,
+                    merchant_oid: orderNumber,
+                    email: email,
+                    payment_amount: payment_amount,
+                    paytr_token: paytr_token,
+                    user_basket: user_basket,
+                    debug_on: '1',
+                    no_installment: no_installment,
+                    max_installment: max_installment,
+                    user_name: orderData.customer.name || 'Müşteri',
+                    user_address: user_address,
+                    user_phone: user_phone,
+                    merchant_ok_url: `${protocol}://${host}/siparis-tamamlandi?order=${orderNumber}`,
+                    merchant_fail_url: `${protocol}://${host}/odeme?error=paytr_failed`,
+                    timeout_limit: '30',
+                    currency: currency,
+                    test_mode: test_mode,
+                    lang: 'tr'
+                };
+            } else {
+                const payment_type = 'eft';
+
+                // Havale/EFT API hash sırası: merchant_id + user_ip + merchant_oid + email + payment_amount + payment_type
+                hashSTR = `${PAYTR_MERCHANT_ID}${userIp}${orderNumber}${email}${payment_amount}${payment_type}`;
+                const paytr_token = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY).update(hashSTR + PAYTR_MERCHANT_SALT).digest('base64');
+
+                postParams = {
+                    merchant_id: PAYTR_MERCHANT_ID,
+                    user_ip: userIp,
+                    merchant_oid: orderNumber,
+                    email: email,
+                    payment_amount: payment_amount,
+                    payment_type: payment_type,
+                    paytr_token: paytr_token,
+                    debug_on: '1',
+                    user_name: orderData.customer.name || 'Müşteri',
+                    user_address: user_address,
+                    user_phone: user_phone,
+                    merchant_ok_url: `${protocol}://${host}/siparis-tamamlandi?order=${orderNumber}`,
+                    merchant_fail_url: `${protocol}://${host}/odeme?error=paytr_failed`,
+                    timeout_limit: '30',
+                    currency: currency,
+                    test_mode: test_mode,
+                    lang: 'tr'
+                };
+            }
+
+            const postData = new URLSearchParams(postParams).toString();
 
             // PayTR'ye server-side token isteği yap
+            console.log('--- PAYTR REQUEST DETAILS ---');
+            console.log('postData:', postData);
+            console.log('hashSTR:', hashSTR);
+            console.log('userIp:', userIp);
+            console.log('email:', email);
+            console.log('payment_amount:', payment_amount);
+            console.log('user_name:', orderData.customer.name);
+            console.log('user_address:', user_address);
+            console.log('-----------------------------');
+
             const iframeToken = await new Promise((resolve, reject) => {
                 const https = require('https');
                 const options = {
@@ -1058,6 +1132,10 @@ async function handleCreateOrder(request, response) {
                     let data = '';
                     res.on('data', chunk => data += chunk);
                     res.on('end', () => {
+                        console.log('--- PAYTR RESPONSE ---');
+                        console.log('Status:', res.statusCode);
+                        console.log('Body:', data);
+                        console.log('----------------------');
                         try {
                             const json = JSON.parse(data);
                             if (json.status === 'success') resolve(json.token);
