@@ -1,4 +1,4 @@
-// Vercel Serverless Function: /api/paytr/callback
+// Vercel Serverless Function: /api/paytr/callback (Redeploy trigger to load env variables)
 // PayTR ödeme sonuç bildirimi (2. Adım)
 
 const crypto = require('crypto');
