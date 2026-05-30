@@ -70,7 +70,7 @@
     },
     {
       "source": "/siparis-tamamlandi",
-      "destination": "/order-complete.html"
+      "destination": "/success.html"
     }
   ]
 }
