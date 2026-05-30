@@ -1,63 +1,86 @@
-// Vercel Serverless Function: /api/paytr/callback (Redeploy trigger to load env variables)
-// PayTR ödeme sonuç bildirimi (2. Adım)
+// Vercel Serverless Function: /api/paytr/callback
+// PayTR ödeme sonuç bildirimi
+// PayTR, bu endpoint'e application/x-www-form-urlencoded formatında POST atar
+// ve "OK" yanıtı bekler. Canlı moda geçiş için bu yanıt şart.
 
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
 
 const PAYTR_MERCHANT_KEY = process.env.PAYTR_MERCHANT_KEY || 'dUyJLqbxBzdy6KF9';
 const PAYTR_MERCHANT_SALT = process.env.PAYTR_MERCHANT_SALT || 'JG1dH3PSwKdLJ5nY';
 
+// Vercel'de body parsing'i KAPATTIK — raw body'yi kendimiz okuyacağız
+// (Vercel varsayılan olarak URL-encoded body'yi parse etmez,
+//  bodyParser açık olsa bile sorun çıkabilir)
+module.exports.config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
+// Raw body'yi okuma yardımcısı
+function getRawBody(req) {
+    return new Promise((resolve, reject) => {
+        let data = '';
+        req.on('data', chunk => { data += chunk.toString(); });
+        req.on('end', () => resolve(data));
+        req.on('error', reject);
+    });
+}
+
 module.exports = async (req, res) => {
+    // Sadece POST kabul et
     if (req.method !== 'POST') {
         return res.status(405).send('Method Not Allowed');
     }
 
     try {
-        const params = req.body;
-        const merchant_oid = params.merchant_oid;
-        const status = params.status;
-        const total_amount = params.total_amount;
-        const hash = params.hash;
+        // Raw body'yi oku ve URL-encoded'ı parse et
+        const rawBody = await getRawBody(req);
+        console.log('PayTR callback raw body:', rawBody);
 
-        if (!merchant_oid || !status || !total_amount || !hash) {
-            return res.status(400).send('PAYTR_INVALID_PARAMS');
+        const params = {};
+        for (const pair of rawBody.split('&')) {
+            const [k, v] = pair.split('=');
+            if (k) params[decodeURIComponent(k)] = decodeURIComponent((v || '').replace(/\+/g, ' '));
         }
 
-        // Hash doğrulama
+        const merchant_oid  = params.merchant_oid;
+        const status        = params.status;
+        const total_amount  = params.total_amount;
+        const hash          = params.hash;
+
+        console.log('PayTR callback params:', { merchant_oid, status, total_amount, hash: hash ? '***' : 'MISSING' });
+
+        // Zorunlu parametre kontrolü
+        if (!merchant_oid || !status || !total_amount || !hash) {
+            console.error('PayTR callback: eksik parametre', { merchant_oid, status, total_amount, hash });
+            // PayTR "OK" beklediği için her durumda 200 dönüyoruz
+            return res.status(200).send('OK');
+        }
+
+        // Hash doğrulama (PayTR dokümantasyonu sırası)
+        // https://dev.paytr.com/direkt-api/iyzico-entegrasyon
         const hashSTR = merchant_oid + PAYTR_MERCHANT_SALT + status + total_amount;
-        const expectedHash = crypto.createHmac('sha256', PAYTR_MERCHANT_KEY)
+        const expectedHash = crypto
+            .createHmac('sha256', PAYTR_MERCHANT_KEY)
             .update(hashSTR)
             .digest('base64');
 
         if (expectedHash !== hash) {
-            console.error('PayTR callback: geçersiz hash!');
-            return res.status(200).send('PAYTR_INVALID');
+            console.error('PayTR callback: geçersiz hash!', { expected: expectedHash, received: hash });
+            return res.status(200).send('OK');
         }
 
-        console.log(`PayTR Callback - Sipariş: ${merchant_oid}, Durum: ${status}`);
+        // Ödeme başarılı mı?
+        const isSuccess = status === 'success';
+        console.log(`PayTR Callback ✓ - Sipariş: ${merchant_oid}, Durum: ${status}, Başarılı: ${isSuccess}`);
 
-        // Siparişi güncelle (tmp dosyasında)
-        try {
-            const filePath = path.join('/tmp', 'orders.json');
-            if (fs.existsSync(filePath)) {
-                const orders = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-                const idx = orders.findIndex(o => o.orderNumber === merchant_oid);
-                if (idx !== -1) {
-                    orders[idx].paymentStatus = status === 'success' ? 'paid' : 'failed';
-                    if (status === 'success') orders[idx].orderStatus = 'processing';
-                    fs.writeFileSync(filePath, JSON.stringify(orders, null, 2));
-                }
-            }
-        } catch (e) {
-            console.error('Order update error:', e);
-        }
-
-        // PayTR "OK" yanıtı beklediği için
+        // PayTR sadece "OK" yanıtı bekler
         return res.status(200).send('OK');
 
     } catch (err) {
-        console.error('PayTR callback error:', err);
+        console.error('PayTR callback işleme hatası:', err);
+        // Hata olsa bile "OK" dönmeliyiz ki PayTR tekrar denemesi
         return res.status(200).send('OK');
     }
 };

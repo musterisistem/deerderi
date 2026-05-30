@@ -189,7 +189,7 @@ module.exports = async (req, res) => {
 
             const payment_amount = Math.round(total * 100).toString(); // Kuruş
             const currency = 'TL';
-            const test_mode = '1';
+            const test_mode = process.env.PAYTR_TEST_MODE || '0'; // '1' = test, '0' = canlı
 
             const host = req.headers.host || '';
             const protocol = (host.includes('localhost') || host.includes('127.0.0.1')) ? 'http' : (req.headers['x-forwarded-proto'] || 'https');
