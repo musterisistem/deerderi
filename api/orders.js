@@ -73,19 +73,28 @@ module.exports = async (req, res) => {
 
     if (req.method === 'OPTIONS') { res.status(200).end(); return; }
 
-    // GET: tek sipariş sorgula
+    // GET: sipariş sorgula
     if (req.method === 'GET') {
-        const orderNumber = req.query.orderNumber || req.query.id;
-        if (!orderNumber) return res.status(400).json({ error: 'orderNumber gerekli' });
         try {
             const filePath = path.join('/tmp', 'orders.json');
-            if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Sipariş bulunamadı' });
-            const orders = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-            const order = orders.find(o => o.orderNumber === orderNumber);
-            if (!order) return res.status(404).json({ error: 'Sipariş bulunamadı' });
-            return res.status(200).json({ success: true, data: order });
+            const orders = fs.existsSync(filePath)
+                ? JSON.parse(fs.readFileSync(filePath, 'utf8'))
+                : [];
+
+            const orderNumber = req.query.orderNumber || req.query.id;
+
+            // Belirli sipariş sorgusu
+            if (orderNumber) {
+                const order = orders.find(o => o.orderNumber === orderNumber);
+                if (!order) return res.status(404).json({ success: false, error: 'Sipariş bulunamadı' });
+                return res.status(200).json({ success: true, data: order });
+            }
+
+            // Tüm siparişleri döndür (admin için)
+            return res.status(200).json({ success: true, data: orders, count: orders.length });
+
         } catch (e) {
-            return res.status(500).json({ error: e.message });
+            return res.status(500).json({ success: false, error: e.message });
         }
     }
 

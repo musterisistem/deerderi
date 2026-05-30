@@ -61,6 +61,69 @@ document.addEventListener('DOMContentLoaded', function () {
                 const initialCats = Array.from(new Set(state.products.map(p => p.category))).map(name => ({
                     id: name,
                     name: name.charAt(0).toUpperCase() + name.slice(1)
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Configuration & State ---
+    const state = {
+        currentView: 'dashboard',
+        products: [],
+        orders: [],
+        categories: [],
+        siteSettings: {
+            announcement: {
+                text: "2000 TL ve Üzeri Kargo Bizden!",
+                active: true
+            }
+        },
+        uspFeatures: [],
+        faqItems: [],
+        productInfoBoxes: [],
+        deliveryInfo: {},
+        mosaicItems: [],
+        menuItems: []
+    };
+
+    // --- Initialization ---
+    function init() {
+        loadData();
+        setupEventListeners();
+        renderView('dashboard');
+        updateCurrentDate();
+    }
+
+    // --- Data Management ---
+    function loadData() {
+        try {
+            // Imported CSV Data - Force Update
+            if (typeof products !== 'undefined') {
+                state.products = products;
+                localStorage.setItem('deerDeriProducts', JSON.stringify(products));
+            } else {
+                const localProducts = localStorage.getItem('deerDeriProducts');
+                state.products = localProducts ? JSON.parse(localProducts) : [];
+            }
+
+            // Seed Admin User
+            const adminEmail = 'admin@deerderi.com';
+            const users = JSON.parse(localStorage.getItem('deerDeriUsers') || '[]');
+            if (!users.find(u => u.email === adminEmail)) {
+                users.push({
+                    id: 'admin-001',
+                    firstName: 'Admin',
+                    lastName: 'User',
+                    email: adminEmail,
+                    password: '159753Deerderi',
+                    orders: [],
+                    addresses: []
+                });
+                localStorage.setItem('deerDeriUsers', JSON.stringify(users));
+            }
+
+            // Load Categories
+            const localCats = localStorage.getItem('deerDeriCategories');
+            if (!localCats) {
+                const initialCats = Array.from(new Set(state.products.map(p => p.category))).map(name => ({
+                    id: name,
+                    name: name.charAt(0).toUpperCase() + name.slice(1)
                 }));
                 state.categories = initialCats;
                 localStorage.setItem('deerDeriCategories', JSON.stringify(initialCats));
@@ -68,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 state.categories = JSON.parse(localCats);
             }
 
-            // Load Orders
+            // Load Orders — localStorage'dan oku
             const allUsers = JSON.parse(localStorage.getItem('deerDeriUsers') || '[]');
             state.orders = [];
             allUsers.forEach(user => {
@@ -82,10 +145,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             });
+            // Global orders (misafir siparişler)
+            const globalOrders = JSON.parse(localStorage.getItem('deerDeriOrders') || '[]');
+            globalOrders.forEach(o => {
+                const exists = state.orders.find(x => (x.id || x.orderNumber) === (o.id || o.orderNumber));
+                if (!exists) {
+                    state.orders.push({
+                        ...o,
+                        customerName: o.customerName || (o.customer ? `${o.customer.name || ''} ${o.customer.surname || ''}`.trim() : 'Misafir'),
+                        userId: o.userId || 'guest'
+                    });
+                }
+            });
             state.orders.sort((a, b) => {
-                const dateA = a.date.split('.').reverse().join('-');
-                const dateB = b.date.split('.').reverse().join('-');
-                return new Date(dateB) - new Date(dateA);
+                return new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0);
             });
 
             // Load Settings (USP, FAQ, InfoBoxes, Delivery, Banners)
@@ -265,396 +338,6 @@ document.addEventListener('DOMContentLoaded', function () {
             case 'logo-settings':
                 renderLogoSettings(contentArea);
                 break;
-            case 'campaigns':
-                renderCampaignSettings(contentArea);
-                break;
-        }
-    }
-
-    // Submenu toggle function
-    window.toggleSubmenu = function (event, submenuId) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const submenu = document.getElementById(submenuId);
-        const parent = event.currentTarget;
-
-        if (submenu) {
-            submenu.classList.toggle('active');
-            parent.classList.toggle('active');
-        }
-    };
-
-    function setupEventListeners() {
-        // Navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const view = link.getAttribute('data-view');
-                if (view) {
-                    e.preventDefault();
-                    renderView(view);
-                }
-            });
-        });
-
-        // Add Button
-        const addBtn = document.getElementById('add-item-btn');
-        if (addBtn) {
-            addBtn.addEventListener('click', () => {
-                if (state.currentView === 'products') {
-                    if (window.showProductModal) window.showProductModal();
-                } else if (state.currentView === 'categories') {
-                    if (window.showCategoryModal) window.showCategoryModal();
-                }
-            });
-        }
-
-        // Modal Close
-        const closeBtn = document.querySelector('.close-modal');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                document.getElementById('admin-modal').style.display = 'none';
-            });
-        }
-
-        // Outside Click
-        window.addEventListener('click', (e) => {
-            const modal = document.getElementById('admin-modal');
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    }
-
-    // --- View Renderers ---
-    function renderDashboard(container) {
-        const totalRevenue = state.orders.reduce((sum, order) => sum + (order.total || 0), 0);
-        const totalOrders = state.orders.length;
-        const totalProducts = state.products.length;
-        const activeCustomers = new Set(state.orders.map(o => o.userId)).size;
-        const recentOrders = state.orders.slice(0, 3);
-
-        // Calculate order statistics
-        const deliveredOrders = state.orders.filter(o => o.status === 'Teslim Edildi').length;
-        const processingOrders = state.orders.filter(o => o.status === 'İşleniyor' || o.status === 'Hazırlanıyor').length;
-        const canceledOrders = state.orders.filter(o => o.status === 'İptal Edildi').length;
-
-        const deliveredPercent = totalOrders > 0 ? Math.round((deliveredOrders / totalOrders) * 100) : 0;
-        const processingPercent = totalOrders > 0 ? Math.round((processingOrders / totalOrders) * 100) : 0;
-        const canceledPercent = totalOrders > 0 ? Math.round((canceledOrders / totalOrders) * 100) : 0;
-
-        // Get top selling products (mock data for now)
-        const topProducts = state.products.slice(0, 3);
-
-        // Calculate today's stats
-        const today = new Date();
-        const dd = String(today.getDate()).padStart(2, '0');
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const yyyy = today.getFullYear();
-        const todayStr = `${dd}.${mm}.${yyyy}`;
-
-        const todaysOrders = state.orders.filter(o => o.date === todayStr);
-        const todaysRevenue = todaysOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-        const todaysOrderCount = todaysOrders.length;
-
-        container.innerHTML = `
-            <!-- Stats Cards -->
-            <div class="dashboard-stats-grid">
-                <div class="nexa-stat-card">
-                    <div class="nexa-stat-header">
-                        <div class="nexa-stat-icon"><i class="fa-solid fa-users"></i></div>
-                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
-                    </div>
-                    <div class="nexa-stat-label">Toplam Müşteri</div>
-                    <div class="nexa-stat-value">${activeCustomers.toLocaleString('tr-TR')}</div>
-                    <div class="nexa-stat-change positive"><i class="fa-solid fa-arrow-trend-up"></i> 8.5% <span>düne göre arttı</span></div>
-                </div>
-
-                <div class="nexa-stat-card">
-                    <div class="nexa-stat-header">
-                        <div class="nexa-stat-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
-                    </div>
-                    <div class="nexa-stat-label">Toplam Sipariş</div>
-                    <div class="nexa-stat-value">${totalOrders.toLocaleString('tr-TR')}</div>
-                    <div class="nexa-stat-change positive"><i class="fa-solid fa-arrow-trend-up"></i> 2.5% <span>geçen haftaya göre</span></div>
-                </div>
-
-                <div class="nexa-stat-card">
-                    <div class="nexa-stat-header">
-                        <div class="nexa-stat-icon"><i class="fa-solid fa-chart-line"></i></div>
-                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
-                    </div>
-                    <div class="nexa-stat-label">Toplam Satış</div>
-                    <div class="nexa-stat-value">${formatPrice(totalRevenue)}₺</div>
-                    <div class="nexa-stat-change negative"><i class="fa-solid fa-arrow-trend-down"></i> 3.5% <span>geçen haftaya göre</span></div>
-                </div>
-
-                <div class="nexa-stat-card">
-                    <div class="nexa-stat-header">
-                        <div class="nexa-stat-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                        <i class="fa-solid fa-chevron-right nexa-stat-arrow"></i>
-                    </div>
-                    <div class="nexa-stat-label">Bekleyen Sipariş</div>
-                    <div class="nexa-stat-value">${processingOrders.toLocaleString('tr-TR')}</div>
-                    <div class="nexa-stat-change positive"><i class="fa-solid fa-arrow-trend-up"></i> 1.8% <span>geçen haftaya göre</span></div>
-                </div>
-            </div>
-
-            <!-- Main Dashboard Grid -->
-            <div class="dashboard-grid">
-                <!-- Orders Summary with Today's Stats -->
-                <div class="dashboard-card">
-                    <div class="dashboard-card-header">
-                        <h3>Sipariş Özetii</h3>
-                        <select class="dashboard-select">
-                            <option>Bugün</option>
-                            <option>Bu Hafta</option>
-                            <option>Bu Ay</option>
-                        </select>
-                    </div>
-                    <div class="orders-summary">
-                        <div class="order-stat-circle">
-                            <div class="circle-progress" data-percent="${processingPercent}">
-                                <svg width="120" height="120">
-                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="10"/>
-                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#4CAF50" stroke-width="10" 
-                                            stroke-dasharray="${2 * Math.PI * 50}" 
-                                            stroke-dashoffset="${2 * Math.PI * 50 * (1 - processingPercent / 100)}"
-                                            transform="rotate(-90 60 60)"/>
-                                </svg>
-                                <div class="circle-text">
-                                    <div class="circle-percent">${processingPercent}%</div>
-                                    <div class="circle-label">İşlemde</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="order-stat-circle">
-                            <div class="circle-progress" data-percent="${deliveredPercent}">
-                                <svg width="120" height="120">
-                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="10"/>
-                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#2196F3" stroke-width="10" 
-                                            stroke-dasharray="${2 * Math.PI * 50}" 
-                                            stroke-dashoffset="${2 * Math.PI * 50 * (1 - deliveredPercent / 100)}"
-                                            transform="rotate(-90 60 60)"/>
-                                </svg>
-                                <div class="circle-text">
-                                    <div class="circle-percent">${deliveredPercent}%</div>
-                                    <div class="circle-label">Teslim Edildi</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="order-stat-circle">
-                            <div class="circle-progress" data-percent="${canceledPercent}">
-                                <svg width="120" height="120">
-                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="10"/>
-                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#FF9800" stroke-width="10" 
-                                            stroke-dasharray="${2 * Math.PI * 50}" 
-                                            stroke-dashoffset="${2 * Math.PI * 50 * (1 - canceledPercent / 100)}"
-                                            transform="rotate(-90 60 60)"/>
-                                </svg>
-                                <div class="circle-text">
-                                    <div class="circle-percent">${canceledPercent}%</div>
-                                    <div class="circle-label">İptal</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Today's Summary Box -->
-                    <div class="today-orders-summary">
-                        <div class="today-stat-item">
-                            <div class="today-stat-label">Bugünkü Satışlar</div>
-                            <div class="today-stat-value">${formatPrice(todaysRevenue)}₺</div>
-                        </div>
-                        <div class="today-stat-divider"></div>
-                        <div class="today-stat-item">
-                            <div class="today-stat-label">Bugünkü Sipariş</div>
-                            <div class="today-stat-value">${todaysOrderCount} Adet</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Top Selling Items -->
-                <div class="dashboard-card">
-                    <div class="dashboard-card-header">
-                        <h3>En Çok Satan Ürünler</h3>
-                    </div>
-                    <div class="top-products-list">
-                        ${topProducts.map((product, index) => `
-                            <a href="/urun-${product.slug || product.id}" target="_blank" class="top-product-item" style="text-decoration: none; color: inherit; display: flex; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
-                                <div class="product-rank">${index + 1}</div>
-                                <img src="${product.image || product.images?.[0] || 'placeholder.jpg'}" alt="${product.name}" class="product-thumb-small">
-                                <div class="product-info-small">
-                                    <div class="product-name-small">${product.name}</div>
-                                    <div class="product-price-small">${formatPrice(product.price)}₺</div>
-                                </div>
-                            </a>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <!-- Recent Orders Box -->
-                <div class="dashboard-card">
-                    <div class="dashboard-card-header">
-                        <h3>Son Siparişler</h3>
-                        <button class="btn btn-sm btn-primary" onclick="window.renderView('orders')">Tüm Siparişlerim</button>
-                    </div>
-                    <div class="recent-orders-list-small">
-                        ${recentOrders.map(order => `
-                            <div class="recent-order-item-small" onclick="window.renderOrderDetail(${order.id})" style="cursor: pointer;">
-                                <div class="order-icon-small">
-                                    <i class="fa-solid fa-bag-shopping"></i>
-                                </div>
-                                <div class="order-info-small">
-                                    <div class="order-customer-small">${order.customerName}</div>
-                                    <div class="order-date-small">${order.date}</div>
-                                </div>
-                                <div class="order-total-small">${formatPrice(order.total)}₺</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <!-- Orders Trends Chart -->
-                <div class="dashboard-card dashboard-card-wide">
-                    <div class="dashboard-card-header">
-                        <h3>Sipariş Trendleri</h3>
-                        <select class="dashboard-select">
-                            <option>Haftalık</option>
-                            <option>Aylık</option>
-                            <option>Yıllık</option>
-                        </select>
-                    </div>
-                    <div class="chart-container">
-                        <div class="bar-chart">
-                            ${['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'].map((day, i) => {
-            const height = Math.random() * 60 + 20;
-            return `
-                                    <div class="bar-wrapper">
-                                        <div class="bar" style="height: ${height}%"></div>
-                                        <div class="bar-label">${day}</div>
-                                    </div>
-                                `;
-        }).join('')}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total Revenue Chart -->
-                <div class="dashboard-card">
-                    <div class="dashboard-card-header">
-                        <h3>Toplam Gelir</h3>
-                    </div>
-                    <div class="revenue-chart">
-                        <svg viewBox="0 0 300 150" class="area-chart">
-                            <defs>
-                                <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#26A69A;stop-opacity:0.3" />
-                                    <stop offset="100%" style="stop-color:#26A69A;stop-opacity:0" />
-                                </linearGradient>
-                            </defs>
-                            <path d="M 0 120 L 30 100 L 60 80 L 90 90 L 120 60 L 150 70 L 180 50 L 210 65 L 240 40 L 270 55 L 300 30 L 300 150 L 0 150 Z" 
-                                  fill="url(#areaGradient)" stroke="none"/>
-                            <path d="M 0 120 L 30 100 L 60 80 L 90 90 L 120 60 L 150 70 L 180 50 L 210 65 L 240 40 L 270 55 L 300 30" 
-                                  fill="none" stroke="#26A69A" stroke-width="3"/>
-                        </svg>
-                        <div class="revenue-value">${formatPrice(totalRevenue)}₺</div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    function slugifyText(text) {
-        if (!text) return '';
-        const trMap = {
-            'ç': 'c', 'Ç': 'c', 'ğ': 'g', 'Ğ': 'g', 'ş': 's', 'Ş': 's',
-            'ü': 'u', 'Ü': 'u', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'Ö': 'o'
-        };
-        let result = text.toLowerCase();
-        for (let key in trMap) {
-            result = result.replace(new RegExp(key, 'g'), trMap[key]);
-        }
-        return result
-            .replace(/[^-a-zA-Z0-9\s]+/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .trim();
-    }
-
-    function renderProducts(container) {
-        container.innerHTML = `
-            <div class="card">
-                <div class="admin-table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Görsel</th>
-                                <th>Ürün Adı</th>
-                                <th>Kategori</th>
-                                <th>Fiyat</th>
-                                <th>İşlemler</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${state.products.map(p => `
-                                <tr>
-                                    <td><img src="${p.images ? p.images[0] : ''}" class="product-img-td"></td>
-                                    <td>
-                                        <a href="/urun-${p.slug || slugifyText(p.name)}" target="_blank" style="color: inherit; text-decoration: none;">
-                                            <strong>${p.name}</strong> <i class="fa-solid fa-external-link-alt" style="font-size: 12px; color: #999; margin-left: 5px;"></i>
-                                        </a>
-                                    </td>
-                                    <td>${p.category}</td>
-                                    <td>${formatPrice(p.price)}₺</td>
-                                    <td>
-                                        <div style="display: flex; gap: 10px;">
-                                            <button class="btn btn-sm btn-icon btn-edit" onclick="window.editProduct(${p.id})">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-icon btn-delete" onclick="window.deleteProduct(${p.id})">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderOrders(container) {
-        container.innerHTML = `
-            <div class="card">
-                <div class="admin-table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sipariş No</th>
-                                <th>Müşteri</th>
-                                <th>Tarih</th>
-                                <th>Tutar</th>
-                                <th>Durum</th>
-                                <th>Giriş</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${state.orders.map(order => `
-                                <tr class="clickable-row" onclick="window.viewOrderDetail('${order.id}')">
-                                    <td>#${order.id}</td>
-                                    <td>${order.customerName}</td>
-                                    <td>${order.date}</td>
-                                    <td>${formatPrice(order.total)}₺</td>
-                                    <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status || 'İşleniyor'}</span></td>
-                                    <td style="text-align: center;"><i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i></td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
                 </div>
             </div>
         `;
